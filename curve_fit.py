@@ -5,7 +5,7 @@ Fits a sum of exgaussians to an FRB.
 
 import numpy as np
 from scipy.optimize import curve_fit
-from scipy.signal import find_peaks
+# from scipy.signal import find_peaks
 from utils import *
 import json
 
@@ -17,9 +17,9 @@ def estimate_params(n, xs, ys, prev_popt=None, maxima=False):
 	'''
 	params = np.zeros(3*n+1)
 	params[0::3] = 0.5 # a
-	params[1::3] = np.linspace(xs[0], xs[-1], n+2, endpoint=True)[1:-1] # evenly space gaussians
+	params[1::3] = np.linspace(xs[0], xs[-1], n+2, endpoint=True)[1:-1] # gaussian means
 	# params[1::3] = xs[sorted(find_peaks(ys)[0], key=lambda i: ys[i])[:n]] # centre gaussian at the tallest peaks in ys
-	params[2::3] = 1 # start the gaussians skinny
+	params[2::3] = 10 / n # sd
 	params[-1] = 3 # ts
 
 
@@ -108,8 +108,8 @@ if __name__ == '__main__':
 	a.add_argument('--smax', default=20, type=int)
 	args = a.parse_args()
 
-	ys = np.load(args.frb) # [3700:4300] # manually extract burst
-	# ys[:175] = 0 # manually zero the tails to improve the fit
-	# ys[450:] = 0
+	ys = np.load(args.frb)[3700:4300] # manually extract burst
+	ys[:175] = 0 # manually zero the tails to improve the fit
+	ys[450:] = 0
 
 	fit(ys, args.fmin, args.fmax, args.smin, args.smax, args.data0, args.data1)
