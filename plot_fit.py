@@ -41,15 +41,6 @@ def plot(xs, ys, params, rms, label=''):
 	fig.legend()
 
 
-def print_components(params):
-	'''
-	Print the parameters for individual exgauss components in params.
-	'''
-	print(f'ts {params[-1]}')
-	for i in range(0, len(params)-1, 3):
-		print(f'a: {params[i]} u: {params[i+1]} sd: {params[i+2]}')
-
-
 def plot_fitted(xs, ys, rms, data_file, ns=None):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
@@ -61,26 +52,12 @@ def plot_fitted(xs, ys, rms, data_file, ns=None):
 		if not ns or int(n) in ns:	
 			params = data[n]['params']
 			plot(xs, ys, params, rms, f'fit N={n}')
-			# print_components(params)
-
-
-def get_nums(lst):
-	'''
-	Extract integers from command line arguments
-	'''
-	nums = []
-	for x in lst:
-		try: nums.append(int(x))
-		except: pass
-	return nums
 
 
 if __name__ == '__main__':
 	import sys
 
 	frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
-	data0 = 'data/first_pass.json'
-	data1 = 'data/second_pass.json'
 	
 	ys = np.load(frb)
 	rms = np.std(ys[:3700]) # manually get baseline rms
@@ -88,6 +65,9 @@ if __name__ == '__main__':
 	ys = ys[3700:4300] # manually extract burst
 	xs = range(len(ys))
 
-	plot_fitted(xs, ys, rms, data0, get_nums(sys.argv))
+	data_file = get_data_file(sys.argv)
+	if not data_file: exit()
+
+	plot_fitted(xs, ys, rms, data_file, get_nums(sys.argv))
 
 	plt.show(block=True)

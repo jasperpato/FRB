@@ -1,22 +1,31 @@
+'''
+Fits a sum of exgaussians to an FRB.
+'''
+
+
 import numpy as np
 from scipy.optimize import curve_fit
+from scipy.signal import find_peaks
 from utils import *
 import json
 
 
-def estimate_params(n, xmin, xmax, prev_popt):
+def estimate_params(n, xs, ys, prev_popt=None, maxima=False):
 	'''
 	Returns an array of 3*n + 1 params that are reasonable initial guesses to fit the data, and an array of bounds of the params.
 	Spaces out n exgaussians along range [xmin, xmax].
 	'''
 	params = np.zeros(3*n+1)
 	params[0::3] = 0.5 # a
-	params[1::3] = np.linspace(xmin, xmax, n+2, endpoint=True)[1:-1] # gaussian means
-	params[2::3] = 10 / n # sd
-	params[-1] = 5 # ts
+	params[1::3] = np.linspace(xs[0], xs[-1], n+2, endpoint=True)[1:-1] # evenly space gaussians
+	# params[1::3] = xs[sorted(find_peaks(ys)[0], key=lambda i: ys[i])[:n]] # centre gaussian at the tallest peaks in ys
+	params[2::3] = 1 # start the gaussians skinny
+	params[-1] = 3 # ts
+
 
 	if prev_popt is not None:
 		prev_n = (len(prev_popt) - 1) // 3
+
 		# replace the first exgausses with the tallest exgausses from best fitted curve in the first pass
 		exgausses = sorted(np.reshape(prev_popt[:-1], (prev_n, 3)), key=lambda x: x[0], reverse=True)
 		prev_params = np.ravel(exgausses)
@@ -28,21 +37,11 @@ def estimate_params(n, xmin, xmax, prev_popt):
 
 	bounds = np.zeros((3*n+1, 2))
 	bounds[0::3] = [0, 3] # keep vertical scale positive
-	bounds[1::3] = [xmin, xmax] # mean within range
+	bounds[1::3] = [xs[0], xs[-1]] # mean within range
 	bounds[2::3] = [0, np.inf] # sd positive
 	bounds[-1] = [0, 50] # ts positive
 
 	return params, bounds.T
-
-
-def rsquared(xs, ys, params):
-	'''
-	Returns R squared value for a set of parameters popt
-	'''
-	residuals = ys - np.array([sum_exgauss(x, *params) for x in xs])
-	ss_res = np.sum(residuals ** 2)
-	ss_tot = np.sum((ys - np.mean(ys)) ** 2)
-	return 1 - (ss_res / ss_tot)
 
 
 def _fit(ys, nmin, nmax, data_file, prev_popt=None):
@@ -56,10 +55,12 @@ def _fit(ys, nmin, nmax, data_file, prev_popt=None):
 		data[str(n)] = d
 		try:
 			print(f'N={n}')
-			p0, bounds = estimate_params(n, xs[0], xs[-1], prev_popt)
+			p0, bounds = estimate_params(n, xs, ys, prev_popt, maxima=True)
+
 			try:
 				popt, _ = curve_fit(sum_exgauss, xs, ys, p0, bounds=bounds)
 				d['rsquared'] = rsquared(xs, ys, popt)
+				d['adjusted'] = adjusted_rsquared(xs, ys, popt)
 				
 				popt[1:-1:3] += len(ys) / 2 # shift back the gaussian means
 				d['params'] = list(popt)
@@ -78,30 +79,37 @@ def _fit(ys, nmin, nmax, data_file, prev_popt=None):
 
 def get_popt(data, shift):
 	'''
-	Returns the exgauss params with the highest r^2 value in data.
+	Returns the exgauss params with the highest adjusted r^2 value in data.
 	'''
-	params = np.array(max(data.values(), key=lambda d: d['rsquared'])['params'])
+	params = np.array(max(data.values(), key=lambda d: d['adjusted'])['params'])
 	params[1:-1:3] -= shift # redo the shift for the next pass
 	return params
 
 
-def fit(ys, data0, data1):
+def fit(ys, fmin, fmax, smin, smax, data0, data1):
 	'''
-	Fit curves of different n values 
+	Fits curves of different n values and stores the results to file.
 	'''
-	data = _fit(ys, 14, 15, data0) # manually set n range for first pass
+	data = _fit(ys, fmin, fmax, data0) # manually set n range for first pass
 	popt = get_popt(data, len(ys) / 2)
-	print(popt)
-	_fit(ys, 1, 10, data1, popt) # second pass
+	_fit(ys, smin, smax, data1, popt) # second pass
 
 
 if __name__ == '__main__':
-	frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
-	data0 = 'data/first_pass.json'
-	data1 = 'data/second_pass.json'
-	
-	ys = np.load(frb)[3700:4300] # manually extract burst
-	ys[:175] = 0 # manually zero the tails to improve the fit
-	ys[450:] = 0
+	from argparse import ArgumentParser
 
-	fit(ys, data0, data1)
+	a = ArgumentParser()
+	a.add_argument('--frb', default='data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy')
+	a.add_argument('--data0', default='data/data0.json')
+	a.add_argument('--data1', default='data/data1.json')
+	a.add_argument('--fmin', default=1, type=int)
+	a.add_argument('--fmax', default=20, type=int)
+	a.add_argument('--smin', default=1, type=int)
+	a.add_argument('--smax', default=20, type=int)
+	args = a.parse_args()
+
+	ys = np.load(args.frb) # [3700:4300] # manually extract burst
+	# ys[:175] = 0 # manually zero the tails to improve the fit
+	# ys[450:] = 0
+
+	fit(ys, args.fmin, args.fmax, args.smin, args.smax, args.data0, args.data1)
