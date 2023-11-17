@@ -44,7 +44,7 @@ def estimate_params(n, xs, ys, prev_popt=None, maxima=False):
 	return params, bounds.T
 
 
-def _fit(ys, nmin, nmax, data_file, prev_popt=None):
+def _fit(ys, nmin, nmax, prev_popt=None):
 	'''
 	Iterates through n values and fits the sum of n exgaussians to the ys data. Saves the results to file.
 	'''
@@ -71,9 +71,6 @@ def _fit(ys, nmin, nmax, data_file, prev_popt=None):
 		except KeyboardInterrupt:
 			break
 
-	with open(data_file, 'w') as f:
-		json.dump(data, f)
-
 	return data
 
 
@@ -86,15 +83,27 @@ def get_popt(data, shift):
 	return params
 
 
-def fit(ys, fmin, fmax, smin, smax, data0, data1):
+def write_data(data, data_file):
+	data = {
+		'data': data,
+		'optimum': max(data.keys(), key=lambda n: data[n]['adjusted'])
+	}
+	with open(data_file, 'w') as f:
+		json.dump(data, f)
+
+
+def fit(ys, fmin, fmax, smin, smax, data_file0, data_file1):
 	'''
 	Fits curves of different n values and stores the results to file.
 	'''
 	print('First pass')
-	data = _fit(ys, fmin, fmax, data0) # manually set n range for first pass
-	popt = get_popt(data, len(ys) / 2)
+	data0 = _fit(ys, fmin, fmax, data0) # manually set n range for first pass
+	write_data(data0, data_file0)
+
 	print('Second pass')
-	_fit(ys, smin, smax, data1, popt) # second pass
+	popt = get_popt(data0, len(ys) / 2)
+	data1 = _fit(ys, smin, smax, data1, popt) # second pass
+	write_data(data1, data_file1)
 
 
 if __name__ == '__main__':
@@ -104,14 +113,17 @@ if __name__ == '__main__':
 	a.add_argument('--frb', default='data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy')
 	a.add_argument('--data0', default='data/data0.json')
 	a.add_argument('--data1', default='data/data1.json')
-	a.add_argument('--fmin', default=1, type=int)
-	a.add_argument('--fmax', default=21, type=int)
-	a.add_argument('--smin', default=1, type=int)
-	a.add_argument('--smax', default=21, type=int)
+	a.add_argument('--frange', default='1,21')
+	a.add_argument('--srange', default='1,21')
+	
 	args = a.parse_args()
 
 	ys = np.load(args.frb)[3700:4300] # manually extract burst
 	ys[:175] = 0 # manually zero the tails to improve the fit
 	ys[450:] = 0
 
-	fit(ys, args.fmin, args.fmax, args.smin, args.smax, args.data0, args.data1)
+	get_range = lambda s: [int(x) for x in s.split(',')]
+	fmin, fmax = get_range(args.frange)
+	smin, smax = get_range(args.srange)
+
+	fit(ys, fmin, fmax, smin, smax, args.data0, args.data1)
