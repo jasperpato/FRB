@@ -10,10 +10,20 @@ def plot_data(data_file):
 	with open(data_file, 'r') as f:
 		data = json.load(f)
 
-	plt.plot(data.keys(), [d.get('adjusted', 0) for d in data.values()])
+	plt.plot(data.keys(), [d['adjusted'] for d in data.values()])
 	plt.xlabel('N')
 	plt.ylabel('Adjusted R^2')
 	plt.title('Adjusted R^2 against Number of exGaussians')
+
+	plt.figure()
+
+	# plot scattering timescale against n
+
+	plt.plot(data.keys(), [d['params'][0] for d in data.values()])
+	plt.xlabel('N')
+	plt.ylabel('Scattering timescale')
+	plt.title('Scattering timescale against Number of exGaussians')
+
 
 if __name__ == '__main__':
 	import sys
