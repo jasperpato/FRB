@@ -90,8 +90,10 @@ def fit(ys, fmin, fmax, smin, smax, data0, data1):
 	'''
 	Fits curves of different n values and stores the results to file.
 	'''
+	print('First pass')
 	data = _fit(ys, fmin, fmax, data0) # manually set n range for first pass
 	popt = get_popt(data, len(ys) / 2)
+	print('Second pass')
 	_fit(ys, smin, smax, data1, popt) # second pass
 
 

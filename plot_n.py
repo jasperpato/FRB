@@ -5,10 +5,12 @@ from utils import *
 
 def plot_data(data_file):
 	'''
-	plot n against adjusted R squared value.
+	Plot adjusted R squared and scattering timescale against n.
 	'''
 	with open(data_file, 'r') as f:
 		data = json.load(f)
+
+	# plot adjusted R^2 against n
 
 	plt.plot(data.keys(), [d['adjusted'] for d in data.values()])
 	plt.xlabel('N')
