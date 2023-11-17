@@ -49,12 +49,3 @@ def get_nums(lst):
 		try: nums.append(int(x))
 		except: pass
 	return nums
-
-
-def get_data_file(lst):
-	'''
-	Extract data_file from command line arguments.
-	'''
-	for x in lst:
-		if '.json' in x:
-			return x

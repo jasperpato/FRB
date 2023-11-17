@@ -65,7 +65,7 @@ if __name__ == '__main__':
 	ys = ys[3700:4300] # manually extract burst
 	xs = range(len(ys))
 
-	data_file = get_data_file(sys.argv)
+	data_file = [x for x in sys.argv if '.json' in x][0]
 	if not data_file: exit()
 
 	plot_fitted(xs, ys, rms, data_file, get_nums(sys.argv))

@@ -19,7 +19,7 @@ def plot_data(data_file):
 
 	# plot scattering timescale against n
 
-	plt.plot(data.keys(), [d['params'][0] for d in data.values()])
+	plt.plot(data.keys(), [d['params'][-1] for d in data.values()])
 	plt.xlabel('N')
 	plt.ylabel('Scattering timescale')
 	plt.title('Scattering timescale against Number of exGaussians')
@@ -27,7 +27,12 @@ def plot_data(data_file):
 
 if __name__ == '__main__':
 	import sys
-	data_file = get_data_file(sys.argv)
-	if not data_file: exit()
-	plot_data(data_file)
+	
+	data_files = [x for x in sys.argv if '.json' in x]
+	if not data_files:
+		exit()
+
+	for data_file in data_files:
+		plot_data(data_file)
+
 	plt.show(block=True)

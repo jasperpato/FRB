@@ -103,9 +103,9 @@ if __name__ == '__main__':
 	a.add_argument('--data0', default='data/data0.json')
 	a.add_argument('--data1', default='data/data1.json')
 	a.add_argument('--fmin', default=1, type=int)
-	a.add_argument('--fmax', default=20, type=int)
+	a.add_argument('--fmax', default=21, type=int)
 	a.add_argument('--smin', default=1, type=int)
-	a.add_argument('--smax', default=20, type=int)
+	a.add_argument('--smax', default=21, type=int)
 	args = a.parse_args()
 
 	ys = np.load(args.frb)[3700:4300] # manually extract burst
