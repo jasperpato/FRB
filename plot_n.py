@@ -10,6 +10,8 @@ def plot_data(data_file, plot_timescale=False):
 	with open(data_file, 'r') as f:
 		data = json.load(f)['data']
 
+	# plot adjusted R^2 against n
+
 	plt.plot(data.keys(), [d['adjusted_R^2'] for d in data.values()])
 	plt.xlabel('N')
 	plt.ylabel('Adjusted R^2')
@@ -24,11 +26,13 @@ def plot_data(data_file, plot_timescale=False):
 
 
 if __name__ == '__main__':
-	from argparse import ArgumentParser
+	import sys
+	
+	data_files = [x for x in sys.argv if '.json' in x]
+	if not data_files:
+		exit()
 
-	a = ArgumentParser()
-	a.add_argument('--data', default='data/data.json')
-	args = a.parse_args()
+	for data_file in data_files:
+		plot_data(data_file)
 
-	plot_data(args.data)
 	plt.show(block=True)
