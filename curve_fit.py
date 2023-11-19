@@ -84,16 +84,15 @@ if __name__ == '__main__':
 
 	args = a.parse_args()
 
-
 	frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
 	ys_np = np.load(frb) 
 
 	name, xs, ys, timestep, rms = get_data(args.input)
 
-	ys_np = ys_np[3700:4300]
-	ys = ys[7700:8300]
+	ys_np = ys_np # [3700:4300]
+	ys = ys # [7700:8300]
 
-	# fit(ys, *[int(n) for n in args.nrange.split(',')], args.output)
+	# fit(ys_np, *[int(n) for n in args.nrange.split(',')], args.output)
 
 	import matplotlib.pyplot as plt
 	plt.plot(ys_np)

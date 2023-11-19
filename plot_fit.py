@@ -74,20 +74,22 @@ if __name__ == '__main__':
 			data = x
 	
 	# range = 
-	# ys = np.load(frb)
-	# xs = range(len(ys))
+	ys_np = np.load('data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy')
+	xs_np = range(len(ys_np))
 
 	name, xs, ys, timestep, rms = get_data(frb)
 	# xs = range(len(ys))
 
 	rms = np.std(ys[:3700]) # manually get baseline rms
 
-	# ys = ys[3700:4300] # manually extract burst for plotting
-	# xs = xs[3700:4300]
+	ys_np = ys_np[3700:4300] # manually extract burst for plotting
+	xs_np = range(len(ys_np))
+	
+	# xs_np = xs_np[3700:4300]
 	
 	ys = ys[7600:8500]
 	xs = range(len(ys))
 
-	plot_fitted(xs, ys, rms, data, get_nums(sys.argv))
+	plot_fitted(xs_np, ys_np, rms, data, get_nums(sys.argv))
 
 	plt.show(block=True)
