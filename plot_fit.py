@@ -1,7 +1,3 @@
-'''
-Visualises the collected data.
-'''
-
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import *
@@ -19,7 +15,7 @@ def plot_residuals(xs, ys, params, rms, ax):
 
 def plot(xs, ys, data, rms, label=''):
 	'''
-	Plot the sum of exgausses with given params. Also plot individual exgauss components and original FRB.
+	Plot the sum of exGaussians with given params. Also plot individual exGaussian components and original FRB.
 	'''
 	fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [1, 2]})
 	fig.subplots_adjust(hspace=0)
@@ -40,8 +36,8 @@ def plot(xs, ys, data, rms, label=''):
 		ax[1].plot(xs, [exgauss(x, *params[i:i+3], params[-1]) for x in xs], linestyle='dotted', color='blue')
 
 	# burst width
-	ax[1].axvline(low, color='green')
-	ax[1].axvline(high, color='green')
+	ax[1].axvline(xs[low], color='green')
+	ax[1].axvline(xs[high], color='green')
 	
 	ax[1].set_ylabel('Intensity')
 	plt.xlabel('Time (us)')
@@ -62,25 +58,20 @@ def plot_fitted(xs, ys, rms, data_file, ns=None):
 
 
 if __name__ == '__main__':
-	import sys
+	from argparse import ArgumentParser
 
-	frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
+	a = ArgumentParser()
+	a.add_argument('--frb', default='data/221106.pkl')
+	a.add_argument('--data', default='data/data.json')
+	a.add_argument('N', type=int, nargs='*')
+
+	args = a.parse_args()
 	
-	data = 'data/data.json'
-	
-	for x in sys.argv:
-		if '.json' in x:
-			data = x
-	
-	# range = 
-	ys = np.load(frb)
-	xs = range(len(ys))
+	name, xs, ys, timestep, rms = get_data(args.frb)
+	low, high = 7600, 8500 # get_bounds_raw(ys)
 
-	rms = np.std(ys[:3700]) # manually get baseline rms
+	xs = xs[low:high]
+	ys = ys[low:high]
 
-	ys = ys[3700:4300] # manually extract burst for plotting
-	xs = xs[3700:4300]
-
-	plot_fitted(xs, ys, rms, data, get_nums(sys.argv))
-
+	plot_fitted(xs, ys, rms, args.data, args.N)
 	plt.show(block=True)
