@@ -64,7 +64,8 @@ def plot_fitted(xs, ys, rms, data_file, ns=None):
 if __name__ == '__main__':
 	import sys
 
-	frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
+	# frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
+	frb = 'data/221106.pkl'
 	
 	data = 'data/data.json'
 	
@@ -73,13 +74,19 @@ if __name__ == '__main__':
 			data = x
 	
 	# range = 
-	ys = np.load(frb)
-	xs = range(len(ys))
+	# ys = np.load(frb)
+	# xs = range(len(ys))
+
+	name, xs, ys, timestep, rms = get_data(frb)
+	# xs = range(len(ys))
 
 	rms = np.std(ys[:3700]) # manually get baseline rms
 
-	ys = ys[3700:4300] # manually extract burst for plotting
-	xs = xs[3700:4300]
+	# ys = ys[3700:4300] # manually extract burst for plotting
+	# xs = xs[3700:4300]
+	
+	ys = ys[7600:8500]
+	xs = range(len(ys))
 
 	plot_fitted(xs, ys, rms, data, get_nums(sys.argv))
 

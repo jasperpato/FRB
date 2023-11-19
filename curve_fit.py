@@ -10,6 +10,9 @@ from utils import *
 import json
 
 
+STD_EXGAUSS_PEAK = 0.3
+
+
 def estimate_params(n, xs, ys):
 	'''
 	Returns an array of 3*n + 1 params that are reasonable initial guesses to fit the data, and an array of bounds of the params.
@@ -19,7 +22,7 @@ def estimate_params(n, xs, ys):
 	peak_locs = sorted(peaks, key=lambda i: ys[i], reverse=True)[:n]
 
 	params = np.zeros(3*n+1)
-	params[:-1:3] = ys[peak_locs] / 0.3 # 0.3 is the approx height of the standard exGaussian
+	params[:-1:3] = ys[peak_locs] / STD_EXGAUSS_PEAK # 0.3 is the approx height of the standard exGaussian
 	params[1::3] = xs[peak_locs] # centre exGaussian at the tallest peaks in ys
 	params[2::3] = 1 # standard sd
 	params[-1] = 1 # standard ts
@@ -75,11 +78,24 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--frb', default='data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy')
-	a.add_argument('--data', default='data/data.json')
+	a.add_argument('--input', default='data/221106.pkl')
+	a.add_argument('--output', default='data/data.json')
 	a.add_argument('--nrange', default='1,16')
 
 	args = a.parse_args()
 
-	ys = np.load(args.frb) 
-	fit(ys, *[int(n) for n in args.nrange.split(',')], args.data)
+
+	frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
+	ys_np = np.load(frb) 
+
+	name, xs, ys, timestep, rms = get_data(args.input)
+
+	ys_np = ys_np[3700:4300]
+	ys = ys[7700:8300]
+
+	# fit(ys, *[int(n) for n in args.nrange.split(',')], args.output)
+
+	import matplotlib.pyplot as plt
+	plt.plot(ys_np)
+	plt.plot(ys, color='red')
+	plt.show(block=True)

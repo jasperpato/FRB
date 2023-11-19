@@ -1,5 +1,13 @@
 from scipy.stats import exponnorm
 import numpy as np
+import pickle
+import globalpars
+
+
+def get_data(pkl_file):
+	with open(pkl_file, 'rb') as f:
+		data = pickle.load(f)
+	return data.frbname, data.tmsarr, data.it, data.tresms, data.irms
 
 
 def exgauss(x, *args):
@@ -66,3 +74,8 @@ def get_nums(lst):
 		try: nums.append(int(x))
 		except: pass
 	return nums
+
+
+if __name__ == '__main__':
+	name, xs, ys, timestep, rms = get_data('data/221106.pkl')
+	print(name, xs, ys, timestep, rms)
