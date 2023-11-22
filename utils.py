@@ -96,20 +96,25 @@ def plot_single_fit(xs, ys, params):
 	fig.legend()
 
 
-def print_summary(data, timestep):
+def print_summary(data):
 	opt_n = data['optimum']
 	rsquared = data['data'][opt_n]['adjusted_R^2']
 	cond = data['data'][opt_n]['condition']
-	opt_timescale = data['data'][opt_n]['params'][-1]
-	opt_burst_range = data['data'][opt_n]['burst_range']
-	opt_burst_width = (opt_burst_range[1] - opt_burst_range[0]) * timestep
+	opt_timescale = data['data'][opt_n]['timescale']
+	timescale_uncertainty = data['data'][opt_n]['timescale_uncertainty']
+	opt_burst_width = data['data'][opt_n]['burst_width']
 
 	print(f'Optimum N: {opt_n}')
 	print(f'Adjusted R^2: {rsquared}')
 	print(f'Condition number: {cond}')
 	print(f'Timescale: {opt_timescale}')
+	print(f'Timescale uncertainty: {timescale_uncertainty}')
 	print(f'Width: {opt_burst_width}')
 
 
-def default_output(input):
-	return f'data/{basename(input)[:-4]}_out.json'
+def get_frb(input):
+	'''
+	Exract the FRB name from an input file.
+	'''
+	name = basename(input)
+	return name[:name.index(".")]

@@ -56,13 +56,16 @@ def fit(xs, ys, timestep, nmin, nmax, data_file, visualise_for=None):
 		try:
 			print(f'N={n}')
 			p0, bounds = estimate_params(n, xs, ys, timestep, visualise=visualise_for == n)
-
 			popt, pcov = curve_fit(exgauss, xs, ys, p0, bounds=bounds)
-			d['initial_params'] = list(p0)
-			d['adjusted_R^2']   = adjusted_rsquared(xs, ys, popt)
-			d['burst_range']    = model_burst_range(xs, popt)
-			d['condition']			= np.linalg.cond(pcov)
-			d['params']         = list(popt)
+
+			d['initial_params'] 			 = list(p0)
+			d['adjusted_R^2']   			 = adjusted_rsquared(xs, ys, popt)
+			d['burst_range']    			 = model_burst_range(xs, popt)
+			d['burst_width']					 = (d['burst_range'][1] - d['burst_range'][0]) * timestep
+			d['condition']						 = np.linalg.cond(pcov)
+			d['params']         			 = list(popt)
+			d['timescale']						 = popt[-1]
+			d['timescale_uncertainty'] = np.diag(pcov)[-1]
 
 		except Exception as e:
 			if type(e) == KeyboardInterrupt: break
@@ -93,7 +96,8 @@ if __name__ == '__main__':
 	args = a.parse_args()
 
 	if not args.output:
-		args.output = default_output(args.input)
+		frb = get_frb(args.input)
+		args.output = f'data/{frb}_out.json'
 
 	name, xs, ys, timestep, rms = get_data(args.input)
 	low, high = raw_burst_range(ys)
@@ -103,7 +107,7 @@ if __name__ == '__main__':
 
 	data = fit(xs, ys, timestep, *[int(n) for n in args.nrange.split(',')], args.output, args.visualise_for)
 
-	print_summary(data, timestep)
+	print_summary(data)
 	
 	if args.visualise_for:
 		from plot_fit import plot_fitted

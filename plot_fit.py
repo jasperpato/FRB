@@ -48,14 +48,15 @@ def plot(xs, ys, data, rms, label=''):
 	fig.legend()
 
 
-def plot_fitted(xs, ys, rms, data, ns=None):
+def plot_fitted(xs, ys, rms, data, ns=None, show_initial=False):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
 	for n in data:
 		if not ns or int(n) in ns:	
 			d = data[n]
-			plot_single_fit(xs, ys, d['initial_params'])
+			if show_initial:
+				plot_single_fit(xs, ys, d['initial_params'])
 			plot(xs, ys, d, rms, f'fit N={n}')
 
 
@@ -65,12 +66,15 @@ if __name__ == '__main__':
 	a = ArgumentParser()
 	a.add_argument('--input', default='data/221106.pkl')
 	a.add_argument('--output', default=None)
+	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--print', action='store_true')
+	a.add_argument('--save', action='store_true')
 	a.add_argument('N', type=int, nargs='*')
 
 	args = a.parse_args()
 	if not args.output:
-		args.output = default_output(args.input)
+		frb = get_frb(args.input)
+		args.output = f'data/{frb}_out.json'
 
 	name, xs, ys, timestep, rms = get_data(args.input)
 
@@ -83,10 +87,10 @@ if __name__ == '__main__':
 		data = json.load(f)
 
 	if args.print:
-		print_summary(data, timestep)
+		print_summary(data)
 
 	if not args.N:
 		args.N.append(int(data['optimum']))
 
-	plot_fitted(xs, ys, rms, data['data'], args.N)
+	plot_fitted(xs, ys, rms, data['data'], args.N, args.show_initial)
 	plt.show(block=True)
