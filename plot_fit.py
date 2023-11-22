@@ -52,9 +52,10 @@ def plot_fitted(xs, ys, rms, data, ns=None, show_initial=False):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
-	for n in data:
+	low, high = data['range']
+	xs, ys = xs[low:high], ys[low:high]
+	for n, d in data['data'].items():
 		if not ns or int(n) in ns:	
-			d = data[n]
 			if show_initial:
 				plot_single_fit(xs, ys, d['initial_params'])
 			plot(xs, ys, d, rms, f'fit N={n}')
@@ -62,6 +63,7 @@ def plot_fitted(xs, ys, rms, data, ns=None, show_initial=False):
 
 if __name__ == '__main__':
 	from argparse import ArgumentParser
+	import os
 
 	a = ArgumentParser()
 	a.add_argument('--input', default='data/221106.pkl')
@@ -69,6 +71,7 @@ if __name__ == '__main__':
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--print', action='store_true')
 	a.add_argument('--save', action='store_true')
+	a.add_argument('--all', action='store_true')
 	a.add_argument('N', type=int, nargs='*')
 
 	args = a.parse_args()
@@ -77,11 +80,6 @@ if __name__ == '__main__':
 		args.output = f'data/{frb}_out.json'
 
 	name, xs, ys, timestep, rms = get_data(args.input)
-
-	low, high = raw_burst_range(ys)
-	
-	ys = ys[low:high]
-	xs = xs[low:high]
 
 	with open(args.output, 'r') as f:
 		data = json.load(f)
@@ -92,5 +90,5 @@ if __name__ == '__main__':
 	if not args.N:
 		args.N.append(int(data['optimum']))
 
-	plot_fitted(xs, ys, rms, data['data'], args.N, args.show_initial)
+	plot_fitted(xs, ys, rms, data, args.N, args.show_initial)
 	plt.show(block=True)

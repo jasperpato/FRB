@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 from utils import *
 from argparse import ArgumentParser
 from os.path import basename
-from scipy.ndimage import gaussian_filter
+from confsmooth import confsmooth
+
 
 a = ArgumentParser()
 a.add_argument('--input', default='frb_data/221106.pkl')
@@ -15,11 +16,9 @@ low, high = raw_burst_range(ys)
 ys = ys[low:high]
 xs = xs[low:high]
 
-print(rms, timestep)
-
-smooth = gaussian_filter(ys, 5)
-plt.plot(xs, smooth, color='blue')
+smooth = confsmooth(ys, rms)
 plt.plot(xs, ys, color='red')
+plt.plot(xs, smooth, color='blue')
 
 if args.save:
 	plt.savefig(f'figs/frbs/{basename(args.input)[:-4]}.png')

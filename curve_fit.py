@@ -6,23 +6,21 @@ Fits a sum of exgaussians to an FRB.
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.signal import find_peaks
-from scipy.ndimage import gaussian_filter
 from utils import *
 import json
 from globalpars import *
 import matplotlib.pyplot as plt
+from confsmooth import confsmooth
 
-
-def estimate_params(n, xs, ys, timestep, sigma=globalpars.PARAM_ESTIMATE_SIGMA, visualise=False):
+def estimate_params(n, xs, ys, timestep, visualise=False):
 	'''
 	Returns an array of 3*n + 1 params that are reasonable initial guesses to fit the data, and an array of bounds of the params.
 	Fits N standard exGaussians at the local maxima of the burst, vertically scaled to the burst height.
 	'''
-	smooth = gaussian_filter(ys, sigma)
-	peaks, _ = find_peaks(smooth)
+	peaks, _ = find_peaks(ys)
 	num_peaks = len(peaks)
 
-	peak_locs = sorted(peaks, key=lambda i: smooth[i], reverse=True)[:n if n < num_peaks else num_peaks]
+	peak_locs = sorted(peaks, key=lambda i: ys[i], reverse=True)[:n if n < num_peaks else num_peaks]
 	if n > num_peaks:
 		# evenly space remaining exGaussians
 		peak_locs = np.append(peak_locs, np.linspace(xs[0], xs[-1], n - num_peaks, endpoint=True, dtype=int))
@@ -49,34 +47,39 @@ def fit(xs, ys, timestep, nmin, nmax, data_file, visualise_for=None):
 	'''
 	Iterates through n values and fits the sum of n exgaussians to the ys data. Saves the results to file.
 	'''
-	data = {}
+	low, high = raw_burst_range(ys)
+	xs, ys = xs[low:high], ys[low:high]
+
+	smooth = confsmooth(ys, rms)
+	
+	data = {
+		'range': [low, high],
+		'data': {}
+	}
 	for n in range(nmin, nmax):
-		d = {}
-		data[str(n)] = d
 		try:
 			print(f'N={n}')
-			p0, bounds = estimate_params(n, xs, ys, timestep, visualise=visualise_for == n)
-			popt, pcov = curve_fit(exgauss, xs, ys, p0, bounds=bounds)
+			p0, bounds = estimate_params(n, xs, smooth, timestep, visualise=visualise_for == n)
+			popt, pcov = curve_fit(exgauss, xs, smooth, p0, bounds=bounds)
 
-			d['initial_params'] 			 = list(p0)
-			d['adjusted_R^2']   			 = adjusted_rsquared(xs, ys, popt)
-			d['burst_range']    			 = model_burst_range(xs, popt)
-			d['burst_width']					 = (d['burst_range'][1] - d['burst_range'][0]) * timestep
-			d['condition']						 = np.linalg.cond(pcov)
-			d['params']         			 = list(popt)
-			d['timescale']						 = popt[-1]
-			d['timescale_uncertainty'] = np.diag(pcov)[-1]
+			data['data'][str(n)] = {
+				'initial_params': 			 list(p0),
+				'adjusted_R^2':   			 adjusted_rsquared(xs, ys, popt),
+				'burst_range':    			 (b := model_burst_range(xs, popt)),
+				'burst_width':					 (b[1] - b[0]) * timestep,
+				'condition':						 np.linalg.cond(pcov),
+				'params':         			 list(popt),
+				'timescale':						 popt[-1],
+				'timescale_uncertainty': np.diag(pcov)[-1]
+			}
 
 		except Exception as e:
 			if type(e) == KeyboardInterrupt: break
 			else:
 				print(e)
-				del d
+				del data['data'][str(n)]
 
-	data = {
-		'data': data,
-		'optimum': max(data.keys(), key=lambda n: data[n]['adjusted_R^2'])
-	}
+	data['optimum'] = max(data['data'].keys(), key=lambda n: data['data'][n]['adjusted_R^2'])
 	
 	with open(data_file, 'w') as f:
 		json.dump(data, f)
@@ -90,7 +93,7 @@ if __name__ == '__main__':
 	a = ArgumentParser()
 	a.add_argument('--input', default='frb_data/221106.pkl')
 	a.add_argument('--output', default=None)
-	a.add_argument('--nrange', default='1,16')
+	a.add_argument('--nrange', default='1,21')
 	a.add_argument('--visualise-for', default=None, type=int)
 
 	args = a.parse_args()
@@ -100,10 +103,6 @@ if __name__ == '__main__':
 		args.output = f'data/{frb}_out.json'
 
 	name, xs, ys, timestep, rms = get_data(args.input)
-	low, high = raw_burst_range(ys)
-
-	ys = ys[low:high]
-	xs = xs[low:high]
 
 	data = fit(xs, ys, timestep, *[int(n) for n in args.nrange.split(',')], args.output, args.visualise_for)
 
