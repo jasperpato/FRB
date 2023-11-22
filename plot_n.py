@@ -29,7 +29,7 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--output', default='output/221106_out.json')
+	a.add_argument('--output', default='data/221106_out.json')
 	args = a.parse_args()
 
 	plot_n(args.output)

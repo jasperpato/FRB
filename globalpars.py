@@ -9,19 +9,22 @@ from collections import namedtuple
 
 #	-------------------		Curve fit constants	------------------------------------
 
-STD_EXGAUSS_PEAK = 0.3 # approx
+STD_EXGAUSS_PEAK = 0.3
 
 #	-------------------		Curve fit parameters	----------------------------------
 
 RAW_CENTRE_AREA	= 0.9
+RAW_SIGMA				= 5
 RAW_EXTRA_WIDTH	= 1
 
 MODEL_CENTRE_AREA = 0.99
 
+PARAM_ESTIMATE_SIGMA = 5
+
 DEFAULT_STDDEV 		= 1
 DEFAULT_TIMESCALE = 1
 
-MAX_A 				= 5
+MAX_A 				= 3
 MAX_STDDEV 		= 500
 MAX_TIMESCALE = 50
 
