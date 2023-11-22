@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from utils import *
 
 
-def plot_data(data_file, plot_timescale=False):
+def plot_n(data_file, plot_timescale=False):
 	'''
 	Plot adjusted R squared and scattering timescale against n.
 	'''
@@ -26,13 +26,11 @@ def plot_data(data_file, plot_timescale=False):
 
 
 if __name__ == '__main__':
-	import sys
-	
-	data_files = [x for x in sys.argv if '.json' in x]
-	if not data_files:
-		exit()
+	from argparse import ArgumentParser
 
-	for data_file in data_files:
-		plot_data(data_file)
+	a = ArgumentParser()
+	a.add_argument('--output', default='data/221106_out.json')
+	args = a.parse_args()
 
+	plot_n(args.output)
 	plt.show(block=True)

@@ -6,62 +6,69 @@ Fits a sum of exgaussians to an FRB.
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.signal import find_peaks
+from scipy.ndimage import gaussian_filter
 from utils import *
 import json
+from globalpars import *
+import matplotlib.pyplot as plt
 
 
-STD_EXGAUSS_PEAK = 0.3
-
-
-def estimate_params(n, xs, ys):
+def estimate_params(n, xs, ys, timestep, sigma=globalpars.PARAM_ESTIMATE_SIGMA, visualise=False):
 	'''
 	Returns an array of 3*n + 1 params that are reasonable initial guesses to fit the data, and an array of bounds of the params.
 	Fits N standard exGaussians at the local maxima of the burst, vertically scaled to the burst height.
 	'''
-	peaks, _ = find_peaks(ys)
-	peak_locs = sorted(peaks, key=lambda i: ys[i], reverse=True)[:n]
+	smooth = gaussian_filter(ys, sigma)
+	peaks, _ = find_peaks(smooth)
+	num_peaks = len(peaks)
+
+	peak_locs = sorted(peaks, key=lambda i: smooth[i], reverse=True)[:n if n < num_peaks else num_peaks]
+	if n > num_peaks:
+		# evenly space remaining exGaussians
+		peak_locs = np.append(peak_locs, np.linspace(xs[0], xs[-1], n - num_peaks, endpoint=True, dtype=int))
 
 	params = np.zeros(3*n+1)
-	params[:-1:3] = ys[peak_locs] / STD_EXGAUSS_PEAK # 0.3 is the approx height of the standard exGaussian
-	params[1::3] = xs[peak_locs] # centre exGaussian at the tallest peaks in ys
-	params[2::3] = 1 # standard sd
-	params[-1] = 1 # standard ts
+	params[:-1:3] = np.abs(ys[peak_locs] / STD_EXGAUSS_PEAK * timestep) # match height of ys
+	params[1::3]  = xs[peak_locs]                            						# centre exGaussian at the tallest peaks in ys
+	params[2::3]  = DEFAULT_STDDEV * timestep
+	params[-1]    = DEFAULT_TIMESCALE * timestep
+
+	if visualise:
+		plot_single_fit(xs, ys, params)
 
 	bounds = np.zeros((3*n+1, 2))
-	bounds[0::3] = [0, 3] # keep vertical scale positive
-	bounds[1::3] = [xs[0], xs[-1]] # mean within range
-	bounds[2::3] = [0, np.inf] # sd positive
-	bounds[-1] = [0, 50] # ts positive
+	bounds[0::3] = [0, MAX_A * timestep] 
+	bounds[1::3] = [xs[0], xs[-1]] 
+	bounds[2::3] = [0, MAX_STDDEV * timestep]
+	bounds[-1]   = [0, MAX_TIMESCALE * timestep] 
 
 	return params, bounds.T
 
 
-def fit(ys, nmin, nmax, data_file):
+def fit(xs, ys, timestep, nmin, nmax, data_file, visualise_for=None):
 	'''
 	Iterates through n values and fits the sum of n exgaussians to the ys data. Saves the results to file.
 	'''
-	xs = np.arange(len(ys)) - len(ys) / 2 # centre at 0 for better fitting
 	data = {}
 	for n in range(nmin, nmax):
 		d = {}
 		data[str(n)] = d
 		try:
 			print(f'N={n}')
-			p0, bounds = estimate_params(n, xs, ys)
+			p0, bounds = estimate_params(n, xs, ys, timestep, visualise=visualise_for == n)
 
-			try:
-				popt, _ = curve_fit(exgauss, xs, ys, p0, bounds=bounds)
-				d['adjusted_R^2'] = adjusted_rsquared(xs, ys, popt)
-				
-				popt[1:-1:3] += len(ys) / 2 # shift back the exGaussian means
-				d['burst_range'] = burst_range(popt, len(xs))
-				d['params'] = list(popt)
+			popt, pcov = curve_fit(exgauss, xs, ys, p0, bounds=bounds)
+			d['initial_params'] = list(p0)
+			d['adjusted_R^2']   = adjusted_rsquared(xs, ys, popt)
+			d['burst_range']    = model_burst_range(xs, popt)
+			d['condition']			= np.linalg.cond(pcov)
+			d['params']         = list(popt)
 
-			except RuntimeError as e:
+		except Exception as e:
+			if type(e) == KeyboardInterrupt: break
+			else:
 				print(e)
-
-		except KeyboardInterrupt:
-			break
+				del d
 
 	data = {
 		'data': data,
@@ -78,23 +85,28 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--input', default='data/221106.pkl')
-	a.add_argument('--output', default='data/data.json')
+	a.add_argument('--input', default='frb_data/221106.pkl')
+	a.add_argument('--output', default=None)
 	a.add_argument('--nrange', default='1,16')
+	a.add_argument('--visualise-for', default=None, type=int)
 
 	args = a.parse_args()
 
-	frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
-	ys_np = np.load(frb) 
+	if not args.output:
+		args.output = default_output(args.input)
 
 	name, xs, ys, timestep, rms = get_data(args.input)
+	low, high = raw_burst_range(ys)
 
-	ys_np = ys_np # [3700:4300]
-	ys = ys # [7700:8300]
+	ys = ys[low:high]
+	xs = xs[low:high]
 
-	# fit(ys_np, *[int(n) for n in args.nrange.split(',')], args.output)
+	data = fit(xs, ys, timestep, *[int(n) for n in args.nrange.split(',')], args.output, args.visualise_for)
 
-	import matplotlib.pyplot as plt
-	plt.plot(ys_np)
-	plt.plot(ys, color='red')
+	print_summary(data, timestep)
+	
+	if args.visualise_for:
+		from plot_fit import plot_fitted
+		plot_fitted(xs, ys, rms, args.output, [args.visualise_for])
+	
 	plt.show(block=True)

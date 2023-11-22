@@ -40,56 +40,53 @@ def plot(xs, ys, data, rms, label=''):
 		ax[1].plot(xs, [exgauss(x, *params[i:i+3], params[-1]) for x in xs], linestyle='dotted', color='blue')
 
 	# burst width
-	ax[1].axvline(low, color='green')
-	ax[1].axvline(high, color='green')
+	ax[1].axvline(xs[low], color='green')
+	ax[1].axvline(xs[high], color='green')
 	
 	ax[1].set_ylabel('Intensity')
 	plt.xlabel('Time (us)')
 	fig.legend()
 
 
-def plot_fitted(xs, ys, rms, data_file, ns=None):
+def plot_fitted(xs, ys, rms, data, ns=None):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
-	with open(data_file, 'r') as f:
-		data = json.load(f)['data']
-
 	for n in data:
 		if not ns or int(n) in ns:	
 			d = data[n]
+			plot_single_fit(xs, ys, d['initial_params'])
 			plot(xs, ys, d, rms, f'fit N={n}')
 
 
 if __name__ == '__main__':
-	import sys
+	from argparse import ArgumentParser
 
-	# frb = 'data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy'
-	frb = 'data/221106.pkl'
+	a = ArgumentParser()
+	a.add_argument('--input', default='data/221106.pkl')
+	a.add_argument('--output', default=None)
+	a.add_argument('--print', action='store_true')
+	a.add_argument('N', type=int, nargs='*')
+
+	args = a.parse_args()
+	if not args.output:
+		args.output = default_output(args.input)
+
+	name, xs, ys, timestep, rms = get_data(args.input)
+
+	low, high = raw_burst_range(ys)
 	
-	data = 'data/data.json'
-	
-	for x in sys.argv:
-		if '.json' in x:
-			data = x
-	
-	# range = 
-	ys_np = np.load('data/single_FRB_221106_I_ts_343.0_64_avg_1_200.npy')
-	xs_np = range(len(ys_np))
+	ys = ys[low:high]
+	xs = xs[low:high]
 
-	name, xs, ys, timestep, rms = get_data(frb)
-	# xs = range(len(ys))
+	with open(args.output, 'r') as f:
+		data = json.load(f)
 
-	rms = np.std(ys[:3700]) # manually get baseline rms
+	if args.print:
+		print_summary(data, timestep)
 
-	ys_np = ys_np[3700:4300] # manually extract burst for plotting
-	xs_np = range(len(ys_np))
-	
-	# xs_np = xs_np[3700:4300]
-	
-	ys = ys[7600:8500]
-	xs = range(len(ys))
+	if not args.N:
+		args.N.append(int(data['optimum']))
 
-	plot_fitted(xs_np, ys_np, rms, data, get_nums(sys.argv))
-
+	plot_fitted(xs, ys, rms, data['data'], args.N)
 	plt.show(block=True)
