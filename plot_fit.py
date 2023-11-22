@@ -12,7 +12,7 @@ def plot_residuals(xs, ys, params, rms, ax):
 	'''
 	Plot residuals / RMS as a scatter plot.
 	'''
-	residuals = ys - np.array([exgauss(x, *params) for x in xs])
+	residuals = ys - exgauss(xs, *params)
 	ax.scatter(xs, residuals / rms, color='black', alpha=0.3)
 	ax.set_ylabel('Residuals / RMS')
 
@@ -33,11 +33,11 @@ def plot(xs, ys, data, rms, label=''):
 	ax[1].plot(xs, ys, label='FRB', color='red')
 	
 	# fitted curve
-	ax[1].plot(xs, [exgauss(x, *params) for x in xs], label=label, color='black')
+	ax[1].plot(xs, exgauss(xs, *params), label=label, color='black')
 	
 	# components
 	for i in range(0, len(params)-1, 3):
-		ax[1].plot(xs, [exgauss(x, *params[i:i+3], params[-1]) for x in xs], linestyle='dotted', color='blue')
+		ax[1].plot(xs, exgauss(xs, *params[i:i+3], params[-1]), linestyle='dotted', color='blue')
 
 	# burst width
 	ax[1].axvline(xs[low], color='green')
@@ -52,9 +52,11 @@ def plot_fitted(xs, ys, rms, data, ns=None, show_initial=False):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
-	for n in data:
+	low, high = data['range']
+	xs, ys = xs[low:high], ys[low:high]
+
+	for n, d in data['data'].items():
 		if not ns or int(n) in ns:	
-			d = data[n]
 			if show_initial:
 				plot_single_fit(xs, ys, d['initial_params'])
 			plot(xs, ys, d, rms, f'fit N={n}')
@@ -74,14 +76,9 @@ if __name__ == '__main__':
 	args = a.parse_args()
 	if not args.output:
 		frb = get_frb(args.input)
-		args.output = f'data/{frb}_out.json'
+		args.output = f'output/{frb}_out.json'
 
 	name, xs, ys, timestep, rms = get_data(args.input)
-
-	low, high = raw_burst_range(ys)
-	
-	ys = ys[low:high]
-	xs = xs[low:high]
 
 	with open(args.output, 'r') as f:
 		data = json.load(f)
@@ -92,5 +89,5 @@ if __name__ == '__main__':
 	if not args.N:
 		args.N.append(int(data['optimum']))
 
-	plot_fitted(xs, ys, rms, data['data'], args.N, args.show_initial)
+	plot_fitted(xs, ys, rms, data, args.N, args.show_initial)
 	plt.show(block=True)

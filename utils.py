@@ -5,6 +5,7 @@ import pickle
 import globalpars
 import matplotlib.pyplot as plt
 from os.path import basename
+from confsmooth import confsmooth
 
 
 def get_data(pkl_file):
@@ -19,8 +20,8 @@ def exgauss(x, *args):
 	params listed in args, followed by a single param ts.
 	eg. exgauss(x, a0, u0, sd0, a1, u1, sd1, ts)
 	'''
-	exgauss = lambda x, a, u, sd, ts: a * exponnorm.pdf(x, ts / sd, loc=u, scale=sd)
-	return sum(exgauss(x, *args[i:i+3], args[-1]) for i in range(0, len(args)-1, 3))
+	_exgauss = lambda x, a, u, sd, ts: a * exponnorm.pdf(x, ts / sd, loc=u, scale=sd)
+	return sum(_exgauss(x, *args[i:i+3], args[-1]) for i in range(0, len(args)-1, 3))
 
 
 def integral(x, *args):
@@ -31,21 +32,21 @@ def integral(x, *args):
 	return sum(single_integral(x, *args[i:i+3], args[-1]) for i in range(0, len(args)-1, 3))
 
 
-def raw_burst_range(ys, area=globalpars.RAW_CENTRE_AREA, sigma=globalpars.RAW_SIGMA, extra_width=globalpars.RAW_EXTRA_WIDTH):
+def raw_burst_range(ys, area=globalpars.RAW_CENTRE_AREA, extra_width=globalpars.RAW_EXTRA_WIDTH):
 	'''
-	Attempt to extract the FRB range from the raw data. Smoothens the signal and
-	finds the middle range containing `area` proportion of total area under the curve.
+	Attempt to extract the FRB range from the raw data. Finds the middle range
+	containing `area` proportion of total area under the curve.
 
 	Finally extends the range by `extra_width` on each side.
 	'''
-	smooth = gaussian_filter(ys, sigma)
-	total_area = np.trapz(smooth)
+	# smooth = confsmooth(ys, rms)
+	total_area = np.trapz(ys)
 	low_area = (1 - area) / 2 * total_area
 	high_area = (1 + area) / 2 * total_area
 	i = 0
-	while np.trapz(smooth[:i]) < low_area: i += 1
+	while np.trapz(ys[:i]) < low_area: i += 1
 	low = i
-	while np.trapz(smooth[:i]) < high_area: i += 1
+	while np.trapz(ys[:i]) < high_area: i += 1
 	width = (i - low) * extra_width
 	return max(0, low - width), min(len(ys), i + width)
 
