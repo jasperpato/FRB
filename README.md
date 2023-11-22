@@ -1,0 +1,6 @@
+[](figs/fits/181112_20_N10.png)
+[](figs/fits/181112_50_N11.png)
+[](figs/fits/210912_20_N14.png)
+[](figs/fits/210912_50_N11.png)
+[](figs/fits/221106_N14.png)
+[](figs/fits/230708_100_N15.png)
