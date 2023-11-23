@@ -4,7 +4,6 @@
 #								AB, April 2023
 
 import numpy as np
-# import pickle as pkl
 from collections import namedtuple
 
 #	-------------------		Curve fit constants	------------------------------------

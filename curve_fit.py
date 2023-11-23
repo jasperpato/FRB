@@ -11,6 +11,7 @@ import json
 from globalpars import *
 import matplotlib.pyplot as plt
 from confsmooth import confsmooth
+from plot_fit import *
 
 def estimate_params(n, xs, ys, timestep, visualise=False):
 	'''
@@ -100,7 +101,7 @@ if __name__ == '__main__':
 
 	if not args.output:
 		frb = get_frb(args.input)
-		args.output = f'data/{frb}_out.json'
+		args.output = f'output/{frb}_out.json'
 
 	name, xs, ys, timestep, rms = get_data(args.input)
 
@@ -109,7 +110,6 @@ if __name__ == '__main__':
 	print_summary(data)
 	
 	if args.visualise_for:
-		from plot_fit import plot_fitted
 		plot_fitted(xs, ys, rms, args.output, [args.visualise_for])
 	
 	plt.show(block=True)

@@ -1,3 +1,7 @@
+'''
+Script to plot a single raw FRB signal.
+'''
+
 import matplotlib.pyplot as plt
 from utils import *
 from argparse import ArgumentParser

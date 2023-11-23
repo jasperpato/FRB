@@ -85,18 +85,10 @@ def adjusted_rsquared(xs, ys, params):
 	return 1 - (1 - rs) * (len(xs) - 1) / (len(xs) - len(params) - 1)
 
 
-def plot_single_fit(xs, ys, params):
-	'''
-	Plot fit on a separate figure.
-	'''
-	fig, ax = plt.subplots(1, 1)
-	ax.plot(xs, ys, color='red', label='Smoothed FRB')
-	ax.plot(xs, [exgauss(x, *params) for x in xs], color='black', label='Estimated params')
-	fig.suptitle('Estimated Parameters')
-	fig.legend()
-
-
 def print_summary(data):
+	'''
+	Prints the relevant stats from output data.
+	'''
 	opt_n = data['optimum']
 	rsquared = data['data'][opt_n]['adjusted_R^2']
 	cond = data['data'][opt_n]['condition']

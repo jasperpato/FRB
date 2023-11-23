@@ -8,6 +8,17 @@ from utils import *
 import json
 
 
+def plot_single_fit(xs, ys, params):
+	'''
+	Plot fit on a separate figure.
+	'''
+	fig, ax = plt.subplots(1, 1)
+	ax.plot(xs, ys, color='red', label='Smoothed FRB')
+	ax.plot(xs, [exgauss(x, *params) for x in xs], color='black', label='Estimated params')
+	fig.suptitle('Estimated Parameters')
+	fig.legend()
+
+
 def plot_residuals(xs, ys, params, rms, ax):
 	'''
 	Plot residuals / RMS as a scatter plot.
@@ -17,7 +28,7 @@ def plot_residuals(xs, ys, params, rms, ax):
 	ax.set_ylabel('Residuals / RMS')
 
 
-def plot(xs, ys, data, rms, label=''):
+def _plot(xs, ys, data, rms, label=''):
 	'''
 	Plot the sum of exgausses with given params. Also plot individual exgauss components and original FRB.
 	'''
@@ -58,12 +69,11 @@ def plot_fitted(xs, ys, rms, data, ns=None, show_initial=False):
 		if not ns or int(n) in ns:	
 			if show_initial:
 				plot_single_fit(xs, ys, d['initial_params'])
-			plot(xs, ys, d, rms, f'fit N={n}')
+			_plot(xs, ys, d, rms, f'fit N={n}')
 
 
 if __name__ == '__main__':
 	from argparse import ArgumentParser
-	import os
 
 	a = ArgumentParser()
 	a.add_argument('--input', default='data/221106.pkl')
@@ -77,7 +87,7 @@ if __name__ == '__main__':
 	args = a.parse_args()
 	if not args.output:
 		frb = get_frb(args.input)
-		args.output = f'data/{frb}_out.json'
+		args.output = f'output/{frb}_out.json'
 
 	name, xs, ys, timestep, rms = get_data(args.input)
 
