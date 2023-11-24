@@ -55,7 +55,7 @@ def _plot(xs, ys, data, rms, label=''):
 	ax[1].axvline(xs[high], color='green')
 	
 	ax[1].set_ylabel('Intensity')
-	plt.xlabel('Time (us)')
+	plt.xlabel('Time (ms)')
 	fig.legend()
 
 

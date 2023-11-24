@@ -68,6 +68,7 @@ def fit(xs, ys, timestep, nmin, nmax, data_file, visualise_for=None):
 				'adjusted_R^2':   			 adjusted_rsquared(xs, ys, popt),
 				'burst_range':    			 (b := model_burst_range(xs, popt)),
 				'burst_width':					 (b[1] - b[0]) * timestep,
+				'fluence':							 sum(ys[b]),
 				'condition':						 np.linalg.cond(pcov),
 				'params':         			 list(popt),
 				'timescale':						 popt[-1],
