@@ -12,6 +12,8 @@ from globalpars import *
 import matplotlib.pyplot as plt
 from confsmooth import confsmooth
 from plot_fit import *
+from calculate_data import calculate_data
+
 
 def estimate_params(n, xs, ys, timestep, visualise=False):
 	'''
@@ -44,7 +46,7 @@ def estimate_params(n, xs, ys, timestep, visualise=False):
 	return params, bounds.T
 
 
-def fit(xs, ys, timestep, nmin, nmax, data_file, visualise_for=None):
+def fit(xs, ys, timestep, rms, nmin, nmax, data_file, visualise_for=None):
 	'''
 	Iterates through n values and fits the sum of n exgaussians to the ys data. Saves the results to file.
 	'''
@@ -64,15 +66,17 @@ def fit(xs, ys, timestep, nmin, nmax, data_file, visualise_for=None):
 			popt, pcov = curve_fit(exgauss, xs, smooth, p0, bounds=bounds)
 
 			data['data'][str(n)] = {
-				'initial_params': 			 list(p0),
-				'adjusted_R^2':   			 adjusted_rsquared(xs, ys, popt),
-				'burst_range':    			 (b := model_burst_range(xs, popt)),
-				'burst_width':					 (b[1] - b[0]) * timestep,
-				'fluence':							 sum(ys[b]),
-				'condition':						 np.linalg.cond(pcov),
-				'params':         			 list(popt),
-				'timescale':						 popt[-1],
-				'timescale_uncertainty': np.diag(pcov)[-1]
+				'initial_params': list(p0),
+				'params': list(popt),
+				'condition': np.linalg.cond(pcov),
+				'uncertainties': list(np.diag(pcov))
+				# 'adjusted_R^2':   			 adjusted_rsquared(xs, ys, popt),
+				# 'burst_range':    			 (b := model_burst_range(xs, popt)),
+				# 'burst_width':					 (b[1] - b[0]) * timestep,
+				# 'fluence':							 sum(ys[b]),
+				# 'condition':						 np.linalg.cond(pcov),
+				# 'timescale':						 popt[-1],
+				# 'timescale_uncertainty': np.diag(pcov)[-1]
 			}
 
 		except Exception as e:
@@ -81,7 +85,7 @@ def fit(xs, ys, timestep, nmin, nmax, data_file, visualise_for=None):
 				print(e)
 				del data['data'][str(n)]
 
-	data['optimum'] = max(data['data'].keys(), key=lambda n: data['data'][n]['adjusted_R^2'])
+	# data['optimum'] = max(data['data'].keys(), key=lambda n: data['data'][n]['adjusted_R^2'])
 	
 	with open(data_file, 'w') as f:
 		json.dump(data, f)
@@ -104,13 +108,24 @@ if __name__ == '__main__':
 		frb = get_frb(args.input)
 		args.output = f'output/{frb}_out.json'
 
-	name, xs, ys, timestep, rms = get_data(args.input)
+	# name, xs, ys, timestep, rms = get_data(args.input)
+	frb_data = get_data(args.input)
 
-	data = fit(xs, ys, timestep, *[int(n) for n in args.nrange.split(',')], args.output, args.visualise_for)
+	data = fit(
+		frb_data.tmsarr,
+		frb_data.it,
+		frb_data.tresms,
+		frb_data.irms,
+		*[int(n) for n in args.nrange.split(',')],
+		args.output,
+		args.visualise_for
+	)
 
-	print_summary(data)
+	calculate_data(frb_data, args.output)
+
+	# print_summary(data)
 	
 	if args.visualise_for:
-		plot_fitted(xs, ys, rms, args.output, [args.visualise_for])
+		plot_fitted(data.tmsarr, data.it, data.irms, args.output, [args.visualise_for])
 	
 	plt.show(block=True)
