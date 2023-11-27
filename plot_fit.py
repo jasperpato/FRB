@@ -28,7 +28,7 @@ def plot_residuals(xs, ys, params, rms, ax):
 	ax.set_ylabel('Residuals / RMS')
 
 
-def _plot(xs, ys, data, rms, label=''):
+def _plot(xs, ys, data, rms, n, low_i, show=False):
 	'''
 	Plot the sum of exgausses with given params. Also plot individual exgauss components and original FRB.
 	'''
@@ -44,61 +44,61 @@ def _plot(xs, ys, data, rms, label=''):
 	ax[1].plot(xs, ys, label='FRB', color='red')
 	
 	# fitted curve
-	ax[1].plot(xs, [exgauss(x, *params) for x in xs], label=label, color='black')
+	ax[1].plot(xs, exgauss(xs, *params), label=f'N={n}', color='black')
 	
 	# components
 	for i in range(0, len(params)-1, 3):
-		ax[1].plot(xs, [exgauss(x, *params[i:i+3], params[-1]) for x in xs], linestyle='dotted', color='blue')
+		ax[1].plot(xs, exgauss(xs, *params[i:i+3], params[-1]), linestyle='dotted', color='blue')
 
 	# burst width
-	ax[1].axvline(xs[low], color='green')
-	ax[1].axvline(xs[high], color='green')
+	ax[1].axvline(xs[low - low_i], color='green')
+	ax[1].axvline(xs[high - low_i], color='green')
 	
 	ax[1].set_ylabel('Intensity')
 	plt.xlabel('Time (ms)')
 	fig.legend()
 
 
-def plot_fitted(xs, ys, rms, data, ns=None, show_initial=False):
+def plot_fitted(xs, ys, rms, data, n, show=False, show_initial=False):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
 	low, high = data['range']
 	xs, ys = xs[low:high], ys[low:high]
-	for n, d in data['data'].items():
-		if not ns or int(n) in ns:	
-			if show_initial:
-				plot_single_fit(xs, ys, d['initial_params'])
-			_plot(xs, ys, d, rms, f'fit N={n}')
+	
+	d = data['data'][n]
+
+	if show_initial:
+		plot_single_fit(xs, ys, d['initial_params'])
+
+	_plot(xs, ys, d, rms, n, low, show)
 
 
 if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--input', default='data/221106.pkl')
-	a.add_argument('--output', default=None)
 	a.add_argument('--show-initial', action='store_true')
-	a.add_argument('--print', action='store_true')
-	a.add_argument('--save', action='store_true')
-	a.add_argument('--all', action='store_true')
-	a.add_argument('N', type=int, nargs='*')
+	a.add_argument('--show', action='store_true')
+	a.add_argument('inputs', nargs='*', default=get_data_files('data'))
 
 	args = a.parse_args()
-	if not args.output:
-		frb = get_frb(args.input)
-		args.output = f'output/{frb}_out.json'
 
-	name, xs, ys, timestep, rms = get_data(args.input)
+	for input in args.inputs:
+		frb = get_frb(input)
+		output = f'output/{frb}_out.json'
 
-	with open(args.output, 'r') as f:
-		data = json.load(f)
+		frb_data = get_data(input)
 
-	if args.print:
-		print_summary(data)
+		with open(output, 'r') as f:
+			data = json.load(f)
 
-	if not args.N:
-		args.N.append(int(data['optimum']))
+		n = data['optimum']
 
-	plot_fitted(xs, ys, rms, data, args.N, args.show_initial)
-	plt.show(block=True)
+		plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, args.show_initial)
+		
+		if args.show or args.show_initial:
+			plt.show(block=True)
+
+		else:
+			plt.savefig(f'figs/fits/{frb}')

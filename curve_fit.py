@@ -70,13 +70,6 @@ def fit(xs, ys, timestep, rms, nmin, nmax, data_file, visualise_for=None):
 				'params': list(popt),
 				'condition': np.linalg.cond(pcov),
 				'uncertainties': list(np.diag(pcov))
-				# 'adjusted_R^2':   			 adjusted_rsquared(xs, ys, popt),
-				# 'burst_range':    			 (b := model_burst_range(xs, popt)),
-				# 'burst_width':					 (b[1] - b[0]) * timestep,
-				# 'fluence':							 sum(ys[b]),
-				# 'condition':						 np.linalg.cond(pcov),
-				# 'timescale':						 popt[-1],
-				# 'timescale_uncertainty': np.diag(pcov)[-1]
 			}
 
 		except Exception as e:
@@ -97,35 +90,35 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--input', default='frb_data/221106.pkl')
-	a.add_argument('--output', default=None)
-	a.add_argument('--nrange', default='1,21')
+	# a.add_argument('--input', default='data/221106.pkl')
+	a.add_argument('--suffix', default='_out.json')
+	a.add_argument('--nrange', default='1,19')
 	a.add_argument('--visualise-for', default=None, type=int)
+	a.add_argument('inputs', nargs='*', default=get_data_files('data'))
 
 	args = a.parse_args()
 
-	if not args.output:
-		frb = get_frb(args.input)
-		args.output = f'output/{frb}_out.json'
+	for input in args.inputs:
+		frb = get_frb(input)
+		output = f'output/{frb}{args.suffix}'
 
-	# name, xs, ys, timestep, rms = get_data(args.input)
-	frb_data = get_data(args.input)
+		print(frb)
 
-	data = fit(
-		frb_data.tmsarr,
-		frb_data.it,
-		frb_data.tresms,
-		frb_data.irms,
-		*[int(n) for n in args.nrange.split(',')],
-		args.output,
-		args.visualise_for
-	)
+		frb_data = get_data(input)
 
-	calculate_data(frb_data, args.output)
+		data = fit(
+			frb_data.tmsarr,
+			frb_data.it,
+			frb_data.tresms,
+			frb_data.irms,
+			*[int(n) for n in args.nrange.split(',')],
+			output,
+			args.visualise_for
+		)
 
-	# print_summary(data)
+		calculate_data(frb_data, output)
 	
-	if args.visualise_for:
-		plot_fitted(data.tmsarr, data.it, data.irms, args.output, [args.visualise_for])
+		if args.visualise_for:
+			plot_fitted(data.tmsarr, data.it, data.irms, output, [args.visualise_for])
 	
 	plt.show(block=True)
