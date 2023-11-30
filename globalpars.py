@@ -1,7 +1,7 @@
-#
-#	Global parameters for FRB HTR polarization analysis
-#
-#								AB, April 2023
+'''
+Global parameters for FRB HTR polarization analysis
+AB, April 2023
+'''
 
 import numpy as np
 from collections import namedtuple

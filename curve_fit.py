@@ -2,7 +2,6 @@
 Fits a sum of exgaussians to an FRB.
 '''
 
-
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.signal import find_peaks
@@ -69,7 +68,7 @@ def fit(xs, ys, timestep, rms, nmin, nmax, data_file, visualise_for=None):
 				'initial_params': list(p0),
 				'params': list(popt),
 				'condition': np.linalg.cond(pcov),
-				'uncertainties': list(np.diag(pcov))
+				'uncertainties': list(np.sqrt(np.diag(pcov)))
 			}
 
 		except Exception as e:
@@ -78,8 +77,6 @@ def fit(xs, ys, timestep, rms, nmin, nmax, data_file, visualise_for=None):
 				print(e)
 				del data['data'][str(n)]
 
-	# data['optimum'] = max(data['data'].keys(), key=lambda n: data['data'][n]['adjusted_R^2'])
-	
 	with open(data_file, 'w') as f:
 		json.dump(data, f)
 
@@ -90,7 +87,6 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	# a.add_argument('--input', default='data/221106.pkl')
 	a.add_argument('--suffix', default='_out.json')
 	a.add_argument('--nrange', default='1,19')
 	a.add_argument('--visualise-for', default=None, type=int)

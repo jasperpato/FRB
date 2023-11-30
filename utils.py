@@ -4,7 +4,6 @@ import numpy as np
 import pickle
 import globalpars
 import os
-# from os.path import basename
 
 
 def get_data(pkl_file):
@@ -57,3 +56,31 @@ def get_data_files(dir):
 	Get all input files from a directory.
 	'''
 	return [f'{dir}/{f}' for f in os.listdir(dir)]
+
+
+def to_degrees(hours, h_mins, h_secs, error):
+	'''
+	Convert an angle into degrees.
+	'''
+	return (
+		15 * hours + 15 * h_mins / 60 + 15 * h_secs / 3600,
+		15 * error / 3600
+	)
+
+import astropy.units as u
+from astropy.coordinates import SkyCoord, FK5, Galactic
+
+def to_galactic(ra, dec):
+	'''
+	Convert from FK5 coords to Galactic coords.
+	'''
+	sc = SkyCoord(ra=ra, dec=dec, unit='deg', frame=FK5, equinox='J2000')
+	sc = sc.transform_to(Galactic())
+	return sc.l.deg, sc.b.deg
+
+
+if __name__ == '__main__':
+	import sys
+	# print(to_degrees(*[int(a) for a in sys.argv[1:]]))
+
+	print(to_galactic(82, 33))

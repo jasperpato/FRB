@@ -1,5 +1,5 @@
 '''
-Visualises the collected data.
+Visualises the curve fitted FRBs.
 '''
 
 import numpy as np
@@ -10,7 +10,8 @@ import json
 
 def plot_single_fit(xs, ys, params):
 	'''
-	Plot fit on a separate figure.
+	Plot fit model on a separate figure. Used for displaying the initial params
+	against the raw FRB.
 	'''
 	fig, ax = plt.subplots(1, 1)
 	ax.plot(xs, ys, color='red', label='Smoothed FRB')
@@ -28,7 +29,7 @@ def plot_residuals(xs, ys, params, rms, ax):
 	ax.set_ylabel('Residuals / RMS')
 
 
-def _plot(xs, ys, data, rms, n, low_i, show=False):
+def _plot(xs, ys, data, rms, n, low_i):
 	'''
 	Plot the sum of exgausses with given params. Also plot individual exgauss components and original FRB.
 	'''
@@ -59,7 +60,7 @@ def _plot(xs, ys, data, rms, n, low_i, show=False):
 	fig.legend()
 
 
-def plot_fitted(xs, ys, rms, data, n, show=False, show_initial=False):
+def plot_fitted(xs, ys, rms, data, n, show_initial=False):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
@@ -71,7 +72,25 @@ def plot_fitted(xs, ys, rms, data, n, show=False, show_initial=False):
 	if show_initial:
 		plot_single_fit(xs, ys, d['initial_params'])
 
-	_plot(xs, ys, d, rms, n, low, show)
+	_plot(xs, ys, d, rms, n, low)
+
+
+def print_summary(frb, n, data):
+	'''
+	Print the relevant FRB properties from the data dictionary.
+	'''
+	print(f'{frb} N={n}')
+	keys = (
+		'adjusted_R^2',
+		'burst_width',
+		'timescale',
+		'fluence',
+		'linear polarisation fraction',
+		'total polarisation fraction',
+	)
+	for key in keys:
+		print(f'{key:{max(len(k) for k in keys)}} {np.round(data[key], 4)}')
+	print()
 
 
 if __name__ == '__main__':
@@ -80,6 +99,7 @@ if __name__ == '__main__':
 	a = ArgumentParser()
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--show', action='store_true')
+	a.add_argument('--print', action='store_true')
 	a.add_argument('inputs', nargs='*', default=get_data_files('data'))
 
 	args = a.parse_args()
@@ -95,10 +115,13 @@ if __name__ == '__main__':
 
 		n = data['optimum']
 
-		plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, args.show_initial)
-		
-		if args.show or args.show_initial:
-			plt.show(block=True)
-
+		if args.print:
+			print_summary(frb, n, data['data'][n])
 		else:
-			plt.savefig(f'figs/fits/{frb}')
+			plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, args.show_initial)
+			
+			if args.show or args.show_initial:
+				plt.show(block=True)
+
+			else:
+				plt.savefig(f'figs/fits/{frb}')

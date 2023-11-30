@@ -1,3 +1,7 @@
+'''
+Calculate FRB properties for a curve fitted FRB and add properties to the JSON data file.
+'''
+
 from utils import *
 import json
 import numpy as np
@@ -13,22 +17,36 @@ def integral(xs, *args):
 	return np.sum([single_integral(xs, *args[i:i+3], args[-1]) for i in range(0, len(args)-1, 3)], axis=0)
 
 
-def model_burst_range(xs, params, area=globalpars.MODEL_CENTRE_AREA):
+def ppf(xs, params, area_prop, low=None, high=None, area=None):
 	'''
-	Get the burst range of a fitted curve by iterating through xs and finding the
-	central range containing `width` proportion of the total area under the curve.
+	Implements the ppf of the sum of exGaussians as a binary search.
 	'''
-	total_area = integral(xs[-1], *params)
-	low_area = (1 - area) / 2 * total_area
-	high_area = (1 + area) / 2 * total_area
 
-	i = 0
-	while integral(xs[i], *params) < low_area: i += 1
-	low = i
-	i = len(xs) - 1
-	while integral(xs[i], *params) > high_area: i -= 1
+	if not area:
+		total_area = integral(xs[-1], *params)
+		area = total_area * area_prop
 
-	return low, i
+	if low is None: low = 0
+	if high is None: high = len(xs) - 1
+
+	mid = (high + low) // 2
+
+	if mid == 0 or ((a := integral(xs[mid], *params)) < area and integral(xs[mid + 1], *params) >= area):
+		return mid
+
+	if a < area:
+		return ppf(xs, params, area_prop, mid + 1, high, area)
+	
+	else:
+		return ppf(xs, params, area_prop, low, mid - 1, area)
+
+
+def model_burst_range(xs, params, area_prop=globalpars.MODEL_CENTRE_AREA):
+	'''
+	Get the burst range of a fitted curve by finding the central range containing
+	`area_prop` proportion of the total area under the curve.
+	'''
+	return ppf(xs, params, (1 - area_prop) / 2), ppf(xs, params, (1 + area_prop) / 2)
 
 
 def rsquared(xs, ys, params):
@@ -51,8 +69,7 @@ def adjusted_rsquared(xs, ys, params):
 
 def replace_nan(arr):
 	'''
-	Replace NaN with mean of neighbours. 'Pads' the array with leading and trailing
-	zeroes.
+	Replace NaN with mean of neighbours. Assumes leading and trailing zero values.
 	'''
 	b_val = 0
 	b_i = -1
@@ -73,7 +90,7 @@ def replace_nan(arr):
 
 def polarisation_fluence(arr, error):
 	'''
-	Returns linear polarisation fluence and associated error.
+	Returns polarisation fluence and associated error.
 	'''
 	return [
 		np.sum(arr),
@@ -93,8 +110,11 @@ def polarisation_fraction(pol, error, fluence, fluence_error):
 
 def calculate_data(frb_data, data_file):
 	'''
-	Calculate the relevant data for a curve fitted FRB.
+	Calculate FRB properties for a curve fitted FRB. Add the properties to the
+	JSON file.
 	'''
+	print(f'Calculating data for {frb_data.frbname}')
+
 	with open(data_file, 'r') as f:
 		data = json.load(f)
 
@@ -104,6 +124,10 @@ def calculate_data(frb_data, data_file):
 	it = frb_data.it
 	timestep = frb_data.tresms
 
+	lt = replace_nan(frb_data.lt)
+	elts = replace_nan(frb_data.elts)
+	pt = replace_nan(frb_data.pt)
+	epts = replace_nan(frb_data.epts)
 
 	for n, d in data['data'].items():
 		d['adjusted_R^2'] = adjusted_rsquared(xs[low:high], it[low:high], d['params'])
@@ -113,19 +137,19 @@ def calculate_data(frb_data, data_file):
 
 		# use model bounds
 		it_bounded = it[b[0]:b[1]]
-		lt = replace_nan(frb_data.lt[b[0]:b[1]])
-		pt = replace_nan(frb_data.pt[b[0]:b[1]])
-		elts = replace_nan(frb_data.elts[b[0]:b[1]])
-		epts = replace_nan(frb_data.epts[b[0]:b[1]])
+		lt_bounded = lt[b[0]:b[1]]
+		pt_bounded = pt[b[0]:b[1]]
+		elts_bounded = elts[b[0]:b[1]]
+		epts_bounded = epts[b[0]:b[1]]
 		
 		d['fluence'] = (f := [np.sum(it_bounded), frb_data.irms * len(xs) ** 0.5]) # fluence and associated error
-		d['linear polarisation fluence'] = (l := polarisation_fluence(lt, elts))
-		d['total polarisation fluence'] = (p := polarisation_fluence(pt, epts))
+		d['linear polarisation fluence'] = (l := polarisation_fluence(lt_bounded, elts_bounded))
+		d['total polarisation fluence'] = (p := polarisation_fluence(pt_bounded, epts_bounded))
 		
 		d['linear polarisation fraction'] = polarisation_fraction(*l, *f)
 		d['total polarisation fraction'] = polarisation_fraction(*p, *f)
 		
-		d['timescale'] = d['params'][-1]
+		d['timescale'] = [d['params'][-1], d['uncertainties'][-1]] # timescale and timescale error
 		
 		data['data'][n] = dict(sorted(d.items()))
 
