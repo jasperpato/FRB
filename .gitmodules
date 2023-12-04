@@ -1,0 +1,12 @@
+[submodule "FRB"]
+	path = FRB
+	url = https://github.com/FRBs/FRB
+[submodule "zdm"]
+	path = zdm
+	url = https://github.com/FRBs/zdm
+[submodule "astropath"]
+	path = astropath
+	url = https://github.com/FRBs/astropath
+[submodule "ne2001"]
+	path = ne2001
+	url = https://github.com/FRBs/ne2001
