@@ -6,6 +6,7 @@ import globalpars
 import os
 from astropy.coordinates import SkyCoord, FK5, Galactic
 from pyne2001 import get_galactic_dm
+from zdm import parameters, pcosmic
 
 
 def get_data(pkl_file):
@@ -93,16 +94,18 @@ def to_galactic(ra, dec):
 
 
 if __name__ == '__main__':
-	import sys
-	# print(to_degrees(*[int(a) for a in sys.argv[1:]]))
-
-	# print(to_galactic('05h31m58.698s', '+33d08m52.6s'))
-
-	# print(to_decimal('05h31m58.698s', '+33d08m52.6s'))
-
+	
+	# DM_MW
+	
 	dm = get_galactic_dm(*to_galactic('05h31m58.698s', '+33d08m52.6s'))
 	print(dm)
 
 	dm = get_galactic_dm(*to_galactic(*to_decimal('05h31m58.698s', '+33d08m52.6s')))
+	print(dm)
+
+	# DM_IGM
+
+	state = parameters.State()
+	dm = pcosmic.get_mean_DM(np.array([0.1927]), state)
 	print(dm)
 	
