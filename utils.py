@@ -4,9 +4,6 @@ import numpy as np
 import pickle
 import globalpars
 import os
-from astropy.coordinates import SkyCoord, FK5, Galactic
-from pyne2001 import get_galactic_dm
-from zdm import parameters, pcosmic
 
 
 def get_data(pkl_file):
@@ -59,53 +56,4 @@ def get_data_files(dir):
 	Get all input files from a directory.
 	'''
 	return [f'{dir}/{f}' for f in os.listdir(dir)]
-
-
-def split_angle(angle):
-	'''
-	Split angle string into components.
-	'''
-	angle = angle.replace('h', 'd')
-	first, rest = angle.split('d')
-	second, third = rest.split('m')
-	if third[-1] == 's': third = third[:-1]
-	return float(first), float(second), float(third)
-
-
-def to_decimal(ra, dec):
-	'''
-	Convert RA and DEC from hours, minutes, seconds into decimal degrees.
-	'''
-	ra_hours, ra_mins, ra_secs = split_angle(ra)
-	dec_deg, dec_mins, dec_secs = split_angle(dec)
-	return (
-		15 * ra_hours + 15 * ra_mins / 60 + 15 * ra_secs / 3600,
-		dec_deg + dec_mins / 60 + dec_secs / 3600
-	)
-
-
-def to_galactic(ra, dec):
-	'''
-	Convert from FK5 coords to Galactic coords.
-	'''
-	sc = SkyCoord(ra=ra, dec=dec, unit='deg', frame=FK5, equinox='J2000')
-	sc = sc.transform_to(Galactic())
-	return sc.l.deg, sc.b.deg
-
-
-if __name__ == '__main__':
-	
-	# DM_MW
-	
-	dm = get_galactic_dm(*to_galactic('05h31m58.698s', '+33d08m52.6s'))
-	print(dm)
-
-	dm = get_galactic_dm(*to_galactic(*to_decimal('05h31m58.698s', '+33d08m52.6s')))
-	print(dm)
-
-	# DM_IGM
-
-	state = parameters.State()
-	dm = pcosmic.get_mean_DM(np.array([0.1927]), state)
-	print(dm)
 	

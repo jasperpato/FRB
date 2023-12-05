@@ -6,6 +6,10 @@ AB, April 2023
 import numpy as np
 from collections import namedtuple
 
+# ------------------------------------------------------------------------------
+
+MW_DIAMETER = 30e3 # pc
+
 #	-------------------		Curve fit constants	------------------------------------
 
 STD_EXGAUSS_PEAK = 0.3
