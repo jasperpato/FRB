@@ -45,7 +45,7 @@ def estimate_params(n, xs, ys, timestep, visualise=False):
 	return params, bounds.T
 
 
-def fit(xs, ys, timestep, rms, nmin, nmax, data_file, visualise_for=None):
+def fit(xs, ys, timestep, rms, nmin, nmax, data_file, frbname, visualise_for=None):
 	'''
 	Iterates through n values and fits the sum of n exgaussians to the ys data. Saves the results to file.
 	'''
@@ -55,6 +55,7 @@ def fit(xs, ys, timestep, rms, nmin, nmax, data_file, visualise_for=None):
 	smooth = confsmooth(ys, rms)
 	
 	data = {
+		'FRB': frbname,
 		'range': [low, high],
 		'data': {}
 	}
@@ -65,10 +66,10 @@ def fit(xs, ys, timestep, rms, nmin, nmax, data_file, visualise_for=None):
 			popt, pcov = curve_fit(exgauss, xs, smooth, p0, bounds=bounds)
 
 			data['data'][str(n)] = {
-				'initial_params': list(p0),
-				'params': list(popt),
-				'condition': np.linalg.cond(pcov),
-				'uncertainties': list(np.sqrt(np.diag(pcov)))
+				'Initial params': list(p0),
+				'Params': list(popt),
+				'Condition': np.linalg.cond(pcov),
+				'Uncertainties': list(np.sqrt(np.diag(pcov)))
 			}
 
 		except Exception as e:
@@ -87,16 +88,16 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--suffix', default='_out.json')
+	a.add_argument('--suffix', default='_out')
 	a.add_argument('--nrange', default='1,19')
 	a.add_argument('--visualise-for', default=None, type=int)
-	a.add_argument('inputs', nargs='*', default=get_data_files('data'))
+	a.add_argument('inputs', nargs='*', default=get_files('data'))
 
 	args = a.parse_args()
 
 	for input in args.inputs:
 		frb = get_frb(input)
-		output = f'output/{frb}{args.suffix}'
+		output = f'output/{frb}{args.suffix}.json'
 
 		print(frb)
 
@@ -109,6 +110,7 @@ if __name__ == '__main__':
 			frb_data.irms,
 			*[int(n) for n in args.nrange.split(',')],
 			output,
+			frb_data.frbname,
 			args.visualise_for
 		)
 

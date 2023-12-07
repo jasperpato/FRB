@@ -36,8 +36,8 @@ def _plot(xs, ys, data, rms, n, low_i):
 	fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [1, 2]})
 	fig.subplots_adjust(hspace=0)
 
-	params = data['params']
-	low, high = data['burst_range']
+	params = data['Params']
+	low, high = data['Burst range']
 
 	plot_residuals(xs, ys, params, rms, ax[0])
 	
@@ -70,7 +70,7 @@ def plot_fitted(xs, ys, rms, data, n, show_initial=False):
 	d = data['data'][n]
 
 	if show_initial:
-		plot_single_fit(xs, ys, d['initial_params'])
+		plot_single_fit(xs, ys, d['Initial params'])
 
 	_plot(xs, ys, d, rms, n, low)
 
@@ -81,12 +81,12 @@ def print_summary(frb, n, data):
 	'''
 	print(f'{frb} N={n}')
 	keys = (
-		'adjusted_R^2',
-		'burst_width',
-		'timescale',
-		'fluence',
-		'linear polarisation fraction',
-		'total polarisation fraction',
+		'Adjusted R^2',
+		'Burst width (ms)',
+		'Scattering timescale (ms)',
+		'Fluence',
+		'Linear polarisation fraction',
+		'Total polarisation fraction',
 	)
 	for key in keys:
 		print(f'{key:{max(len(k) for k in keys)}} {np.round(data[key], 4)}')
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--show', action='store_true')
 	a.add_argument('--print', action='store_true')
-	a.add_argument('inputs', nargs='*', default=get_data_files('data'))
+	a.add_argument('inputs', nargs='*', default=get_files('data'))
 
 	args = a.parse_args()
 

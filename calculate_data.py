@@ -130,10 +130,10 @@ def calculate_data(frb_data, data_file):
 	epts = replace_nan(frb_data.epts)
 
 	for n, d in data['data'].items():
-		d['adjusted_R^2'] = adjusted_rsquared(xs[low:high], it[low:high], d['params'])
+		d['Adjusted R^2'] = adjusted_rsquared(xs[low:high], it[low:high], d['Params'])
 		
-		d['burst_range'] = (b := model_burst_range(xs, d['params']))
-		d['burst_width'] = (b[1] - b[0]) * timestep
+		d['Burst range'] = (b := model_burst_range(xs, d['Params']))
+		d['Burst width (ms)'] = (b[1] - b[0]) * timestep
 
 		# use model bounds
 		it_bounded = it[b[0]:b[1]]
@@ -142,18 +142,18 @@ def calculate_data(frb_data, data_file):
 		elts_bounded = elts[b[0]:b[1]]
 		epts_bounded = epts[b[0]:b[1]]
 		
-		d['fluence'] = (f := [np.sum(it_bounded), frb_data.irms * len(xs) ** 0.5]) # fluence and associated error
-		d['linear polarisation fluence'] = (l := polarisation_fluence(lt_bounded, elts_bounded))
-		d['total polarisation fluence'] = (p := polarisation_fluence(pt_bounded, epts_bounded))
+		d['Fluence'] = (f := [np.sum(it_bounded), frb_data.irms * len(xs) ** 0.5]) # fluence and associated error
+		d['Linear polarisation fluence'] = (l := polarisation_fluence(lt_bounded, elts_bounded))
+		d['Total polarisation fluence'] = (p := polarisation_fluence(pt_bounded, epts_bounded))
 		
-		d['linear polarisation fraction'] = polarisation_fraction(*l, *f)
-		d['total polarisation fraction'] = polarisation_fraction(*p, *f)
+		d['Linear polarisation fraction'] = polarisation_fraction(*l, *f)
+		d['Total polarisation fraction'] = polarisation_fraction(*p, *f)
 		
-		d['timescale'] = [d['params'][-1], d['uncertainties'][-1]] # timescale and timescale error
+		d['Scattering timescale (ms)'] = [d['Params'][-1], d['Uncertainties'][-1]] # timescale and timescale error
 		
 		data['data'][n] = dict(sorted(d.items()))
 
-	data['optimum'] = max(data['data'].keys(), key=lambda n: data['data'][n]['adjusted_R^2'])
+	data['optimum'] = max(data['data'].keys(), key=lambda n: data['data'][n]['Adjusted R^2'])
 	
 	with open(data_file, 'w') as f:
 		json.dump(data, f)

@@ -51,7 +51,7 @@ def get_frb(input):
 	return name[:name.index(".")]
 
 
-def get_data_files(dir):
+def get_files(dir):
 	'''
 	Get all input files from a directory.
 	'''
