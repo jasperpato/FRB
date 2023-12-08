@@ -75,31 +75,12 @@ def plot_fitted(xs, ys, rms, data, n, show_initial=False):
 	_plot(xs, ys, d, rms, n, low)
 
 
-def print_summary(frb, n, data):
-	'''
-	Print the relevant FRB properties from the data dictionary.
-	'''
-	print(f'{frb} N={n}')
-	keys = (
-		'Adjusted R^2',
-		'Burst width (ms)',
-		'Scattering timescale (ms)',
-		'Fluence',
-		'Linear polarisation fraction',
-		'Total polarisation fraction',
-	)
-	for key in keys:
-		print(f'{key:{max(len(k) for k in keys)}} {np.round(data[key], 4)}')
-	print()
-
-
 if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--show', action='store_true')
-	a.add_argument('--print', action='store_true')
 	a.add_argument('inputs', nargs='*', default=get_files('data'))
 
 	args = a.parse_args()
@@ -115,13 +96,10 @@ if __name__ == '__main__':
 
 		n = data['optimum']
 
-		if args.print:
-			print_summary(frb, n, data['data'][n])
-		else:
-			plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, args.show_initial)
+		plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, args.show_initial)
 			
-			if args.show or args.show_initial:
-				plt.show(block=True)
-
-			else:
-				plt.savefig(f'figs/fits/{frb}')
+		if not (args.show or args.show_initial):
+			plt.savefig(f'figs/fits/{frb}')
+	
+	if args.show or args.show_initial:
+		plt.show(block=True)

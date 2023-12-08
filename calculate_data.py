@@ -21,7 +21,6 @@ def ppf(xs, params, area_prop, low=None, high=None, area=None):
 	'''
 	Implements the ppf of the sum of exGaussians as a binary search.
 	'''
-
 	if not area:
 		total_area = integral(xs[-1], *params)
 		area = total_area * area_prop
@@ -174,5 +173,3 @@ if __name__ == '__main__':
 
 	frb_data = get_data(args.input)
 	calculate_data(frb_data, args.output)
-
-	# print(replace_nan(np.array([np.nan,1,np.nan,2,3,np.nan,np.nan,5,np.nan,np.nan])))

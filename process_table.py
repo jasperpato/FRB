@@ -1,3 +1,7 @@
+'''
+Complete host properties and FRB burst properties in CSV file.
+'''
+
 from astropy.coordinates import SkyCoord, FK5, Galactic
 from pyne2001 import get_galactic_dm
 from zdm import parameters, pcosmic

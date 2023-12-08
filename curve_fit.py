@@ -1,5 +1,5 @@
 '''
-Fits a sum of exgaussians to an FRB.
+Fits a sum of exgaussians to an FRB, stores the fit information in a JSON file.
 '''
 
 import numpy as np
