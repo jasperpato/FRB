@@ -18,11 +18,9 @@ def split_angle(angle):
 	'''
 	Split angle string into components.
 	'''
-	angle = angle.replace('h', 'd')
-	first, rest = angle.split('d')
-	second, third = rest.split('m')
-	if third[-1] == 's': third = third[:-1]
-	return float(first), float(second), float(third)
+	x0, x1, x2 = [float(x) for x in angle.split(':')]
+	if angle[0] == '-': x1, x2 = -x1, -x2
+	return x0, x1, x2
 
 
 def to_decimal(ra, dec):
@@ -31,6 +29,7 @@ def to_decimal(ra, dec):
 	'''
 	ra_hours, ra_mins, ra_secs = split_angle(ra)
 	dec_deg, dec_mins, dec_secs = split_angle(dec)
+	
 	return (
 		15 * ra_hours + 15 * ra_mins / 60 + 15 * ra_secs / 3600,
 		dec_deg + dec_mins / 60 + dec_secs / 3600
@@ -74,18 +73,11 @@ def complete_row(row, state):
 	'''
 	Complete the missing columns of a row.
 	'''
-	# transform ra, dec to decimal if necessary
-	in_minutes = lambda data: type(data) == str and 'm' in data
+	ra, dec = 'RA', 'DEC'
+	glon, glat = 'Galactic lon', 'Galactic lat'
 
-	ra, dec = 'Host RA (deg)', 'Host DEC (deg)'
-	glon, glat = 'Galactic longitude', 'Galactic latitude'
-
-	if in_minutes(row[ra]) and in_minutes(row[dec]):
-		row[ra], row[dec] = to_decimal(row[ra], row[dec])
-
-	# transform ra, dec to galactic coords
-	if not np.isnan([row[ra], row[dec]]).any():
-		row[glon], row[glat] = to_galactic(row[ra], row[dec])
+	r, d = to_decimal(row[ra], row[dec])
+	row[glon], row[glat] = to_galactic(r, d)
 
 	if not np.isnan([row[glon], row[glat]]).any():
 		# DM NE2001 and error
@@ -93,18 +85,14 @@ def complete_row(row, state):
 		row['DM_MW error (NE2001)'] = get_error(row[glon], row[glat], method='NE2001')
 
 		# RM_MW and error
-		coord = SkyCoord(ra=row[ra], dec=row[dec], unit='deg', frame=FK5, equinox='J2000')
+		coord = SkyCoord(ra=r, dec=d, unit='deg', frame=FK5, equinox='J2000')
 		rm, rm_error = galactic_rm(coord)
 		row['RM_MW (rad/m^2)'], row['RM_MW error'] = rm.value, rm_error.value
 
 	# DM IGM and error
-	if not np.isnan(row['Host z']):
-		row['DM_IGM'] = pcosmic.get_mean_DM(np.array([row['Host z']]), state)[0]
-		row['DM_IGM error'] = get_igm_error(row['Host z'], state)
-
-	# log stellar mass
-	row['Log host mass (M_sun)'] = np.log10(row['Host mass (10^9 M_sun)'] * 10e9)
-	row['Log host mass error'] = row['Host mass error'] / np.log(10) / row['Host mass (10^9 M_sun)'] / 10e9
+	if not np.isnan(row['z']):
+		row['DM_IGM'] = pcosmic.get_mean_DM(np.array([row['z']]), state)[0]
+		row['DM_IGM error'] = get_igm_error(row['z'], state)
 
 	return row
 
@@ -133,7 +121,7 @@ def complete_burst_properties(frb, data, output, frb_data):
 	data.at[i, 'DM_obs (pc cm^-3)'] = frb_data.dm
 
 	# YMW16 (requires observed frequency)
-	glon, glat = data.at[i, 'Galactic longitude'], data.at[i, 'Galactic latitude']
+	glon, glat = data.at[i, 'Galactic lon'], data.at[i, 'Galactic lat']
 	dm, sc = dist_to_dm(glon, glat, globalpars.MW_DIAMETER, nu=freq)
 	
 	data.at[i, 'DM_MW (YMW16)'], data.at[i, 'Tau_SC (ms) (YMW16)'] = dm.value, sc.value * 1e3 # ms  
@@ -157,10 +145,9 @@ def update_table(file):
 	# complete missing host properties
 	data = pd.read_csv(file, index_col=0)
 	data = data.apply(complete_row, axis=1, state=igm_state)
-	data['FRB'] = data['FRB'].astype(int)
 
 	# iterate through available FRBs and fill in burst properties
-	for entry in get_files('output'):
+	for entry in []: # get_files('output'): # CHANGE
 		with open(entry, 'r') as f:
 			# output of curve fit
 			output = json.load(f)
@@ -178,7 +165,7 @@ def update_table(file):
 
 
 if __name__ == '__main__':
-	load_hutschenreuter2020()
+	# load_hutschenreuter2020()
 
-	file = 'table.csv'
+	file = 'table_new.csv'
 	update_table(file)
