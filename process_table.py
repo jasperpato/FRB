@@ -141,9 +141,11 @@ def complete_burst_properties(frb, data, output, frb_data):
 
 	# SC_ex
 	data.at[i, 'SC_ex'] = (data.at[i, 'Scattering timescale (ms)'] - data.at[i, 'Tau_SC (ms) (YMW16)']) ** 0.5
+	data.at[i, 'SC_ex error'] = 0.5 * np.hypot(data.at[i, 'Scattering timescale (ms)'], data.at[i, 'Tau_SC (ms) (YMW16)']) / data.at[i, 'SC_ex']
 
 	# DM_ex
 	data.at[i, 'DM_ex (NE2001)'] = data.at[i, 'DM_obs (pc cm^-3)'] - data.at[i, 'DM_MW (NE2001)'] - data.at[i, 'DM_IGM']
+	data.at[i, 'DM_ex error (NE2001)'] = np.hypot(data.at[i, 'DM_MW error (NE2001)'], data.at[i, 'DM_IGM error'])
 
 
 def update_table(file):

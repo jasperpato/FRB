@@ -1,0 +1,312 @@
+DM_IGM, Host z
+Spearman: 1.0000
+Pearson:  1.0000
+
+DM_MW (YMW16), Tau_SC (ms) (YMW16)
+Spearman: 0.9824
+Pearson:  0.9392
+
+DM_MW (NE2001), DM_MW (YMW16)
+Spearman: 0.8941
+Pearson:  0.9925
+
+DM_MW (NE2001), Tau_SC (ms) (YMW16)
+Spearman: 0.8618
+Pearson:  0.9306
+
+Host mass (10^9 M_sun), Log host mass (M_sun)
+Spearman: 1.0000
+Pearson:  0.7876
+
+Log host mass (M_sun), Metallicity (12 + log(O/H))
+Spearman: 0.7882
+Pearson:  0.8216
+
+Stellar age (Gyr), Metallicity (12 + log(O/H))
+Spearman: 0.9009
+Pearson:  0.5046
+
+Host mass (10^9 M_sun), Metallicity (12 + log(O/H))
+Spearman: 0.7882
+Pearson:  0.5058
+
+DM_MW (NE2001), Stellar age (Gyr)
+Spearman: -0.7169
+Pearson:  -0.4589
+
+Tau_SC (ms) (YMW16), Metallicity (12 + log(O/H))
+Spearman: -0.4009
+Pearson:  -0.7576
+
+DM_MW (NE2001), Log host mass (M_sun)
+Spearman: -0.5321
+Pearson:  -0.5584
+
+DM_MW (YMW16), Metallicity (12 + log(O/H))
+Spearman: -0.4009
+Pearson:  -0.6763
+
+RM_MW (rad/m^2), Host z
+Spearman: 0.5393
+Pearson:  0.5250
+
+DM_IGM, RM_MW (rad/m^2)
+Spearman: 0.5393
+Pearson:  0.5175
+
+DM_MW (NE2001), Metallicity (12 + log(O/H))
+Spearman: -0.3189
+Pearson:  -0.7126
+
+DM_MW (YMW16), Log host mass (M_sun)
+Spearman: -0.4679
+Pearson:  -0.5173
+
+Galactic latitude, Stellar age (Gyr)
+Spearman: 0.4155
+Pearson:  0.5200
+
+Tau_SC (ms) (YMW16), Log host mass (M_sun)
+Spearman: -0.4643
+Pearson:  -0.4382
+
+DM_MW (YMW16), Stellar age (Gyr)
+Spearman: -0.4612
+Pearson:  -0.4280
+
+Host mass (10^9 M_sun), Host SFR (M_sun / year)
+Spearman: 0.3964
+Pearson:  0.4781
+
+Tau_SC (ms) (YMW16), Stellar age (Gyr)
+Spearman: -0.4566
+Pearson:  -0.4144
+
+DM_MW (NE2001), Host mass (10^9 M_sun)
+Spearman: -0.5321
+Pearson:  -0.3281
+
+Log host mass (M_sun), Host SFR (M_sun / year)
+Spearman: 0.3964
+Pearson:  0.4154
+
+Log host mass (M_sun), Stellar age (Gyr)
+Spearman: 0.4521
+Pearson:  0.3557
+
+DM_MW (YMW16), Host mass (10^9 M_sun)
+Spearman: -0.4679
+Pearson:  -0.3133
+
+Galactic latitude, RM_MW (rad/m^2)
+Spearman: -0.4265
+Pearson:  -0.3414
+
+RM_MW (rad/m^2), Host SFR (M_sun / year)
+Spearman: 0.4964
+Pearson:  0.2463
+
+Tau_SC (ms) (YMW16), Host mass (10^9 M_sun)
+Spearman: -0.4643
+Pearson:  -0.2758
+
+Host mass (10^9 M_sun), Stellar age (Gyr)
+Spearman: 0.4521
+Pearson:  0.2659
+
+Galactic longitude, RM_MW (rad/m^2)
+Spearman: 0.4294
+Pearson:  0.2838
+
+Galactic latitude, Host SFR (M_sun / year)
+Spearman: -0.4679
+Pearson:  -0.2332
+
+Host SFR (M_sun / year), Metallicity (12 + log(O/H))
+Spearman: 0.3827
+Pearson:  0.3143
+
+Galactic longitude, Host z
+Spearman: 0.3643
+Pearson:  0.3251
+
+Galactic longitude, DM_IGM
+Spearman: 0.3643
+Pearson:  0.3238
+
+Tau_SC (ms) (YMW16), RM_MW (rad/m^2)
+Spearman: -0.0294
+Pearson:  -0.6567
+
+DM_MW (NE2001), RM_MW (rad/m^2)
+Spearman: -0.0971
+Pearson:  -0.5249
+
+Galactic latitude, DM_MW (YMW16)
+Spearman: 0.3588
+Pearson:  0.2245
+
+Galactic latitude, Tau_SC (ms) (YMW16)
+Spearman: 0.3824
+Pearson:  0.1890
+
+Tau_SC (ms) (YMW16), Host z
+Spearman: -0.0714
+Pearson:  -0.4873
+
+DM_IGM, Tau_SC (ms) (YMW16)
+Spearman: -0.0714
+Pearson:  -0.4819
+
+DM_MW (YMW16), RM_MW (rad/m^2)
+Spearman: -0.0147
+Pearson:  -0.5205
+
+DM_IGM, Host mass (10^9 M_sun)
+Spearman: 0.1214
+Pearson:  0.3999
+
+Host z, Host mass (10^9 M_sun)
+Spearman: 0.1214
+Pearson:  0.3988
+
+Galactic longitude, Host SFR (M_sun / year)
+Spearman: 0.1607
+Pearson:  0.3374
+
+Galactic longitude, Metallicity (12 + log(O/H))
+Spearman: 0.2825
+Pearson:  0.2143
+
+Host z, Stellar age (Gyr)
+Spearman: 0.3014
+Pearson:  0.1882
+
+DM_IGM, Stellar age (Gyr)
+Spearman: 0.3014
+Pearson:  0.1857
+
+DM_MW (NE2001), Host z
+Spearman: -0.0679
+Pearson:  -0.3801
+
+DM_MW (NE2001), DM_IGM
+Spearman: -0.0679
+Pearson:  -0.3764
+
+Galactic latitude, Host mass (10^9 M_sun)
+Spearman: -0.2393
+Pearson:  0.2016
+
+Galactic longitude, DM_MW (YMW16)
+Spearman: 0.3794
+Pearson:  -0.0536
+
+Galactic latitude, DM_MW (NE2001)
+Spearman: 0.2382
+Pearson:  0.1863
+
+DM_MW (YMW16), Host z
+Spearman: 0.0179
+Pearson:  -0.3992
+
+DM_MW (YMW16), DM_IGM
+Spearman: 0.0179
+Pearson:  -0.3956
+
+Galactic longitude, DM_MW (NE2001)
+Spearman: 0.3912
+Pearson:  0.0038
+
+RM_MW (rad/m^2), Metallicity (12 + log(O/H))
+Spearman: -0.2141
+Pearson:  0.1592
+
+Galactic longitude, Tau_SC (ms) (YMW16)
+Spearman: 0.2588
+Pearson:  -0.1050
+
+DM_IGM, Log host mass (M_sun)
+Spearman: 0.1214
+Pearson:  0.2192
+
+Host z, Log host mass (M_sun)
+Spearman: 0.1214
+Pearson:  0.2191
+
+DM_MW (YMW16), Host SFR (M_sun / year)
+Spearman: -0.2071
+Pearson:  -0.1088
+
+Tau_SC (ms) (YMW16), Host SFR (M_sun / year)
+Spearman: -0.1714
+Pearson:  -0.1443
+
+Galactic latitude, Log host mass (M_sun)
+Spearman: -0.2393
+Pearson:  -0.0420
+
+Galactic longitude, Stellar age (Gyr)
+Spearman: -0.0457
+Pearson:  0.2135
+
+RM_MW (rad/m^2), Stellar age (Gyr)
+Spearman: 0.0411
+Pearson:  0.1844
+
+DM_IGM, Metallicity (12 + log(O/H))
+Spearman: 0.0091
+Pearson:  0.2161
+
+Host z, Metallicity (12 + log(O/H))
+Spearman: 0.0091
+Pearson:  0.2153
+
+Galactic latitude, Host z
+Spearman: -0.1821
+Pearson:  -0.0204
+
+Galactic latitude, DM_IGM
+Spearman: -0.1821
+Pearson:  -0.0180
+
+Galactic longitude, Galactic latitude
+Spearman: -0.0412
+Pearson:  -0.1357
+
+Galactic longitude, Log host mass (M_sun)
+Spearman: -0.0821
+Pearson:  -0.0832
+
+DM_MW (NE2001), Host SFR (M_sun / year)
+Spearman: -0.0571
+Pearson:  -0.1022
+
+DM_IGM, Host SFR (M_sun / year)
+Spearman: -0.0286
+Pearson:  -0.1221
+
+Host z, Host SFR (M_sun / year)
+Spearman: -0.0286
+Pearson:  -0.1192
+
+RM_MW (rad/m^2), Log host mass (M_sun)
+Spearman: -0.0143
+Pearson:  0.0862
+
+Galactic longitude, Host mass (10^9 M_sun)
+Spearman: -0.0821
+Pearson:  0.0107
+
+Host SFR (M_sun / year), Stellar age (Gyr)
+Spearman: -0.0091
+Pearson:  0.0794
+
+RM_MW (rad/m^2), Host mass (10^9 M_sun)
+Spearman: -0.0143
+Pearson:  0.0462
+
+Galactic latitude, Metallicity (12 + log(O/H))
+Spearman: 0.0000
+Pearson:  0.0044
+
