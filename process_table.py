@@ -167,23 +167,18 @@ def update_table(file):
 
 	# complete missing host properties
 	data = pd.read_csv(file, index_col=0)
-	data = data.apply(complete_row, axis=1, state=igm_state)
+	# data = data.apply(complete_row, axis=1, state=igm_state)
 
-	# # iterate through available FRBs and fill in burst properties
-	# for entry in []: # get_files('output'): # CHANGE
-	# 	if 'pkl' in entry:
-	# 		with open(entry, 'r') as f:
-	# 			# output of curve fit
-	# 			output = json.load(f)
-	# 			output = output['data'][output['optimum']]
-
-	# 			# input pkl file
-	# 			frb_name = get_frb(entry)[:-4]
-	# 			frb_base = int(frb_name[:6])
-	# 			frb_data = get_data(f'data/{frb_name}.pkl')
-
-	# 			if frb_base in data['FRB'].values:
-	# 				complete_burst_properties(frb_base, data, output, frb_data)
+	# reorder columns
+	order = [
+		'FRB', 'RA', 'DEC', 'Galactic lat', 'Galactic lon', 'z', 'Repeater', 'Host magnitude (AB)', 
+		'log(MF/Mo)', 'log(MF/Mo) error', 'log(Z*/Zo)', 'log(Z*/Zo) error', 'Av,old (mag)', 'Av,old error', 'Av,young (mag)', 'Av,young error', 'AGN',
+		'log(Zgas/Zo)', 'log(Zgas/Zo) error', 'SFR 0-100 Myr (Mo yr-1)', 'SFR error', 'log(M*/Mo)', 'log(M*/Mo) error', 'tm (Gyr)', 'tm error',
+		'DM_MW (NE2001)', 'DM_MW error (NE2001)', 'DM_MW (YMW16)', 'DM_MW error (YMW16)', 'DM_IGM', 'DM_IGM error', 'DM_obs (pc cm^-3)', 'DM_ex (NE2001)', 'DM_ex error (NE2001)',
+		'RM_MW (rad/m^2)', 'RM_MW error', 'Tau_SC (ms) (YMW16)', 'Tau_SC error (YMW16)', 'Scattering timescale (ms)', 'Scattering timescale error', 'SC_ex', 'SC_ex error',
+		'Linear polarisation fraction', 'Linear polarisation fraction error', 'Total polarisation fraction', 'Total polarisation fraction error',  'Burst width (ms)',        
+	]
+	data = data[order]
 
 	data.to_csv(file)
 
