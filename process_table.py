@@ -167,11 +167,11 @@ def update_table(file):
 
 	# complete missing host properties
 	data = pd.read_csv(file, index_col=0)
-	data = data.apply(complete_row, axis=1, state=igm_state)
+	# data = data.apply(complete_row, axis=1, state=igm_state)
 
 	# reorder columns
 	order = [
-		'FRB', 'RA', 'DEC', 'Galactic lat', 'Galactic lon', 'z', 'Repeater', 'Host magnitude (AB)', 
+		'FRB', 'RA', 'DEC', 'Galactic lon', 'Galactic lat', 'z', 'Repeater', 'Host magnitude (AB)', 
 		'log(MF/Mo)', 'log(MF/Mo) error', 'log(Z*/Zo)', 'log(Z*/Zo) error', 'Av,old (mag)', 'Av,old error', 'Av,young (mag)', 'Av,young error', 'AGN',
 		'log(Zgas/Zo)', 'log(Zgas/Zo) error', 'SFR 0-100 Myr (Mo yr-1)', 'SFR error', 'log(M*/Mo)', 'log(M*/Mo) error', 'tm (Gyr)', 'tm error',
 		'DM_MW (NE2001)', 'DM_MW error (NE2001)', 'DM_MW (YMW16)', 'DM_MW error (YMW16)', 'DM_IGM', 'DM_IGM error', 'DM_obs (pc cm^-3)', 'DM_ex (NE2001)', 'DM_ex error (NE2001)',
@@ -186,5 +186,5 @@ def update_table(file):
 if __name__ == '__main__':
 	load_hutschenreuter2020()
 
-	file = 'data/table_new.csv'
+	file = 'data/table.csv'
 	update_table(file)
