@@ -1,312 +1,312 @@
 DM_IGM, Host z
-Spearman: 1.0000
-Pearson:  1.0000
+Spearman: 1.0000 mean: 0.0130 std: 0.2478
+Pearson:  1.0000 mean: 0.0170 std: 0.2627
 
 DM_MW (YMW16), Tau_SC (ms) (YMW16)
-Spearman: 0.9824
-Pearson:  0.9392
+Spearman: 0.9824 mean: 0.0046 std: 0.2702
+Pearson:  0.9392 mean: -0.0066 std: 0.2504
 
 DM_MW (NE2001), DM_MW (YMW16)
-Spearman: 0.8941
-Pearson:  0.9925
+Spearman: 0.8941 mean: 0.0091 std: 0.2538
+Pearson:  0.9925 mean: 0.0074 std: 0.2598
 
 DM_MW (NE2001), Tau_SC (ms) (YMW16)
-Spearman: 0.8618
-Pearson:  0.9306
+Spearman: 0.8618 mean: 0.0026 std: 0.2595
+Pearson:  0.9306 mean: -0.0026 std: 0.2543
 
 Host mass (10^9 M_sun), Log host mass (M_sun)
-Spearman: 1.0000
-Pearson:  0.7876
+Spearman: 1.0000 mean: -0.0230 std: 0.2590
+Pearson:  0.7876 mean: -0.0180 std: 0.2535
 
 Log host mass (M_sun), Metallicity (12 + log(O/H))
-Spearman: 0.7882
-Pearson:  0.8216
+Spearman: 0.7882 mean: 0.0110 std: 0.3261
+Pearson:  0.8216 mean: -0.0082 std: 0.3252
 
 Stellar age (Gyr), Metallicity (12 + log(O/H))
-Spearman: 0.9009
-Pearson:  0.5046
+Spearman: 0.9009 mean: -0.0050 std: 0.4148
+Pearson:  0.5046 mean: -0.0060 std: 0.4081
 
 Host mass (10^9 M_sun), Metallicity (12 + log(O/H))
-Spearman: 0.7882
-Pearson:  0.5058
+Spearman: 0.7882 mean: -0.0096 std: 0.3187
+Pearson:  0.5058 mean: -0.0019 std: 0.3266
 
 DM_MW (NE2001), Stellar age (Gyr)
-Spearman: -0.7169
-Pearson:  -0.4589
+Spearman: -0.7169 mean: 0.0113 std: 0.3126
+Pearson:  -0.4589 mean: -0.0198 std: 0.3135
 
 Tau_SC (ms) (YMW16), Metallicity (12 + log(O/H))
-Spearman: -0.4009
-Pearson:  -0.7576
+Spearman: -0.4009 mean: -0.0045 std: 0.3198
+Pearson:  -0.7576 mean: 0.0272 std: 0.2940
 
 DM_MW (NE2001), Log host mass (M_sun)
-Spearman: -0.5321
-Pearson:  -0.5584
+Spearman: -0.5321 mean: 0.0116 std: 0.2728
+Pearson:  -0.5584 mean: 0.0089 std: 0.2682
 
 DM_MW (YMW16), Metallicity (12 + log(O/H))
-Spearman: -0.4009
-Pearson:  -0.6763
+Spearman: -0.4009 mean: -0.0141 std: 0.3231
+Pearson:  -0.6763 mean: 0.0037 std: 0.3246
 
 RM_MW (rad/m^2), Host z
-Spearman: 0.5393
-Pearson:  0.5250
+Spearman: 0.5393 mean: -0.0070 std: 0.2676
+Pearson:  0.5250 mean: -0.0047 std: 0.2594
 
 DM_IGM, RM_MW (rad/m^2)
-Spearman: 0.5393
-Pearson:  0.5175
+Spearman: 0.5393 mean: -0.0071 std: 0.2608
+Pearson:  0.5175 mean: 0.0081 std: 0.2629
 
 DM_MW (NE2001), Metallicity (12 + log(O/H))
-Spearman: -0.3189
-Pearson:  -0.7126
+Spearman: -0.3189 mean: -0.0127 std: 0.3144
+Pearson:  -0.7126 mean: -0.0221 std: 0.3236
 
 DM_MW (YMW16), Log host mass (M_sun)
-Spearman: -0.4679
-Pearson:  -0.5173
+Spearman: -0.4679 mean: 0.0006 std: 0.2644
+Pearson:  -0.5173 mean: 0.0005 std: 0.2695
 
 Galactic latitude, Stellar age (Gyr)
-Spearman: 0.4155
-Pearson:  0.5200
+Spearman: 0.4155 mean: 0.0015 std: 0.3223
+Pearson:  0.5200 mean: -0.0034 std: 0.3192
 
 Tau_SC (ms) (YMW16), Log host mass (M_sun)
-Spearman: -0.4643
-Pearson:  -0.4382
+Spearman: -0.4643 mean: -0.0023 std: 0.2765
+Pearson:  -0.4382 mean: -0.0078 std: 0.2734
 
 DM_MW (YMW16), Stellar age (Gyr)
-Spearman: -0.4612
-Pearson:  -0.4280
+Spearman: -0.4612 mean: -0.0011 std: 0.3156
+Pearson:  -0.4280 mean: -0.0024 std: 0.2997
 
 Host mass (10^9 M_sun), Host SFR (M_sun / year)
-Spearman: 0.3964
-Pearson:  0.4781
+Spearman: 0.3964 mean: -0.0103 std: 0.2619
+Pearson:  0.4781 mean: -0.0080 std: 0.2580
 
 Tau_SC (ms) (YMW16), Stellar age (Gyr)
-Spearman: -0.4566
-Pearson:  -0.4144
+Spearman: -0.4566 mean: 0.0199 std: 0.3110
+Pearson:  -0.4144 mean: -0.0221 std: 0.2994
 
 DM_MW (NE2001), Host mass (10^9 M_sun)
-Spearman: -0.5321
-Pearson:  -0.3281
+Spearman: -0.5321 mean: 0.0127 std: 0.2772
+Pearson:  -0.3281 mean: 0.0087 std: 0.2742
 
 Log host mass (M_sun), Host SFR (M_sun / year)
-Spearman: 0.3964
-Pearson:  0.4154
+Spearman: 0.3964 mean: -0.0025 std: 0.2676
+Pearson:  0.4154 mean: -0.0015 std: 0.2728
 
 Log host mass (M_sun), Stellar age (Gyr)
-Spearman: 0.4521
-Pearson:  0.3557
+Spearman: 0.4521 mean: 0.0086 std: 0.3313
+Pearson:  0.3557 mean: 0.0037 std: 0.3019
 
 DM_MW (YMW16), Host mass (10^9 M_sun)
-Spearman: -0.4679
-Pearson:  -0.3133
+Spearman: -0.4679 mean: 0.0005 std: 0.2650
+Pearson:  -0.3133 mean: -0.0029 std: 0.2669
 
 Galactic latitude, RM_MW (rad/m^2)
-Spearman: -0.4265
-Pearson:  -0.3414
+Spearman: -0.4265 mean: 0.0007 std: 0.2554
+Pearson:  -0.3414 mean: 0.0023 std: 0.2621
 
 RM_MW (rad/m^2), Host SFR (M_sun / year)
-Spearman: 0.4964
-Pearson:  0.2463
+Spearman: 0.4964 mean: -0.0031 std: 0.2685
+Pearson:  0.2463 mean: 0.0061 std: 0.2695
 
 Tau_SC (ms) (YMW16), Host mass (10^9 M_sun)
-Spearman: -0.4643
-Pearson:  -0.2758
+Spearman: -0.4643 mean: 0.0069 std: 0.2693
+Pearson:  -0.2758 mean: -0.0019 std: 0.2548
 
 Host mass (10^9 M_sun), Stellar age (Gyr)
-Spearman: 0.4521
-Pearson:  0.2659
+Spearman: 0.4521 mean: 0.0012 std: 0.3161
+Pearson:  0.2659 mean: 0.0150 std: 0.3269
 
 Galactic longitude, RM_MW (rad/m^2)
-Spearman: 0.4294
-Pearson:  0.2838
+Spearman: 0.4294 mean: 0.0149 std: 0.2503
+Pearson:  0.2838 mean: -0.0047 std: 0.2545
 
 Galactic latitude, Host SFR (M_sun / year)
-Spearman: -0.4679
-Pearson:  -0.2332
+Spearman: -0.4679 mean: 0.0044 std: 0.2666
+Pearson:  -0.2332 mean: 0.0059 std: 0.2739
 
 Host SFR (M_sun / year), Metallicity (12 + log(O/H))
-Spearman: 0.3827
-Pearson:  0.3143
+Spearman: 0.3827 mean: 0.0084 std: 0.3092
+Pearson:  0.3143 mean: -0.0098 std: 0.3209
 
 Galactic longitude, Host z
-Spearman: 0.3643
-Pearson:  0.3251
+Spearman: 0.3643 mean: -0.0146 std: 0.2790
+Pearson:  0.3251 mean: -0.0082 std: 0.2673
 
 Galactic longitude, DM_IGM
-Spearman: 0.3643
-Pearson:  0.3238
+Spearman: 0.3643 mean: 0.0027 std: 0.2597
+Pearson:  0.3238 mean: -0.0010 std: 0.2595
 
 Tau_SC (ms) (YMW16), RM_MW (rad/m^2)
-Spearman: -0.0294
-Pearson:  -0.6567
+Spearman: -0.0294 mean: -0.0008 std: 0.2595
+Pearson:  -0.6567 mean: 0.0018 std: 0.2641
 
 DM_MW (NE2001), RM_MW (rad/m^2)
-Spearman: -0.0971
-Pearson:  -0.5249
+Spearman: -0.0971 mean: -0.0125 std: 0.2559
+Pearson:  -0.5249 mean: -0.0020 std: 0.2587
 
 Galactic latitude, DM_MW (YMW16)
-Spearman: 0.3588
-Pearson:  0.2245
+Spearman: 0.3588 mean: 0.0012 std: 0.2505
+Pearson:  0.2245 mean: -0.0140 std: 0.2600
 
 Galactic latitude, Tau_SC (ms) (YMW16)
-Spearman: 0.3824
-Pearson:  0.1890
+Spearman: 0.3824 mean: -0.0069 std: 0.2635
+Pearson:  0.1890 mean: 0.0024 std: 0.2577
 
 Tau_SC (ms) (YMW16), Host z
-Spearman: -0.0714
-Pearson:  -0.4873
+Spearman: -0.0714 mean: -0.0038 std: 0.2685
+Pearson:  -0.4873 mean: 0.0029 std: 0.2733
 
 DM_IGM, Tau_SC (ms) (YMW16)
-Spearman: -0.0714
-Pearson:  -0.4819
+Spearman: -0.0714 mean: -0.0080 std: 0.2737
+Pearson:  -0.4819 mean: -0.0032 std: 0.2650
 
 DM_MW (YMW16), RM_MW (rad/m^2)
-Spearman: -0.0147
-Pearson:  -0.5205
+Spearman: -0.0147 mean: -0.0005 std: 0.2565
+Pearson:  -0.5205 mean: 0.0100 std: 0.2553
 
 DM_IGM, Host mass (10^9 M_sun)
-Spearman: 0.1214
-Pearson:  0.3999
+Spearman: 0.1214 mean: 0.0009 std: 0.2638
+Pearson:  0.3999 mean: -0.0105 std: 0.2716
 
 Host z, Host mass (10^9 M_sun)
-Spearman: 0.1214
-Pearson:  0.3988
+Spearman: 0.1214 mean: 0.0060 std: 0.2657
+Pearson:  0.3988 mean: -0.0014 std: 0.2680
 
 Galactic longitude, Host SFR (M_sun / year)
-Spearman: 0.1607
-Pearson:  0.3374
+Spearman: 0.1607 mean: 0.0060 std: 0.2709
+Pearson:  0.3374 mean: 0.0083 std: 0.2644
 
 Galactic longitude, Metallicity (12 + log(O/H))
-Spearman: 0.2825
-Pearson:  0.2143
+Spearman: 0.2825 mean: -0.0031 std: 0.3211
+Pearson:  0.2143 mean: 0.0031 std: 0.3173
 
 Host z, Stellar age (Gyr)
-Spearman: 0.3014
-Pearson:  0.1882
+Spearman: 0.3014 mean: 0.0059 std: 0.3063
+Pearson:  0.1882 mean: 0.0155 std: 0.3182
 
 DM_IGM, Stellar age (Gyr)
-Spearman: 0.3014
-Pearson:  0.1857
+Spearman: 0.3014 mean: 0.0001 std: 0.3168
+Pearson:  0.1857 mean: 0.0089 std: 0.3194
 
 DM_MW (NE2001), Host z
-Spearman: -0.0679
-Pearson:  -0.3801
+Spearman: -0.0679 mean: -0.0119 std: 0.2643
+Pearson:  -0.3801 mean: -0.0060 std: 0.2561
 
 DM_MW (NE2001), DM_IGM
-Spearman: -0.0679
-Pearson:  -0.3764
+Spearman: -0.0679 mean: 0.0011 std: 0.2656
+Pearson:  -0.3764 mean: 0.0038 std: 0.2773
 
 Galactic latitude, Host mass (10^9 M_sun)
-Spearman: -0.2393
-Pearson:  0.2016
+Spearman: -0.2393 mean: 0.0199 std: 0.2627
+Pearson:  0.2016 mean: -0.0028 std: 0.2613
 
 Galactic longitude, DM_MW (YMW16)
-Spearman: 0.3794
-Pearson:  -0.0536
+Spearman: 0.3794 mean: 0.0032 std: 0.2491
+Pearson:  -0.0536 mean: -0.0074 std: 0.2571
 
 Galactic latitude, DM_MW (NE2001)
-Spearman: 0.2382
-Pearson:  0.1863
+Spearman: 0.2382 mean: -0.0055 std: 0.2564
+Pearson:  0.1863 mean: -0.0118 std: 0.2583
 
 DM_MW (YMW16), Host z
-Spearman: 0.0179
-Pearson:  -0.3992
+Spearman: 0.0179 mean: 0.0043 std: 0.2610
+Pearson:  -0.3992 mean: -0.0035 std: 0.2811
 
 DM_MW (YMW16), DM_IGM
-Spearman: 0.0179
-Pearson:  -0.3956
+Spearman: 0.0179 mean: -0.0173 std: 0.2610
+Pearson:  -0.3956 mean: -0.0096 std: 0.2749
 
 Galactic longitude, DM_MW (NE2001)
-Spearman: 0.3912
-Pearson:  0.0038
+Spearman: 0.3912 mean: -0.0048 std: 0.2613
+Pearson:  0.0038 mean: 0.0031 std: 0.2579
 
 RM_MW (rad/m^2), Metallicity (12 + log(O/H))
-Spearman: -0.2141
-Pearson:  0.1592
+Spearman: -0.2141 mean: -0.0099 std: 0.3186
+Pearson:  0.1592 mean: -0.0107 std: 0.3127
 
 Galactic longitude, Tau_SC (ms) (YMW16)
-Spearman: 0.2588
-Pearson:  -0.1050
+Spearman: 0.2588 mean: 0.0160 std: 0.2668
+Pearson:  -0.1050 mean: -0.0013 std: 0.2583
 
 DM_IGM, Log host mass (M_sun)
-Spearman: 0.1214
-Pearson:  0.2192
+Spearman: 0.1214 mean: 0.0002 std: 0.2607
+Pearson:  0.2192 mean: -0.0107 std: 0.2736
 
 Host z, Log host mass (M_sun)
-Spearman: 0.1214
-Pearson:  0.2191
+Spearman: 0.1214 mean: 0.0071 std: 0.2749
+Pearson:  0.2191 mean: -0.0092 std: 0.2652
 
 DM_MW (YMW16), Host SFR (M_sun / year)
-Spearman: -0.2071
-Pearson:  -0.1088
+Spearman: -0.2071 mean: -0.0036 std: 0.2706
+Pearson:  -0.1088 mean: 0.0039 std: 0.2713
 
 Tau_SC (ms) (YMW16), Host SFR (M_sun / year)
-Spearman: -0.1714
-Pearson:  -0.1443
+Spearman: -0.1714 mean: 0.0078 std: 0.2656
+Pearson:  -0.1443 mean: -0.0045 std: 0.2533
 
 Galactic latitude, Log host mass (M_sun)
-Spearman: -0.2393
-Pearson:  -0.0420
+Spearman: -0.2393 mean: -0.0166 std: 0.2655
+Pearson:  -0.0420 mean: -0.0025 std: 0.2655
 
 Galactic longitude, Stellar age (Gyr)
-Spearman: -0.0457
-Pearson:  0.2135
+Spearman: -0.0457 mean: 0.0102 std: 0.3122
+Pearson:  0.2135 mean: 0.0006 std: 0.3171
 
 RM_MW (rad/m^2), Stellar age (Gyr)
-Spearman: 0.0411
-Pearson:  0.1844
+Spearman: 0.0411 mean: 0.0004 std: 0.3139
+Pearson:  0.1844 mean: -0.0217 std: 0.3356
 
 DM_IGM, Metallicity (12 + log(O/H))
-Spearman: 0.0091
-Pearson:  0.2161
+Spearman: 0.0091 mean: 0.0034 std: 0.3203
+Pearson:  0.2161 mean: 0.0078 std: 0.3108
 
 Host z, Metallicity (12 + log(O/H))
-Spearman: 0.0091
-Pearson:  0.2153
+Spearman: 0.0091 mean: 0.0014 std: 0.3187
+Pearson:  0.2153 mean: 0.0009 std: 0.3160
 
 Galactic latitude, Host z
-Spearman: -0.1821
-Pearson:  -0.0204
+Spearman: -0.1821 mean: 0.0043 std: 0.2660
+Pearson:  -0.0204 mean: -0.0072 std: 0.2704
 
 Galactic latitude, DM_IGM
-Spearman: -0.1821
-Pearson:  -0.0180
+Spearman: -0.1821 mean: -0.0002 std: 0.2740
+Pearson:  -0.0180 mean: -0.0065 std: 0.2693
 
 Galactic longitude, Galactic latitude
-Spearman: -0.0412
-Pearson:  -0.1357
+Spearman: -0.0412 mean: -0.0064 std: 0.2663
+Pearson:  -0.1357 mean: 0.0128 std: 0.2533
 
 Galactic longitude, Log host mass (M_sun)
-Spearman: -0.0821
-Pearson:  -0.0832
+Spearman: -0.0821 mean: 0.0056 std: 0.2693
+Pearson:  -0.0832 mean: -0.0155 std: 0.2624
 
 DM_MW (NE2001), Host SFR (M_sun / year)
-Spearman: -0.0571
-Pearson:  -0.1022
+Spearman: -0.0571 mean: 0.0018 std: 0.2660
+Pearson:  -0.1022 mean: 0.0036 std: 0.2767
 
 DM_IGM, Host SFR (M_sun / year)
-Spearman: -0.0286
-Pearson:  -0.1221
+Spearman: -0.0286 mean: -0.0028 std: 0.2668
+Pearson:  -0.1221 mean: 0.0167 std: 0.2755
 
 Host z, Host SFR (M_sun / year)
-Spearman: -0.0286
-Pearson:  -0.1192
+Spearman: -0.0286 mean: 0.0061 std: 0.2647
+Pearson:  -0.1192 mean: 0.0057 std: 0.2742
 
 RM_MW (rad/m^2), Log host mass (M_sun)
-Spearman: -0.0143
-Pearson:  0.0862
+Spearman: -0.0143 mean: 0.0179 std: 0.2657
+Pearson:  0.0862 mean: -0.0031 std: 0.2712
 
 Galactic longitude, Host mass (10^9 M_sun)
-Spearman: -0.0821
-Pearson:  0.0107
+Spearman: -0.0821 mean: -0.0030 std: 0.2717
+Pearson:  0.0107 mean: 0.0045 std: 0.2629
 
 Host SFR (M_sun / year), Stellar age (Gyr)
-Spearman: -0.0091
-Pearson:  0.0794
+Spearman: -0.0091 mean: 0.0034 std: 0.3148
+Pearson:  0.0794 mean: -0.0071 std: 0.3080
 
 RM_MW (rad/m^2), Host mass (10^9 M_sun)
-Spearman: -0.0143
-Pearson:  0.0462
+Spearman: -0.0143 mean: -0.0192 std: 0.2689
+Pearson:  0.0462 mean: -0.0169 std: 0.2696
 
 Galactic latitude, Metallicity (12 + log(O/H))
-Spearman: 0.0000
-Pearson:  0.0044
+Spearman: 0.0000 mean: 0.0033 std: 0.3204
+Pearson:  0.0044 mean: -0.0036 std: 0.3155
 

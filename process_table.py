@@ -69,10 +69,35 @@ def get_igm_error(z, state, width=1e-2, size=30):
 	return np.std(dms)
 
 
+def get_frb_data(frb_name):
+	'''
+	Attempt to find frb data and frb output on file, else returns None, None.
+	'''
+	# frb data
+	frb_data = None
+	for entry in get_files('data'):
+		if 'pkl' in entry and frb_name in entry:
+			frb_data = get_data(entry)
+
+	# output
+	frb_output = None
+	for entry in get_files('output'):
+		if frb_name in entry:
+			with open(entry, 'rb') as f:
+				frb_output = json.load(f)
+				frb_output = frb_output['data'][frb_output['optimum']] # get only optimal fit
+
+	return frb_data, frb_output
+
 def complete_row(row, state):
 	'''
 	Complete the missing columns of a row.
 	'''
+
+	# get frb data and frb output
+	frb_name = row['FRB'][2:-1] # get 6-digit frb name
+	frb_data, frb_output = get_frb_data(frb_name)
+	
 	ra, dec = 'RA', 'DEC'
 	glon, glat = 'Galactic lon', 'Galactic lat'
 
@@ -94,47 +119,45 @@ def complete_row(row, state):
 		row['DM_IGM'] = pcosmic.get_mean_DM(np.array([row['z']]), state)[0]
 		row['DM_IGM error'] = get_igm_error(row['z'], state)
 
-	return row
-
-
-def complete_burst_properties(frb, data, output, frb_data):
-	'''
-	Search for FRB in data and fill in burst properties.
-	'''
-	i = data.index[data['FRB'] == frb].to_list()[0]
+	if not frb_data or not frb_output:
+		return row
+	
+	# burst properties
+	
 	freq = np.mean(frb_data.fmhzarr) * 1e-3 # convert to GHz
 
-	# burst properties
-	b = 'Burst width (ms)'
-	data.at[i, b] = output[b]
+	b = b = 'Burst width (ms)'
+	row[b] = frb_output[b]
 
 	s = 'Scattering timescale (ms)'
-	data.at[i, s], data.at[i, 'Scattering timescale error'] = output[s]
+	row[s], row['Scattering timescale error'] = frb_output[s]
 
 	l = 'Linear polarisation fraction'
-	data.at[i, l], data.at[i, 'Linear polarisation fraction error'] = output[l]
+	row[l], row[l + ' error'] = frb_output[l]
 
 	t = 'Total polarisation fraction'
-	data.at[i, t], data.at[i, 'Total polarisation fraction error'] = output[t]
+	row[t], row[t + ' error'] = frb_output[t]
 
 	# DM_obs
-	data.at[i, 'DM_obs (pc cm^-3)'] = frb_data.dm
+	row['DM_obs (pc cm^-3)'] = frb_data.dm
 
 	# YMW16 (requires observed frequency)
-	glon, glat = data.at[i, 'Galactic lon'], data.at[i, 'Galactic lat']
-	dm, sc = dist_to_dm(glon, glat, globalpars.MW_DIAMETER, nu=freq)
+	dm, sc = dist_to_dm(row[glon], row[glat], globalpars.MW_DIAMETER, nu=freq)
 	
-	data.at[i, 'DM_MW (YMW16)'], data.at[i, 'Tau_SC (ms) (YMW16)'] = dm.value, sc.value * 1e3 # ms  
-	data.at[i, 'DM_MW error (YMW16)'], data.at[i, 'Tau_SC error (YMW16)'] = get_error(glon, glat, nu=freq, method='YMW16')
+	row['DM_MW (YMW16)'], row['Tau_SC (ms) (YMW16)'] = dm.value, sc.value * 1e3 # ms  
+	row['DM_MW error (YMW16)'], row['Tau_SC error (YMW16)'] = get_error(row[glon], row[glat], nu=freq, method='YMW16')
 
 	# SC_ex
-	data.at[i, 'SC_ex'] = (data.at[i, 'Scattering timescale (ms)'] - data.at[i, 'Tau_SC (ms) (YMW16)']) ** 0.5
-	data.at[i, 'SC_ex error'] = 0.5 * np.hypot(data.at[i, 'Scattering timescale (ms)'], data.at[i, 'Tau_SC (ms) (YMW16)']) / data.at[i, 'SC_ex']
+	# print(row[s], row['Tau_SC (ms) (YMW16)'])
+
+	row['SC_ex'] = (row[s] - row['Tau_SC (ms) (YMW16)']) ** 0.5
+	row['SC_ex error'] = 0.5 * np.hypot(row[s], row['Tau_SC (ms) (YMW16)']) / row['SC_ex']
 
 	# DM_ex
-	data.at[i, 'DM_ex (NE2001)'] = data.at[i, 'DM_obs (pc cm^-3)'] - data.at[i, 'DM_MW (NE2001)'] - data.at[i, 'DM_IGM']
-	data.at[i, 'DM_ex error (NE2001)'] = np.hypot(data.at[i, 'DM_MW error (NE2001)'], data.at[i, 'DM_IGM error'])
+	row['DM_ex (NE2001)'] = row['DM_obs (pc cm^-3)'] - row['DM_MW (NE2001)'] - row['DM_IGM']
+	row['DM_ex error (NE2001)'] = np.hypot(row['DM_MW error (NE2001)'], row['DM_IGM error'])
 
+	return row
 
 def update_table(file):
 	'''
@@ -146,26 +169,27 @@ def update_table(file):
 	data = pd.read_csv(file, index_col=0)
 	data = data.apply(complete_row, axis=1, state=igm_state)
 
-	# iterate through available FRBs and fill in burst properties
-	for entry in []: # get_files('output'): # CHANGE
-		with open(entry, 'r') as f:
-			# output of curve fit
-			output = json.load(f)
-			output = output['data'][output['optimum']]
+	# # iterate through available FRBs and fill in burst properties
+	# for entry in []: # get_files('output'): # CHANGE
+	# 	if 'pkl' in entry:
+	# 		with open(entry, 'r') as f:
+	# 			# output of curve fit
+	# 			output = json.load(f)
+	# 			output = output['data'][output['optimum']]
 
-			# input pkl file
-			frb_name = get_frb(entry)[:-4]
-			frb_base = int(frb_name[:6])
-			frb_data = get_data(f'data/{frb_name}.pkl')
+	# 			# input pkl file
+	# 			frb_name = get_frb(entry)[:-4]
+	# 			frb_base = int(frb_name[:6])
+	# 			frb_data = get_data(f'data/{frb_name}.pkl')
 
-			if frb_base in data['FRB'].values:
-				complete_burst_properties(frb_base, data, output, frb_data)
+	# 			if frb_base in data['FRB'].values:
+	# 				complete_burst_properties(frb_base, data, output, frb_data)
 
 	data.to_csv(file)
 
 
 if __name__ == '__main__':
-	# load_hutschenreuter2020()
+	load_hutschenreuter2020()
 
-	file = 'table_new.csv'
+	file = 'data/table_new.csv'
 	update_table(file)
