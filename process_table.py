@@ -167,7 +167,7 @@ def update_table(file):
 
 	# complete missing host properties
 	data = pd.read_csv(file, index_col=0)
-	# data = data.apply(complete_row, axis=1, state=igm_state)
+	data = data.apply(complete_row, axis=1, state=igm_state)
 
 	# reorder columns
 	order = [

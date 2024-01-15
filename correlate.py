@@ -11,7 +11,7 @@ import numpy as np
 from itertools import combinations
 
 
-IGNORE = ('Index', 'FRB', 'RA', 'DEC', 'error')
+IGNORE = ('Index', 'FRB', 'RA', 'DEC', 'error', 'Repeater', 'AGN')
 IGNORE = '|'.join(IGNORE)
 
 
@@ -41,7 +41,7 @@ def correlate(x0, x1, method='spearman', n=1000):
 
 
 if __name__ == '__main__':
-	data = pd.read_csv('table.csv')
+	data = pd.read_csv('data/table_new.csv')
 	cols = [col for col in data.columns if not re.search(IGNORE, col)]
 
 	corrs = []
