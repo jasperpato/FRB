@@ -114,10 +114,17 @@ def complete_row(row, state):
 		rm, rm_error = galactic_rm(coord)
 		row['RM_MW (rad/m^2)'], row['RM_MW error'] = rm.value, rm_error.value
 
+
 	# DM IGM and error
 	if not np.isnan(row['z']):
 		row['DM_IGM'] = pcosmic.get_mean_DM(np.array([row['z']]), state)[0]
 		row['DM_IGM error'] = get_igm_error(row['z'], state)
+
+	# DM_ex
+	row['DM_ex (NE2001)'] = row['DM_obs (pc cm^-3)'] - row['DM_MW (NE2001)'] - row['DM_IGM']
+	row['DM_ex error (NE2001)'] = np.hypot(row['DM_MW error (NE2001)'], row['DM_IGM error'])
+
+	print(row['DM_ex (NE2001)'])
 
 	if not frb_data or not frb_output:
 		return row
@@ -139,7 +146,7 @@ def complete_row(row, state):
 	row[t], row[t + ' error'] = frb_output[t]
 
 	# DM_obs
-	row['DM_obs (pc cm^-3)'] = frb_data.dm
+	# row['DM_obs (pc cm^-3)'] = frb_data.dm
 
 	# YMW16 (requires observed frequency)
 	dm, sc = dist_to_dm(row[glon], row[glat], globalpars.MW_DIAMETER, nu=freq)
@@ -153,10 +160,6 @@ def complete_row(row, state):
 	row['SC_ex'] = (row[s] - row['Tau_SC (ms) (YMW16)']) ** 0.5
 	row['SC_ex error'] = 0.5 * np.hypot(row[s], row['Tau_SC (ms) (YMW16)']) / row['SC_ex']
 
-	# DM_ex
-	row['DM_ex (NE2001)'] = row['DM_obs (pc cm^-3)'] - row['DM_MW (NE2001)'] - row['DM_IGM']
-	row['DM_ex error (NE2001)'] = np.hypot(row['DM_MW error (NE2001)'], row['DM_IGM error'])
-
 	return row
 
 def update_table(file):
@@ -167,7 +170,7 @@ def update_table(file):
 
 	# complete missing host properties
 	data = pd.read_csv(file, index_col=0)
-	# data = data.apply(complete_row, axis=1, state=igm_state)
+	data = data.apply(complete_row, axis=1, state=igm_state)
 
 	# reorder columns
 	order = [
