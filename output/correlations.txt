@@ -1,420 +1,544 @@
 z, DM_IGM
-Spearman: 1.0000 mean: -0.0070 std: 0.2137
-Pearson:  0.9999 mean: -0.0066 std: 0.2132
+Spearman: 1.0000 mean: -0.0011 std: 0.2060
+Pearson:  0.9999 mean: -0.0082 std: 0.2120
 
 log(MF/Mo), log(M*/Mo)
-Spearman: 0.9975 mean: -0.0210 std: 0.2086
-Pearson:  0.9992 mean: -0.0034 std: 0.2098
+Spearman: 0.9975 mean: -0.0095 std: 0.2191
+Pearson:  0.9992 mean: 0.0025 std: 0.2144
 
 tm (Gyr), DM_IGM
-Spearman: -0.7105 mean: 0.0110 std: 0.2146
-Pearson:  -0.6632 mean: -0.0061 std: 0.2104
+Spearman: -0.7105 mean: 0.0023 std: 0.2040
+Pearson:  -0.6632 mean: 0.0039 std: 0.2087
 
 Host magnitude (AB), log(Zgas/Zo)
-Spearman: -0.6889 mean: 0.0020 std: 0.2180
-Pearson:  -0.6842 mean: 0.0160 std: 0.2194
+Spearman: -0.6889 mean: 0.0062 std: 0.2210
+Pearson:  -0.6842 mean: -0.0041 std: 0.2142
 
 z, tm (Gyr)
-Spearman: -0.7105 mean: -0.0091 std: 0.2135
-Pearson:  -0.6625 mean: -0.0059 std: 0.2138
+Spearman: -0.7105 mean: 0.0005 std: 0.2123
+Pearson:  -0.6625 mean: -0.0037 std: 0.2098
 
 Host magnitude (AB), log(M*/Mo)
-Spearman: -0.6871 mean: -0.0036 std: 0.2195
-Pearson:  -0.6408 mean: -0.0082 std: 0.2120
+Spearman: -0.6871 mean: 0.0031 std: 0.2195
+Pearson:  -0.6408 mean: -0.0079 std: 0.2175
+
+log(Zgas/Zo), DM_obs (pc cm^-3)
+Spearman: -0.6122 mean: 0.0118 std: 0.2507
+Pearson:  -0.7009 mean: 0.0009 std: 0.2606
 
 Host magnitude (AB), log(MF/Mo)
-Spearman: -0.6777 mean: -0.0013 std: 0.2171
-Pearson:  -0.6272 mean: 0.0142 std: 0.1996
+Spearman: -0.6777 mean: 0.0020 std: 0.2122
+Pearson:  -0.6272 mean: -0.0039 std: 0.2157
+
+Host magnitude (AB), DM_obs (pc cm^-3)
+Spearman: 0.6838 mean: -0.0084 std: 0.2545
+Pearson:  0.6129 mean: 0.0014 std: 0.2510
 
 z, Host magnitude (AB)
-Spearman: 0.6087 mean: -0.0039 std: 0.2146
-Pearson:  0.6863 mean: 0.0056 std: 0.2067
+Spearman: 0.6087 mean: -0.0016 std: 0.2065
+Pearson:  0.6863 mean: 0.0014 std: 0.2182
 
 Host magnitude (AB), DM_IGM
-Spearman: 0.6087 mean: -0.0062 std: 0.2014
-Pearson:  0.6824 mean: -0.0005 std: 0.2072
+Spearman: 0.6087 mean: 0.0049 std: 0.2067
+Pearson:  0.6824 mean: 0.0048 std: 0.2173
+
+DM_IGM, DM_ex (NE2001)
+Spearman: -0.7230 mean: -0.0135 std: 0.2496
+Pearson:  -0.5459 mean: 0.0101 std: 0.2457
+
+z, DM_ex (NE2001)
+Spearman: -0.7230 mean: 0.0067 std: 0.2483
+Pearson:  -0.5424 mean: -0.0037 std: 0.2483
 
 Galactic lon, tm (Gyr)
-Spearman: -0.6057 mean: -0.0022 std: 0.2130
-Pearson:  -0.5924 mean: 0.0100 std: 0.2142
+Spearman: -0.6057 mean: -0.0058 std: 0.2127
+Pearson:  -0.5924 mean: 0.0088 std: 0.2025
 
 z, RM_MW (rad/m^2)
-Spearman: 0.5879 mean: 0.0079 std: 0.2069
-Pearson:  0.5680 mean: -0.0011 std: 0.2061
+Spearman: 0.5879 mean: 0.0089 std: 0.2112
+Pearson:  0.5680 mean: 0.0001 std: 0.2183
 
 DM_IGM, RM_MW (rad/m^2)
-Spearman: 0.5879 mean: 0.0002 std: 0.2124
-Pearson:  0.5652 mean: 0.0042 std: 0.2165
+Spearman: 0.5879 mean: -0.0025 std: 0.2203
+Pearson:  0.5652 mean: -0.0087 std: 0.2145
 
 Host magnitude (AB), SFR 0-100 Myr (Mo yr-1)
-Spearman: -0.4981 mean: -0.0034 std: 0.2096
-Pearson:  -0.5196 mean: -0.0021 std: 0.2155
+Spearman: -0.4981 mean: 0.0023 std: 0.2097
+Pearson:  -0.5196 mean: 0.0086 std: 0.2135
 
 tm (Gyr), RM_MW (rad/m^2)
-Spearman: -0.4694 mean: 0.0024 std: 0.2154
-Pearson:  -0.5395 mean: 0.0002 std: 0.2178
+Spearman: -0.4694 mean: 0.0057 std: 0.2116
+Pearson:  -0.5395 mean: 0.0004 std: 0.2134
 
 z, log(Zgas/Zo)
-Spearman: -0.5143 mean: -0.0065 std: 0.2308
-Pearson:  -0.4246 mean: -0.0054 std: 0.2178
+Spearman: -0.5143 mean: -0.0069 std: 0.2173
+Pearson:  -0.4246 mean: -0.0060 std: 0.2242
 
 log(Zgas/Zo), DM_IGM
-Spearman: -0.5143 mean: 0.0021 std: 0.2132
-Pearson:  -0.4200 mean: -0.0020 std: 0.2183
+Spearman: -0.5143 mean: 0.0012 std: 0.2122
+Pearson:  -0.4200 mean: -0.0029 std: 0.2144
 
 SFR 0-100 Myr (Mo yr-1), tm (Gyr)
-Spearman: -0.4724 mean: -0.0087 std: 0.2191
-Pearson:  -0.4345 mean: -0.0089 std: 0.2139
+Spearman: -0.4724 mean: 0.0061 std: 0.2201
+Pearson:  -0.4345 mean: 0.0028 std: 0.2139
+
+z, DM_obs (pc cm^-3)
+Spearman: 0.5245 mean: 0.0132 std: 0.2521
+Pearson:  0.3768 mean: 0.0053 std: 0.2482
+
+DM_IGM, DM_obs (pc cm^-3)
+Spearman: 0.5245 mean: -0.0033 std: 0.2426
+Pearson:  0.3730 mean: 0.0030 std: 0.2451
+
+log(M*/Mo), DM_obs (pc cm^-3)
+Spearman: -0.4034 mean: 0.0134 std: 0.2431
+Pearson:  -0.4799 mean: 0.0035 std: 0.2655
 
 log(Z*/Zo), SFR 0-100 Myr (Mo yr-1)
-Spearman: 0.5928 mean: 0.0031 std: 0.2102
-Pearson:  0.2898 mean: -0.0111 std: 0.2201
+Spearman: 0.5928 mean: -0.0087 std: 0.2184
+Pearson:  0.2898 mean: 0.0046 std: 0.2170
+
+DM_ex (NE2001), RM_MW (rad/m^2)
+Spearman: -0.5049 mean: -0.0135 std: 0.2569
+Pearson:  -0.3707 mean: -0.0191 std: 0.2444
+
+log(MF/Mo), DM_obs (pc cm^-3)
+Spearman: -0.4049 mean: -0.0009 std: 0.2537
+Pearson:  -0.4681 mean: -0.0058 std: 0.2395
 
 Host magnitude (AB), RM_MW (rad/m^2)
-Spearman: 0.3844 mean: 0.0044 std: 0.2157
-Pearson:  0.4825 mean: 0.0024 std: 0.2100
+Spearman: 0.3844 mean: -0.0014 std: 0.2170
+Pearson:  0.4825 mean: -0.0023 std: 0.2112
 
 log(Zgas/Zo), log(M*/Mo)
-Spearman: 0.3438 mean: -0.0010 std: 0.2197
-Pearson:  0.4772 mean: 0.0066 std: 0.2226
+Spearman: 0.3438 mean: 0.0050 std: 0.2211
+Pearson:  0.4772 mean: -0.0013 std: 0.2132
 
 log(MF/Mo), log(Zgas/Zo)
-Spearman: 0.3356 mean: 0.0033 std: 0.2134
-Pearson:  0.4655 mean: 0.0092 std: 0.2229
+Spearman: 0.3356 mean: 0.0054 std: 0.2168
+Pearson:  0.4655 mean: 0.0126 std: 0.2181
 
 DM_MW (NE2001), RM_MW (rad/m^2)
-Spearman: -0.2480 mean: -0.0048 std: 0.2060
-Pearson:  -0.5500 mean: 0.0051 std: 0.2133
+Spearman: -0.2480 mean: 0.0009 std: 0.2107
+Pearson:  -0.5500 mean: 0.0046 std: 0.2207
 
 log(Z*/Zo), log(M*/Mo)
-Spearman: 0.4548 mean: -0.0046 std: 0.2075
-Pearson:  0.3206 mean: -0.0009 std: 0.2091
+Spearman: 0.4548 mean: 0.0111 std: 0.2063
+Pearson:  0.3206 mean: -0.0007 std: 0.2163
 
 log(MF/Mo), log(Z*/Zo)
-Spearman: 0.4296 mean: -0.0105 std: 0.2101
-Pearson:  0.3055 mean: 0.0071 std: 0.2166
+Spearman: 0.4296 mean: 0.0095 std: 0.2108
+Pearson:  0.3055 mean: -0.0025 std: 0.2208
+
+DM_obs (pc cm^-3), DM_ex (NE2001)
+Spearman: 0.1348 mean: -0.0066 std: 0.2566
+Pearson:  0.5700 mean: 0.0017 std: 0.2541
 
 Galactic lon, DM_IGM
-Spearman: 0.3567 mean: -0.0010 std: 0.2148
-Pearson:  0.3129 mean: -0.0025 std: 0.2155
+Spearman: 0.3567 mean: 0.0007 std: 0.2080
+Pearson:  0.3129 mean: -0.0092 std: 0.2256
 
 Galactic lon, z
-Spearman: 0.3567 mean: 0.0169 std: 0.2088
-Pearson:  0.3110 mean: -0.0065 std: 0.2090
+Spearman: 0.3567 mean: -0.0005 std: 0.2077
+Pearson:  0.3110 mean: 0.0035 std: 0.2236
+
+tm (Gyr), DM_obs (pc cm^-3)
+Spearman: -0.3995 mean: -0.0045 std: 0.2555
+Pearson:  -0.2678 mean: -0.0037 std: 0.2528
 
 SFR 0-100 Myr (Mo yr-1), log(M*/Mo)
-Spearman: 0.5384 mean: 0.0010 std: 0.2140
-Pearson:  0.1262 mean: 0.0067 std: 0.2155
+Spearman: 0.5384 mean: 0.0005 std: 0.2190
+Pearson:  0.1262 mean: 0.0004 std: 0.2039
+
+tm (Gyr), DM_ex (NE2001)
+Spearman: 0.4044 mean: -0.0061 std: 0.2565
+Pearson:  0.2492 mean: -0.0010 std: 0.2403
 
 Host magnitude (AB), tm (Gyr)
-Spearman: -0.2945 mean: 0.0011 std: 0.2113
-Pearson:  -0.3294 mean: -0.0186 std: 0.2105
+Spearman: -0.2945 mean: 0.0084 std: 0.2106
+Pearson:  -0.3294 mean: -0.0025 std: 0.2154
 
 log(Zgas/Zo), SFR 0-100 Myr (Mo yr-1)
-Spearman: 0.2937 mean: -0.0002 std: 0.2215
-Pearson:  0.3178 mean: -0.0042 std: 0.2178
+Spearman: 0.2937 mean: -0.0009 std: 0.2187
+Pearson:  0.3178 mean: 0.0069 std: 0.2191
 
 log(MF/Mo), SFR 0-100 Myr (Mo yr-1)
-Spearman: 0.5023 mean: -0.0049 std: 0.2088
-Pearson:  0.0897 mean: 0.0048 std: 0.2104
+Spearman: 0.5023 mean: -0.0043 std: 0.2119
+Pearson:  0.0897 mean: 0.0066 std: 0.2188
 
 Galactic lat, DM_IGM
-Spearman: -0.2737 mean: 0.0033 std: 0.2151
-Pearson:  -0.3164 mean: 0.0066 std: 0.2040
+Spearman: -0.2737 mean: 0.0002 std: 0.2114
+Pearson:  -0.3164 mean: -0.0094 std: 0.2145
 
 Galactic lat, z
-Spearman: -0.2737 mean: -0.0054 std: 0.2138
-Pearson:  -0.3158 mean: 0.0047 std: 0.2126
+Spearman: -0.2737 mean: 0.0062 std: 0.2153
+Pearson:  -0.3158 mean: -0.0008 std: 0.2076
 
 Av,old (mag), log(Zgas/Zo)
-Spearman: 0.2757 mean: 0.0107 std: 0.2182
-Pearson:  0.3124 mean: -0.0044 std: 0.2234
+Spearman: 0.2757 mean: -0.0048 std: 0.2137
+Pearson:  0.3124 mean: 0.0002 std: 0.2208
 
 Galactic lat, RM_MW (rad/m^2)
-Spearman: -0.3439 mean: -0.0036 std: 0.2118
-Pearson:  -0.2340 mean: -0.0027 std: 0.2116
+Spearman: -0.3439 mean: -0.0087 std: 0.2135
+Pearson:  -0.2340 mean: 0.0041 std: 0.2074
 
 Galactic lon, SFR 0-100 Myr (Mo yr-1)
-Spearman: 0.2718 mean: -0.0119 std: 0.2152
-Pearson:  0.3042 mean: -0.0083 std: 0.2168
+Spearman: 0.2718 mean: 0.0108 std: 0.2124
+Pearson:  0.3042 mean: -0.0088 std: 0.2128
 
 Galactic lon, Av,young (mag)
-Spearman: 0.2983 mean: 0.0078 std: 0.2108
-Pearson:  0.2671 mean: 0.0018 std: 0.2106
+Spearman: 0.2983 mean: 0.0090 std: 0.2129
+Pearson:  0.2671 mean: 0.0081 std: 0.2042
 
 Av,young (mag), RM_MW (rad/m^2)
-Spearman: 0.1650 mean: 0.0087 std: 0.2105
-Pearson:  0.3778 mean: 0.0069 std: 0.2105
+Spearman: 0.1650 mean: 0.0109 std: 0.2003
+Pearson:  0.3778 mean: -0.0039 std: 0.2117
+
+log(Z*/Zo), DM_obs (pc cm^-3)
+Spearman: -0.1362 mean: 0.0142 std: 0.2428
+Pearson:  -0.3933 mean: 0.0046 std: 0.2488
 
 Galactic lat, Av,old (mag)
-Spearman: 0.2818 mean: 0.0073 std: 0.2129
-Pearson:  0.2205 mean: -0.0009 std: 0.2093
+Spearman: 0.2818 mean: -0.0109 std: 0.2022
+Pearson:  0.2205 mean: -0.0104 std: 0.2185
+
+DM_MW (NE2001), DM_ex (NE2001)
+Spearman: -0.3529 mean: 0.0010 std: 0.2527
+Pearson:  -0.1451 mean: -0.0029 std: 0.2397
 
 log(MF/Mo), tm (Gyr)
-Spearman: 0.2313 mean: 0.0032 std: 0.2085
-Pearson:  0.2576 mean: -0.0040 std: 0.2210
+Spearman: 0.2313 mean: -0.0053 std: 0.2061
+Pearson:  0.2576 mean: -0.0065 std: 0.2029
 
 Av,young (mag), tm (Gyr)
-Spearman: -0.1799 mean: 0.0030 std: 0.2048
-Pearson:  -0.3076 mean: -0.0072 std: 0.2108
+Spearman: -0.1799 mean: -0.0036 std: 0.2189
+Pearson:  -0.3076 mean: -0.0068 std: 0.2033
+
+Galactic lon, DM_obs (pc cm^-3)
+Spearman: 0.2892 mean: 0.0191 std: 0.2512
+Pearson:  0.1943 mean: -0.0092 std: 0.2597
+
+log(Z*/Zo), DM_ex (NE2001)
+Spearman: -0.1043 mean: 0.0010 std: 0.2540
+Pearson:  -0.3779 mean: 0.0042 std: 0.2553
 
 Galactic lon, RM_MW (rad/m^2)
-Spearman: 0.2184 mean: 0.0064 std: 0.2123
-Pearson:  0.2594 mean: -0.0234 std: 0.2130
+Spearman: 0.2184 mean: -0.0029 std: 0.2088
+Pearson:  0.2594 mean: 0.0005 std: 0.2118
 
 log(MF/Mo), Av,old (mag)
-Spearman: 0.1482 mean: 0.0077 std: 0.2190
-Pearson:  0.3289 mean: -0.0152 std: 0.2109
+Spearman: 0.1482 mean: -0.0109 std: 0.2211
+Pearson:  0.3289 mean: 0.0040 std: 0.2092
 
 Av,old (mag), log(M*/Mo)
-Spearman: 0.1338 mean: -0.0165 std: 0.2076
-Pearson:  0.3250 mean: -0.0075 std: 0.2209
+Spearman: 0.1338 mean: 0.0015 std: 0.2085
+Pearson:  0.3250 mean: 0.0019 std: 0.2209
+
+Galactic lat, DM_ex (NE2001)
+Spearman: 0.1520 mean: 0.0047 std: 0.2581
+Pearson:  0.3065 mean: -0.0225 std: 0.2485
+
+Galactic lon, DM_ex (NE2001)
+Spearman: -0.2598 mean: -0.0018 std: 0.2542
+Pearson:  -0.1859 mean: 0.0132 std: 0.2520
+
+log(M*/Mo), DM_ex (NE2001)
+Spearman: -0.1901 mean: -0.0116 std: 0.2428
+Pearson:  -0.2410 mean: 0.0058 std: 0.2567
+
+SFR 0-100 Myr (Mo yr-1), DM_obs (pc cm^-3)
+Spearman: -0.2083 mean: 0.0065 std: 0.2483
+Pearson:  -0.2214 mean: 0.0001 std: 0.2477
 
 log(M*/Mo), tm (Gyr)
-Spearman: 0.1982 mean: 0.0024 std: 0.2134
-Pearson:  0.2309 mean: -0.0075 std: 0.2114
+Spearman: 0.1982 mean: -0.0125 std: 0.2179
+Pearson:  0.2309 mean: 0.0009 std: 0.2161
 
 log(Zgas/Zo), tm (Gyr)
-Spearman: 0.2470 mean: 0.0030 std: 0.2284
-Pearson:  0.1681 mean: 0.0020 std: 0.2170
+Spearman: 0.2470 mean: -0.0113 std: 0.2135
+Pearson:  0.1681 mean: -0.0030 std: 0.2146
 
 tm (Gyr), DM_MW (NE2001)
-Spearman: 0.0395 mean: -0.0028 std: 0.2076
-Pearson:  0.3620 mean: -0.0034 std: 0.2081
+Spearman: 0.0395 mean: -0.0055 std: 0.2086
+Pearson:  0.3620 mean: -0.0150 std: 0.2089
 
 log(Zgas/Zo), RM_MW (rad/m^2)
-Spearman: -0.1938 mean: -0.0012 std: 0.2151
-Pearson:  -0.2074 mean: -0.0085 std: 0.2208
+Spearman: -0.1938 mean: 0.0039 std: 0.2150
+Pearson:  -0.2074 mean: 0.0064 std: 0.2195
 
 Av,old (mag), RM_MW (rad/m^2)
-Spearman: 0.3066 mean: 0.0036 std: 0.2267
-Pearson:  0.0867 mean: -0.0096 std: 0.2076
+Spearman: 0.3066 mean: 0.0032 std: 0.2104
+Pearson:  0.0867 mean: -0.0018 std: 0.2146
+
+log(MF/Mo), DM_ex (NE2001)
+Spearman: -0.1583 mean: -0.0086 std: 0.2506
+Pearson:  -0.2337 mean: -0.0148 std: 0.2484
 
 Galactic lat, log(Zgas/Zo)
-Spearman: 0.2227 mean: -0.0051 std: 0.2197
-Pearson:  0.1636 mean: -0.0010 std: 0.2216
+Spearman: 0.2227 mean: -0.0072 std: 0.2230
+Pearson:  0.1636 mean: -0.0034 std: 0.2147
 
 log(M*/Mo), DM_MW (NE2001)
-Spearman: -0.1819 mean: 0.0020 std: 0.2119
-Pearson:  -0.1936 mean: 0.0039 std: 0.2121
+Spearman: -0.1819 mean: -0.0031 std: 0.2169
+Pearson:  -0.1936 mean: 0.0078 std: 0.2127
 
 Galactic lat, Host magnitude (AB)
-Spearman: -0.1591 mean: -0.0001 std: 0.2126
-Pearson:  -0.2118 mean: 0.0004 std: 0.2181
+Spearman: -0.1591 mean: -0.0026 std: 0.2208
+Pearson:  -0.2118 mean: -0.0039 std: 0.2118
 
 log(MF/Mo), DM_MW (NE2001)
-Spearman: -0.1715 mean: -0.0016 std: 0.2128
-Pearson:  -0.1855 mean: 0.0061 std: 0.2157
+Spearman: -0.1715 mean: 0.0051 std: 0.2087
+Pearson:  -0.1855 mean: -0.0043 std: 0.2104
 
 Galactic lon, DM_MW (NE2001)
-Spearman: 0.2490 mean: 0.0103 std: 0.2177
-Pearson:  -0.1073 mean: -0.0002 std: 0.2135
+Spearman: 0.2490 mean: -0.0059 std: 0.2148
+Pearson:  -0.1073 mean: -0.0080 std: 0.2208
+
+log(Zgas/Zo), DM_ex (NE2001)
+Spearman: 0.0309 mean: -0.0032 std: 0.2601
+Pearson:  -0.3243 mean: 0.0038 std: 0.2468
 
 z, DM_MW (NE2001)
-Spearman: -0.0613 mean: -0.0101 std: 0.2189
-Pearson:  -0.2892 mean: 0.0147 std: 0.2079
+Spearman: -0.0613 mean: -0.0122 std: 0.2190
+Pearson:  -0.2892 mean: -0.0042 std: 0.2125
 
 DM_MW (NE2001), DM_IGM
-Spearman: -0.0613 mean: 0.0012 std: 0.2142
-Pearson:  -0.2872 mean: 0.0160 std: 0.2126
+Spearman: -0.0613 mean: -0.0090 std: 0.2136
+Pearson:  -0.2872 mean: 0.0050 std: 0.2180
 
 Av,young (mag), SFR 0-100 Myr (Mo yr-1)
-Spearman: 0.1271 mean: 0.0013 std: 0.2141
-Pearson:  0.2097 mean: -0.0034 std: 0.2086
+Spearman: 0.1271 mean: 0.0121 std: 0.2138
+Pearson:  0.2097 mean: 0.0033 std: 0.2100
 
 Host magnitude (AB), log(Z*/Zo)
-Spearman: -0.2251 mean: -0.0027 std: 0.2167
-Pearson:  -0.1031 mean: 0.0088 std: 0.2173
+Spearman: -0.2251 mean: -0.0057 std: 0.2162
+Pearson:  -0.1031 mean: 0.0091 std: 0.2180
 
 z, SFR 0-100 Myr (Mo yr-1)
-Spearman: 0.1176 mean: 0.0084 std: 0.2162
-Pearson:  -0.2085 mean: -0.0039 std: 0.2128
+Spearman: 0.1176 mean: 0.0079 std: 0.2068
+Pearson:  -0.2085 mean: -0.0222 std: 0.2097
 
 SFR 0-100 Myr (Mo yr-1), DM_IGM
-Spearman: 0.1176 mean: -0.0010 std: 0.2153
-Pearson:  -0.2061 mean: 0.0019 std: 0.2165
+Spearman: 0.1176 mean: 0.0038 std: 0.2203
+Pearson:  -0.2061 mean: 0.0022 std: 0.2074
 
 Av,old (mag), Av,young (mag)
-Spearman: 0.1309 mean: -0.0048 std: 0.2104
-Pearson:  0.1897 mean: -0.0080 std: 0.2144
+Spearman: 0.1309 mean: -0.0014 std: 0.2088
+Pearson:  0.1897 mean: -0.0090 std: 0.2105
 
 Av,young (mag), DM_MW (NE2001)
-Spearman: -0.0535 mean: -0.0051 std: 0.2088
-Pearson:  -0.2659 mean: 0.0045 std: 0.2091
+Spearman: -0.0535 mean: -0.0058 std: 0.2147
+Pearson:  -0.2659 mean: 0.0016 std: 0.2119
+
+Galactic lat, DM_obs (pc cm^-3)
+Spearman: -0.2721 mean: -0.0100 std: 0.2475
+Pearson:  -0.0464 mean: -0.0147 std: 0.2514
+
+Av,young (mag), DM_ex (NE2001)
+Spearman: 0.1233 mean: 0.0137 std: 0.2464
+Pearson:  0.1856 mean: -0.0072 std: 0.2455
 
 Galactic lon, Av,old (mag)
-Spearman: 0.1449 mean: 0.0053 std: 0.2135
-Pearson:  0.1617 mean: 0.0026 std: 0.2169
+Spearman: 0.1449 mean: -0.0076 std: 0.2134
+Pearson:  0.1617 mean: 0.0011 std: 0.2191
+
+Av,old (mag), DM_ex (NE2001)
+Spearman: -0.2025 mean: 0.0070 std: 0.2534
+Pearson:  -0.0976 mean: -0.0081 std: 0.2455
 
 log(Zgas/Zo), DM_MW (NE2001)
-Spearman: -0.1447 mean: 0.0094 std: 0.2183
-Pearson:  -0.1550 mean: 0.0108 std: 0.2167
+Spearman: -0.1447 mean: -0.0047 std: 0.2195
+Pearson:  -0.1550 mean: 0.0011 std: 0.2230
 
 log(Z*/Zo), RM_MW (rad/m^2)
-Spearman: -0.2211 mean: -0.0132 std: 0.2144
-Pearson:  0.0703 mean: -0.0038 std: 0.2082
+Spearman: -0.2211 mean: -0.0022 std: 0.2106
+Pearson:  0.0703 mean: 0.0001 std: 0.2146
 
 log(Z*/Zo), tm (Gyr)
-Spearman: -0.1098 mean: -0.0174 std: 0.2050
-Pearson:  -0.1731 mean: -0.0008 std: 0.2074
+Spearman: -0.1098 mean: -0.0055 std: 0.2077
+Pearson:  -0.1731 mean: -0.0027 std: 0.2133
 
 log(Z*/Zo), Av,old (mag)
-Spearman: -0.2443 mean: -0.0007 std: 0.2115
-Pearson:  -0.0354 mean: 0.0036 std: 0.2135
+Spearman: -0.2443 mean: -0.0009 std: 0.2095
+Pearson:  -0.0354 mean: 0.0036 std: 0.2066
 
 SFR 0-100 Myr (Mo yr-1), DM_MW (NE2001)
-Spearman: -0.0771 mean: -0.0046 std: 0.2204
-Pearson:  -0.1875 mean: 0.0089 std: 0.2150
+Spearman: -0.0771 mean: 0.0005 std: 0.2044
+Pearson:  -0.1875 mean: -0.0011 std: 0.2218
 
 Galactic lon, log(MF/Mo)
-Spearman: -0.1305 mean: -0.0143 std: 0.2190
-Pearson:  -0.1191 mean: -0.0018 std: 0.2123
+Spearman: -0.1305 mean: 0.0021 std: 0.2241
+Pearson:  -0.1191 mean: -0.0031 std: 0.2145
 
 z, log(MF/Mo)
-Spearman: -0.1216 mean: 0.0035 std: 0.2124
-Pearson:  -0.1230 mean: -0.0160 std: 0.2232
+Spearman: -0.1216 mean: -0.0031 std: 0.2122
+Pearson:  -0.1230 mean: 0.0062 std: 0.2105
 
 log(MF/Mo), DM_IGM
-Spearman: -0.1216 mean: -0.0032 std: 0.2168
-Pearson:  -0.1229 mean: 0.0010 std: 0.2113
+Spearman: -0.1216 mean: 0.0006 std: 0.2134
+Pearson:  -0.1229 mean: 0.0202 std: 0.2177
+
+Host magnitude (AB), DM_ex (NE2001)
+Spearman: -0.1544 mean: 0.0023 std: 0.2374
+Pearson:  -0.0895 mean: -0.0030 std: 0.2423
 
 Galactic lon, log(M*/Mo)
-Spearman: -0.1374 mean: -0.0021 std: 0.2127
-Pearson:  -0.1037 mean: 0.0033 std: 0.2121
+Spearman: -0.1374 mean: -0.0112 std: 0.2139
+Pearson:  -0.1037 mean: 0.0016 std: 0.2123
 
 z, log(Z*/Zo)
-Spearman: 0.0816 mean: -0.0006 std: 0.2141
-Pearson:  0.1578 mean: 0.0024 std: 0.2124
+Spearman: 0.0816 mean: -0.0020 std: 0.2159
+Pearson:  0.1578 mean: -0.0047 std: 0.2136
 
 log(Z*/Zo), DM_IGM
-Spearman: 0.0816 mean: 0.0096 std: 0.2113
-Pearson:  0.1567 mean: -0.0067 std: 0.2178
+Spearman: 0.0816 mean: 0.0088 std: 0.2140
+Pearson:  0.1567 mean: 0.0028 std: 0.2067
 
 log(M*/Mo), RM_MW (rad/m^2)
-Spearman: -0.1003 mean: -0.0079 std: 0.2196
-Pearson:  -0.1327 mean: -0.0084 std: 0.2075
+Spearman: -0.1003 mean: -0.0041 std: 0.2153
+Pearson:  -0.1327 mean: 0.0039 std: 0.2174
 
 z, log(M*/Mo)
-Spearman: -0.1112 mean: 0.0044 std: 0.2106
-Pearson:  -0.1201 mean: 0.0038 std: 0.2121
+Spearman: -0.1112 mean: 0.0038 std: 0.2072
+Pearson:  -0.1201 mean: 0.0104 std: 0.2179
 
 log(MF/Mo), RM_MW (rad/m^2)
-Spearman: -0.0959 mean: 0.0072 std: 0.2131
-Pearson:  -0.1353 mean: 0.0078 std: 0.2175
+Spearman: -0.0959 mean: -0.0071 std: 0.2119
+Pearson:  -0.1353 mean: 0.0066 std: 0.2178
 
 log(M*/Mo), DM_IGM
-Spearman: -0.1112 mean: 0.0030 std: 0.2097
-Pearson:  -0.1199 mean: -0.0067 std: 0.2134
+Spearman: -0.1112 mean: 0.0054 std: 0.2130
+Pearson:  -0.1199 mean: 0.0022 std: 0.2203
 
 Av,young (mag), log(Zgas/Zo)
-Spearman: 0.1301 mean: 0.0080 std: 0.2242
-Pearson:  0.0783 mean: 0.0178 std: 0.2167
+Spearman: 0.1301 mean: 0.0029 std: 0.2243
+Pearson:  0.0783 mean: -0.0042 std: 0.2183
 
 log(Z*/Zo), log(Zgas/Zo)
-Spearman: 0.0981 mean: 0.0102 std: 0.2166
-Pearson:  0.1069 mean: -0.0041 std: 0.2196
+Spearman: 0.0981 mean: 0.0041 std: 0.2288
+Pearson:  0.1069 mean: 0.0107 std: 0.2154
+
+SFR 0-100 Myr (Mo yr-1), DM_ex (NE2001)
+Spearman: -0.1029 mean: 0.0036 std: 0.2546
+Pearson:  0.0908 mean: -0.0263 std: 0.2397
 
 log(Z*/Zo), Av,young (mag)
-Spearman: -0.1650 mean: 0.0029 std: 0.2088
-Pearson:  -0.0243 mean: -0.0132 std: 0.2101
+Spearman: -0.1650 mean: -0.0056 std: 0.2080
+Pearson:  -0.0243 mean: 0.0006 std: 0.2104
 
 Av,old (mag), DM_MW (NE2001)
-Spearman: -0.1023 mean: -0.0009 std: 0.2136
-Pearson:  -0.0762 mean: -0.0212 std: 0.2095
+Spearman: -0.1023 mean: -0.0019 std: 0.2109
+Pearson:  -0.0762 mean: 0.0019 std: 0.2094
 
 Galactic lon, Host magnitude (AB)
-Spearman: 0.1028 mean: 0.0051 std: 0.2177
-Pearson:  0.0741 mean: -0.0081 std: 0.2073
+Spearman: 0.1028 mean: 0.0043 std: 0.2039
+Pearson:  0.0741 mean: -0.0059 std: 0.2138
 
 Galactic lat, log(MF/Mo)
-Spearman: -0.1280 mean: -0.0085 std: 0.2124
-Pearson:  -0.0415 mean: 0.0043 std: 0.2085
+Spearman: -0.1280 mean: 0.0009 std: 0.2154
+Pearson:  -0.0415 mean: -0.0110 std: 0.2248
 
 log(Z*/Zo), DM_MW (NE2001)
-Spearman: -0.0678 mean: 0.0031 std: 0.2112
-Pearson:  -0.0977 mean: -0.0005 std: 0.2084
+Spearman: -0.0678 mean: 0.0051 std: 0.2115
+Pearson:  -0.0977 mean: -0.0056 std: 0.2175
+
+Av,young (mag), DM_obs (pc cm^-3)
+Spearman: -0.1566 mean: 0.0029 std: 0.2461
+Pearson:  -0.0024 mean: -0.0005 std: 0.2524
 
 Galactic lat, tm (Gyr)
-Spearman: 0.1383 mean: 0.0036 std: 0.2130
-Pearson:  0.0179 mean: 0.0066 std: 0.2145
+Spearman: 0.1383 mean: 0.0119 std: 0.2112
+Pearson:  0.0179 mean: 0.0015 std: 0.2089
 
 Galactic lon, log(Zgas/Zo)
-Spearman: -0.1034 mean: -0.0068 std: 0.2099
-Pearson:  -0.0506 mean: 0.0069 std: 0.2085
+Spearman: -0.1034 mean: -0.0079 std: 0.2165
+Pearson:  -0.0506 mean: -0.0018 std: 0.2159
 
 Galactic lat, SFR 0-100 Myr (Mo yr-1)
-Spearman: 0.0054 mean: 0.0093 std: 0.2130
-Pearson:  0.1445 mean: -0.0082 std: 0.2121
+Spearman: 0.0054 mean: -0.0016 std: 0.2195
+Pearson:  0.1445 mean: 0.0064 std: 0.2123
 
 Galactic lat, log(M*/Mo)
-Spearman: -0.1167 mean: -0.0072 std: 0.2182
-Pearson:  -0.0314 mean: 0.0029 std: 0.2104
+Spearman: -0.1167 mean: 0.0068 std: 0.2094
+Pearson:  -0.0314 mean: 0.0055 std: 0.2085
+
+DM_MW (NE2001), DM_obs (pc cm^-3)
+Spearman: -0.0417 mean: 0.0126 std: 0.2506
+Pearson:  -0.0832 mean: 0.0129 std: 0.2554
 
 Av,young (mag), log(M*/Mo)
-Spearman: -0.0828 mean: 0.0015 std: 0.2152
-Pearson:  -0.0369 mean: -0.0018 std: 0.2057
+Spearman: -0.0828 mean: -0.0006 std: 0.2089
+Pearson:  -0.0369 mean: -0.0018 std: 0.2100
 
 Galactic lat, Av,young (mag)
-Spearman: 0.0139 mean: -0.0064 std: 0.2171
-Pearson:  0.1050 mean: -0.0018 std: 0.2127
+Spearman: 0.0139 mean: -0.0078 std: 0.2163
+Pearson:  0.1050 mean: 0.0042 std: 0.2195
 
 log(MF/Mo), Av,young (mag)
-Spearman: -0.0669 mean: 0.0056 std: 0.2087
-Pearson:  -0.0449 mean: -0.0061 std: 0.2060
+Spearman: -0.0669 mean: -0.0051 std: 0.2145
+Pearson:  -0.0449 mean: -0.0033 std: 0.2193
 
 Av,old (mag), tm (Gyr)
-Spearman: 0.0593 mean: -0.0031 std: 0.2153
-Pearson:  -0.0371 mean: -0.0021 std: 0.2119
+Spearman: 0.0593 mean: 0.0084 std: 0.2124
+Pearson:  -0.0371 mean: -0.0075 std: 0.2186
 
 Host magnitude (AB), DM_MW (NE2001)
-Spearman: -0.0089 mean: -0.0029 std: 0.2176
-Pearson:  -0.0876 mean: -0.0003 std: 0.2166
+Spearman: -0.0089 mean: 0.0117 std: 0.2122
+Pearson:  -0.0876 mean: 0.0091 std: 0.2068
 
 Host magnitude (AB), Av,old (mag)
-Spearman: 0.0381 mean: -0.0051 std: 0.2235
-Pearson:  -0.0426 mean: -0.0071 std: 0.2117
+Spearman: 0.0381 mean: 0.0114 std: 0.2101
+Pearson:  -0.0426 mean: 0.0048 std: 0.2101
 
 Galactic lon, log(Z*/Zo)
-Spearman: -0.0599 mean: 0.0007 std: 0.2167
-Pearson:  0.0174 mean: -0.0129 std: 0.2102
+Spearman: -0.0599 mean: 0.0131 std: 0.2149
+Pearson:  0.0174 mean: -0.0062 std: 0.2139
 
 Av,old (mag), DM_IGM
-Spearman: 0.0549 mean: -0.0011 std: 0.2116
-Pearson:  -0.0147 mean: 0.0047 std: 0.2153
+Spearman: 0.0549 mean: 0.0095 std: 0.2041
+Pearson:  -0.0147 mean: -0.0012 std: 0.2089
 
 z, Av,old (mag)
-Spearman: 0.0549 mean: -0.0083 std: 0.2069
-Pearson:  -0.0122 mean: 0.0118 std: 0.2095
+Spearman: 0.0549 mean: 0.0040 std: 0.2126
+Pearson:  -0.0122 mean: -0.0015 std: 0.2140
+
+Av,old (mag), DM_obs (pc cm^-3)
+Spearman: -0.0209 mean: 0.0072 std: 0.2484
+Pearson:  -0.0382 mean: 0.0030 std: 0.2564
 
 z, Av,young (mag)
-Spearman: -0.0530 mean: 0.0127 std: 0.2186
-Pearson:  0.0036 mean: 0.0031 std: 0.2145
+Spearman: -0.0530 mean: 0.0024 std: 0.2093
+Pearson:  0.0036 mean: 0.0087 std: 0.2186
 
 Av,young (mag), DM_IGM
-Spearman: -0.0530 mean: -0.0008 std: 0.2063
-Pearson:  0.0015 mean: 0.0042 std: 0.2115
+Spearman: -0.0530 mean: -0.0008 std: 0.2163
+Pearson:  0.0015 mean: -0.0078 std: 0.2164
 
 Galactic lat, log(Z*/Zo)
-Spearman: -0.0351 mean: 0.0042 std: 0.2112
-Pearson:  -0.0177 mean: -0.0070 std: 0.2108
+Spearman: -0.0351 mean: -0.0103 std: 0.2135
+Pearson:  -0.0177 mean: -0.0059 std: 0.2054
 
 Galactic lat, DM_MW (NE2001)
-Spearman: 0.0020 mean: -0.0092 std: 0.2129
-Pearson:  -0.0492 mean: -0.0015 std: 0.2165
+Spearman: 0.0020 mean: -0.0076 std: 0.2204
+Pearson:  -0.0492 mean: 0.0051 std: 0.2133
 
 Host magnitude (AB), Av,young (mag)
-Spearman: 0.0168 mean: -0.0011 std: 0.2020
-Pearson:  0.0172 mean: -0.0002 std: 0.2138
+Spearman: 0.0168 mean: -0.0072 std: 0.2167
+Pearson:  0.0172 mean: 0.0109 std: 0.2188
 
-Galactic lat, Galactic lon
-Spearman: 0.0119 mean: -0.0092 std: 0.2060
-Pearson:  0.0214 mean: 0.0042 std: 0.2162
+DM_obs (pc cm^-3), RM_MW (rad/m^2)
+Spearman: -0.0172 mean: 0.0082 std: 0.2438
+Pearson:  -0.0164 mean: -0.0036 std: 0.2517
+
+Galactic lon, Galactic lat
+Spearman: 0.0119 mean: 0.0018 std: 0.2109
+Pearson:  0.0214 mean: -0.0049 std: 0.2126
 
 SFR 0-100 Myr (Mo yr-1), RM_MW (rad/m^2)
-Spearman: 0.0168 mean: 0.0039 std: 0.2121
-Pearson:  -0.0056 mean: 0.0051 std: 0.2104
+Spearman: 0.0168 mean: 0.0018 std: 0.2177
+Pearson:  -0.0056 mean: 0.0062 std: 0.2152
 
 Av,old (mag), SFR 0-100 Myr (Mo yr-1)
-Spearman: 0.0094 mean: 0.0020 std: 0.2117
-Pearson:  -0.0060 mean: -0.0073 std: 0.2126
+Spearman: 0.0094 mean: 0.0100 std: 0.2138
+Pearson:  -0.0060 mean: -0.0011 std: 0.2126
 
