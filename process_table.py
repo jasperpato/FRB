@@ -93,10 +93,12 @@ def complete_row(row, state):
 	'''
 	Complete the missing columns of a row.
 	'''
-
 	# get frb data and frb output
 	frb_name = row['FRB'][2:-1] # get 6-digit frb name
 	frb_data, frb_output = get_frb_data(frb_name)
+
+	row['log(SFR/M)'] = np.log10(row['SFR 0-100 Myr (Mo yr-1)']) - row['log(M*/Mo)']
+	row['log(SFR/M) error'] = np.hypot(row['SFR error'] / row['SFR 0-100 Myr (Mo yr-1)'] / np.log(10), row['log(M*/Mo) error'])
 	
 	ra, dec = 'RA', 'DEC'
 	glon, glat = 'Galactic lon', 'Galactic lat'
@@ -111,6 +113,7 @@ def complete_row(row, state):
 
 		# RM_MW and error
 		coord = SkyCoord(ra=r, dec=d, unit='deg', frame=FK5, equinox='J2000')
+		
 		rm, rm_error = galactic_rm(coord)
 		row['RM_MW (rad/m^2)'], row['RM_MW error'] = rm.value, rm_error.value
 
@@ -124,8 +127,6 @@ def complete_row(row, state):
 	row['DM_ex (NE2001)'] = row['DM_obs (pc cm^-3)'] - row['DM_MW (NE2001)'] - row['DM_IGM']
 	row['DM_ex error (NE2001)'] = np.hypot(row['DM_MW error (NE2001)'], row['DM_IGM error'])
 
-	print(row['DM_ex (NE2001)'])
-
 	if not frb_data or not frb_output:
 		return row
 	
@@ -136,8 +137,8 @@ def complete_row(row, state):
 	b = b = 'Burst width (ms)'
 	row[b] = frb_output[b]
 
-	s = 'Scattering timescale (ms)'
-	row[s], row['Scattering timescale error'] = frb_output[s]
+	s = 'Tau_obs (ms)'
+	row[s], row['Tau_obs error'] = frb_output[s]
 
 	l = 'Linear polarisation fraction'
 	row[l], row[l + ' error'] = frb_output[l]
@@ -151,14 +152,12 @@ def complete_row(row, state):
 	# YMW16 (requires observed frequency)
 	dm, sc = dist_to_dm(row[glon], row[glat], globalpars.MW_DIAMETER, nu=freq)
 	
-	row['DM_MW (YMW16)'], row['Tau_SC (ms) (YMW16)'] = dm.value, sc.value * 1e3 # ms  
-	row['DM_MW error (YMW16)'], row['Tau_SC error (YMW16)'] = get_error(row[glon], row[glat], nu=freq, method='YMW16')
+	row['DM_MW (YMW16)'], row['Tau_MW (ms) (YMW16)'] = dm.value, sc.value * 1e3 # ms  
+	row['DM_MW error (YMW16)'], row['Tau_MW error (YMW16)'] = get_error(row[glon], row[glat], nu=freq, method='YMW16')
 
-	# SC_ex
-	# print(row[s], row['Tau_SC (ms) (YMW16)'])
-
-	row['SC_ex'] = (row[s] - row['Tau_SC (ms) (YMW16)']) ** 0.5
-	row['SC_ex error'] = 0.5 * np.hypot(row[s], row['Tau_SC (ms) (YMW16)']) / row['SC_ex']
+	# Tau_ex
+	row['Tau_ex'] = (row[s] - row['Tau_MW (ms) (YMW16)']) ** 0.5
+	row['Tau_ex error'] = 0.5 * np.hypot(row[s], row['Tau_MW (ms) (YMW16)']) / row['SC_ex']
 
 	return row
 
@@ -176,9 +175,10 @@ def update_table(file):
 	order = [
 		'FRB', 'RA', 'DEC', 'Galactic lon', 'Galactic lat', 'z', 'Repeater', 'Host magnitude (AB)', 
 		'log(MF/Mo)', 'log(MF/Mo) error', 'log(Z*/Zo)', 'log(Z*/Zo) error', 'Av,old (mag)', 'Av,old error', 'Av,young (mag)', 'Av,young error', 'AGN',
-		'log(Zgas/Zo)', 'log(Zgas/Zo) error', 'SFR 0-100 Myr (Mo yr-1)', 'SFR error', 'log(M*/Mo)', 'log(M*/Mo) error', 'tm (Gyr)', 'tm error',
+		'log(Zgas/Zo)', 'log(Zgas/Zo) error', 'SFR 0-100 Myr (Mo yr-1)', 'SFR error', 'log(M*/Mo)', 'log(M*/Mo) error', 'log(SFR/M)', 'log(SFR/M) error', 'tm (Gyr)', 'tm error',
 		'DM_MW (NE2001)', 'DM_MW error (NE2001)', 'DM_MW (YMW16)', 'DM_MW error (YMW16)', 'DM_IGM', 'DM_IGM error', 'DM_obs (pc cm^-3)', 'DM_ex (NE2001)', 'DM_ex error (NE2001)',
-		'RM_MW (rad/m^2)', 'RM_MW error', 'Tau_SC (ms) (YMW16)', 'Tau_SC error (YMW16)', 'Scattering timescale (ms)', 'Scattering timescale error', 'SC_ex', 'SC_ex error',
+		'RM_MW (rad/m^2)', 'RM_MW error', 'RM_obs (rad/m^2)', 'RM_ex (rad/m^2)', 'RM_ex error',
+		'Tau_MW (ms) (YMW16)', 'Tau_MW error (YMW16)', 'Tau_obs (ms)', 'Tau_obs error', 'Tau_ex', 'Tau_ex error',
 		'Linear polarisation fraction', 'Linear polarisation fraction error', 'Total polarisation fraction', 'Total polarisation fraction error',  'Burst width (ms)',        
 	]
 	data = data[order]

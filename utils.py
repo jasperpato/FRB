@@ -57,3 +57,10 @@ def get_files(dir):
 	'''
 	return [f'{dir}/{f}' for f in os.listdir(dir)]
 	
+
+class DevNull():
+	'''
+	Class to write to instead of stdout to prevent output.
+	'''
+	def write():
+		pass

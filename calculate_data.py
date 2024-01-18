@@ -148,7 +148,7 @@ def calculate_data(frb_data, data_file):
 		d['Linear polarisation fraction'] = polarisation_fraction(*l, *f)
 		d['Total polarisation fraction'] = polarisation_fraction(*p, *f)
 		
-		d['Scattering timescale (ms)'] = [d['Params'][-1], d['Uncertainties'][-1]] # timescale and timescale error
+		d['Tau_obs (ms)'] = [d['Params'][-1], d['Uncertainties'][-1]] # timescale and timescale error
 		
 		data['data'][n] = dict(sorted(d.items()))
 

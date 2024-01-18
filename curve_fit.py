@@ -91,7 +91,7 @@ if __name__ == '__main__':
 	a.add_argument('--suffix', default='_out')
 	a.add_argument('--nrange', default='1,19')
 	a.add_argument('--visualise-for', default=None, type=int)
-	a.add_argument('inputs', nargs='*', default=get_files('data'))
+	a.add_argument('inputs', nargs='*', default=get_files('data/pkls'))
 
 	args = a.parse_args()
 
