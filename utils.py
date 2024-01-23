@@ -43,14 +43,6 @@ def raw_burst_range(ys, area=globalpars.RAW_CENTRE_AREA, sigma=globalpars.RAW_SI
 	return max(0, low - width), min(len(ys), i + width)
 
 
-def get_frb(input):
-	'''
-	Exract the FRB name from an input file.
-	'''
-	name = os.path.basename(input)
-	return name[:name.index(".")]
-
-
 def get_files(dir):
 	'''
 	Get all input files from a directory.

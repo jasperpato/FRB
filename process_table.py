@@ -75,7 +75,7 @@ def get_frb_data(frb_name):
 	'''
 	# frb data
 	frb_data = None
-	for entry in get_files('data'):
+	for entry in get_files('data/pkls'):
 		if 'pkl' in entry and frb_name in entry:
 			frb_data = get_data(entry)
 
@@ -156,8 +156,8 @@ def complete_row(row, state):
 	row['DM_MW error (YMW16)'], row['Tau_MW error (YMW16)'] = get_error(row[glon], row[glat], nu=freq, method='YMW16')
 
 	# Tau_ex
-	row['Tau_ex'] = (row[s] - row['Tau_MW (ms) (YMW16)']) ** 0.5
-	row['Tau_ex error'] = 0.5 * np.hypot(row[s], row['Tau_MW (ms) (YMW16)']) / row['SC_ex']
+	row['Tau_ex (ms)'] = (row[s]**2 - row['Tau_MW (ms) (YMW16)']**2) ** 0.5
+	row['Tau_ex error'] = 0.5 * np.hypot(row[s], row['Tau_MW (ms) (YMW16)']) / row['Tau_ex (ms)']
 
 	return row
 
@@ -178,7 +178,7 @@ def update_table(file):
 		'log(Zgas/Zo)', 'log(Zgas/Zo) error', 'SFR 0-100 Myr (Mo yr-1)', 'SFR error', 'log(M*/Mo)', 'log(M*/Mo) error', 'log(SFR/M)', 'log(SFR/M) error', 'tm (Gyr)', 'tm error',
 		'DM_MW (NE2001)', 'DM_MW error (NE2001)', 'DM_MW (YMW16)', 'DM_MW error (YMW16)', 'DM_IGM', 'DM_IGM error', 'DM_obs (pc cm^-3)', 'DM_ex (NE2001)', 'DM_ex error (NE2001)',
 		'RM_MW (rad/m^2)', 'RM_MW error', 'RM_obs (rad/m^2)', 'RM_ex (rad/m^2)', 'RM_ex error',
-		'Tau_MW (ms) (YMW16)', 'Tau_MW error (YMW16)', 'Tau_obs (ms)', 'Tau_obs error', 'Tau_ex', 'Tau_ex error',
+		'Tau_MW (ms) (YMW16)', 'Tau_MW error (YMW16)', 'Tau_obs (ms)', 'Tau_obs error', 'Tau_ex (ms)', 'Tau_ex error',
 		'Linear polarisation fraction', 'Linear polarisation fraction error', 'Total polarisation fraction', 'Total polarisation fraction error',  'Burst width (ms)',        
 	]
 	data = data[order]

@@ -12,6 +12,10 @@ import matplotlib.pyplot as plt
 from confsmooth import confsmooth
 from plot_fit import *
 from calculate_data import calculate_data
+import os
+
+
+IGNORE = ['190608', '190611', '190711', '200430', '210407', '220501', '220725', '221106', '230526']
 
 
 def estimate_params(n, xs, ys, timestep, visualise=False):
@@ -76,7 +80,7 @@ def fit(xs, ys, timestep, rms, nmin, nmax, data_file, frbname, visualise_for=Non
 			if type(e) == KeyboardInterrupt: break
 			else:
 				print(e)
-				del data['data'][str(n)]
+				# del data['data'][str(n)]
 
 	with open(data_file, 'w') as f:
 		json.dump(data, f)
@@ -88,7 +92,6 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--suffix', default='_out')
 	a.add_argument('--nrange', default='1,19')
 	a.add_argument('--visualise-for', default=None, type=int)
 	a.add_argument('inputs', nargs='*', default=get_files('data/pkls'))
@@ -96,9 +99,13 @@ if __name__ == '__main__':
 	args = a.parse_args()
 
 	for input in args.inputs:
-		frb = get_frb(input)
-		output = f'output/{frb}{args.suffix}.json'
+		frb = os.path.basename(input)[:6]
+		output = f'output/{frb}_out.json'
 
+		if frb in IGNORE:
+			print(f'Skipping {frb}')
+			continue
+		
 		print(frb)
 
 		frb_data = get_data(input)

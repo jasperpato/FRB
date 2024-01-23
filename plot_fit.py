@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from utils import *
 import json
+import os
 
 
 def plot_single_fit(xs, ys, params):
@@ -52,8 +53,9 @@ def _plot(xs, ys, data, rms, n, low_i):
 		ax[1].plot(xs, exgauss(xs, *params[i:i+3], params[-1]), linestyle='dotted', color='blue')
 
 	# burst width
-	ax[1].axvline(xs[low - low_i], color='green')
-	ax[1].axvline(xs[high - low_i], color='green')
+	l, h = max(low - low_i, 0), min(len(xs)-1, high - low_i)
+	ax[1].axvline(xs[l], color='green')
+	ax[1].axvline(xs[h], color='green')
 	
 	ax[1].set_ylabel('Intensity')
 	plt.xlabel('Time (ms)')
@@ -81,13 +83,15 @@ if __name__ == '__main__':
 	a = ArgumentParser()
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--show', action='store_true')
-	a.add_argument('inputs', nargs='*', default=get_files('data'))
+	a.add_argument('inputs', nargs='*', default=get_files('data/pkls'))
 
 	args = a.parse_args()
 
 	for input in args.inputs:
-		frb = get_frb(input)
+		frb = os.path.basename(input)[:6]
 		output = f'output/{frb}_out.json'
+
+		print(frb)
 
 		frb_data = get_data(input)
 
