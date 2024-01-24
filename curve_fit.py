@@ -79,9 +79,9 @@ def update(data0, data1):
 	'''
 	Recursive update of data0 with data1.
 	'''
-	temp = deepcopy(data0['data'])
+	data0['data'].update(data1['data'])
+	data1['data'] = data0['data']
 	data0.update(data1)
-	data0['data'].update(temp)
 
 
 def fit(xs, ys, timestep, nmin, nmax, data_file, frbname, append_data=False, visualise_for=None, stop_after=globalpars.STOP_AFTER):

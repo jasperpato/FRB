@@ -32,6 +32,10 @@ MAX_A 				= 3
 MAX_STDDEV 		= 500
 MAX_TIMESCALE = 50
 
+#	-------------------		Fit plotting parameters	--------------------------------
+
+N_WIDTHS = 1
+
 #	-------------------		Analysis parameters	------------------------------------
 
 Raw_time_res_ms		=	1.0e-3/336.0		#	Time resolution of Raw data files in ms

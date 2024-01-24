@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from utils import *
 import json
 import os
+import globalpars
 
 
 def plot_single_fit(xs, ys, params):
@@ -66,10 +67,14 @@ def plot_fitted(xs, ys, rms, data, n, show_initial=False):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
-	low, high = data['range']
-	xs, ys = xs[low:high], ys[low:high]
-	
 	d = data['data'][n]
+
+	# trunctate tails
+	low, high = d['Burst range']
+	width = high - low
+	low, high = max(0, low - width * globalpars.N_WIDTHS), min(len(xs), high + width * globalpars.N_WIDTHS)
+
+	xs, ys = xs[low:high], ys[low:high]
 
 	if show_initial:
 		plot_single_fit(xs, ys, d['Initial params'])
