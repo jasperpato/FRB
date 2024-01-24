@@ -13,40 +13,17 @@ from plot_fit import *
 from calculate_data import calculate_data
 import os
 import globalpars
-from scipy.ndimage import gaussian_filter
+from copy import deepcopy
 
 
-IGNORE = [] # ['190608', '190611', '190711', '200430', '210407', '220501', '220725', '221106', '230526']
-
-
-def raw_burst_range(xs, ys, n=globalpars.N_EFFECTIVE_WIDTHS): # , area=globalpars.RAW_CENTRE_AREA, sigma_norm=globalpars.RAW_SIGMA_NORM, extra_width=globalpars.RAW_EXTRA_WIDTH):
+def raw_burst_range(xs, ys, n=globalpars.N_EFFECTIVE_WIDTHS):
 	'''
-	Attempt to extract the FRB range from the raw data. Smoothens the signal and
-	finds the middle range containing `area` proportion of total area under the curve.
-
-	Finally extends the range by `extra_width` on each side.
-
-	New: Extracts FRB from signal by taking n effective widths on either side of the peak.
+	Extracts FRB from signal by taking n effective widths on either side of the peak.
 	Returns low and high indices of the extracted FRB.
 	'''
-
-	# find effective width
-	eff = np.trapz(ys) / np.max(ys)
+	eff = np.trapz(ys) / np.max(ys) # effective width
 	centre = np.abs(xs).argmin()
 	return max(0, int(centre - n * eff)), min(len(xs), int(centre + n * eff))
-
-	smooth = gaussian_filter(ys, sigma_norm * len(ys))
-
-	total_area = np.trapz(smooth)
-	low_area = (1 - area) / 2 * total_area
-	high_area = (1 + area) / 2 * total_area
-
-	i = 0
-	while np.trapz(smooth[:i]) < low_area: i += 1
-	low = i
-	while np.trapz(smooth[:i]) < high_area: i += 1
-	width = (i - low) * extra_width
-	return max(0, low - width), min(len(ys), i + width)
 
 
 def estimate_params(n, xs, ys, timestep, visualise=False):
@@ -98,12 +75,13 @@ def adjusted_rsquared(xs, ys, params):
 	return 1 - (1 - rs) * (len(xs) - 1) / (len(xs) - len(params) - 1)
 
 
-def append(data0, data1):
+def update(data0, data1):
 	'''
-	Append data0 to data1, overwriting any overlaps. Return result.
+	Recursive update of data0 with data1.
 	'''
-	# data1['data'].update(data0['data'])
-	pass
+	temp = deepcopy(data0['data'])
+	data0.update(data1)
+	data0['data'].update(temp)
 
 
 def fit(xs, ys, timestep, nmin, nmax, data_file, frbname, append_data=False, visualise_for=None, stop_after=globalpars.STOP_AFTER):
@@ -146,14 +124,14 @@ def fit(xs, ys, timestep, nmin, nmax, data_file, frbname, append_data=False, vis
 				print('Stopping early')
 				break
 
-
 		except KeyboardInterrupt: break
 		except Exception as e: print(e)
 
 	if append_data:
 		with open(data_file, 'r') as f:
 			data_old = json.load(f)
-			data = append(data, data_old)
+			update(data_old, data)
+			data = data_old
 
 	with open(data_file, 'w') as f:
 		json.dump(data, f)
@@ -176,7 +154,7 @@ if __name__ == '__main__':
 		frb = os.path.basename(input)[:6]
 		output = f'output/{frb}_out.json'
 
-		if frb in IGNORE:
+		if frb in []:
 			print(f'Skipping {frb}')
 			continue
 		
