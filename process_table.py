@@ -116,6 +116,8 @@ def complete_row(row, state):
 		
 		rm, rm_error = galactic_rm(coord)
 		row['RM_MW (rad/m^2)'], row['RM_MW error'] = rm.value, rm_error.value
+		row['RM_ex (rad/m^2)'] = ['RM_obs (rad/m^2)'] - row['RM_MW (rad/m^2)']
+		row['RM_ex error'] = np.hypot(row['RM_MW error'], row['RM_obs error'])
 
 
 	# DM IGM and error

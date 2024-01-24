@@ -53,7 +53,7 @@ def _plot(xs, ys, data, rms, n, low_i):
 		ax[1].plot(xs, exgauss(xs, *params[i:i+3], params[-1]), linestyle='dotted', color='blue')
 
 	# burst width
-	l, h = max(low - low_i, 0), min(len(xs)-1, high - low_i)
+	l, h = max(0, low - low_i), min(len(xs)-1, high - low_i)
 	ax[1].axvline(xs[l], color='green')
 	ax[1].axvline(xs[h], color='green')
 	

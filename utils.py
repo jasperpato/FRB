@@ -1,17 +1,7 @@
 from scipy.stats import exponnorm
-from scipy.ndimage import gaussian_filter
 import numpy as np
 import pickle
-import globalpars
 import os
-
-
-def get_data(pkl_file):
-	'''
-	Return named tuple containing FRB data.
-	'''
-	with open(pkl_file, 'rb') as f:
-		return pickle.load(f)
 
 
 def exgauss(xs, *args):
@@ -24,24 +14,13 @@ def exgauss(xs, *args):
 	return np.sum([exgauss(xs, *args[i:i+3], args[-1]) for i in range(0, len(args)-1, 3)], axis=0)
 
 
-def raw_burst_range(ys, area=globalpars.RAW_CENTRE_AREA, sigma=globalpars.RAW_SIGMA, extra_width=globalpars.RAW_EXTRA_WIDTH):
+def get_data(pkl_file):
 	'''
-	Attempt to extract the FRB range from the raw data. Smoothens the signal and
-	finds the middle range containing `area` proportion of total area under the curve.
-
-	Finally extends the range by `extra_width` on each side.
+	Return named tuple containing FRB data.
 	'''
-	smooth = gaussian_filter(ys, sigma)
-	total_area = np.trapz(smooth)
-	low_area = (1 - area) / 2 * total_area
-	high_area = (1 + area) / 2 * total_area
-	i = 0
-	while np.trapz(smooth[:i]) < low_area: i += 1
-	low = i
-	while np.trapz(smooth[:i]) < high_area: i += 1
-	width = (i - low) * extra_width
-	return max(0, low - width), min(len(ys), i + width)
-
+	with open(pkl_file, 'rb') as f:
+		return pickle.load(f)
+	
 
 def get_files(dir):
 	'''
@@ -49,10 +28,3 @@ def get_files(dir):
 	'''
 	return [f'{dir}/{f}' for f in os.listdir(dir)]
 	
-
-class DevNull():
-	'''
-	Class to write to instead of stdout to prevent output.
-	'''
-	def write():
-		pass

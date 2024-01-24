@@ -48,24 +48,6 @@ def model_burst_range(xs, params, area_prop=globalpars.MODEL_CENTRE_AREA):
 	return ppf(xs, params, (1 - area_prop) / 2), ppf(xs, params, (1 + area_prop) / 2)
 
 
-def rsquared(xs, ys, params):
-	'''
-	Returns R squared value for a set of parameters.
-	'''
-	residuals = ys - exgauss(xs, *params)
-	ss_res = np.sum(residuals ** 2)
-	ss_tot = np.sum((ys - np.mean(ys)) ** 2)
-	return 1 - (ss_res / ss_tot)
-
-
-def adjusted_rsquared(xs, ys, params):
-	'''
-	Returns adjust R squared value for a set of parameters.
-	'''
-	rs = rsquared(xs, ys, params)
-	return 1 - (1 - rs) * (len(xs) - 1) / (len(xs) - len(params) - 1)
-
-
 def replace_nan(arr):
 	'''
 	Replace NaN with mean of neighbours. Assumes leading and trailing zero values.
@@ -129,7 +111,7 @@ def calculate_data(frb_data, data_file):
 	epts = replace_nan(frb_data.epts)
 
 	for n, d in data['data'].items():
-		d['Adjusted R^2'] = adjusted_rsquared(xs[low:high], it[low:high], d['Params'])
+		# d['Adjusted R^2'] = adjusted_rsquared(xs[low:high], it[low:high], d['Params'])
 		
 		d['Burst range'] = (b := model_burst_range(xs, d['Params']))
 		d['Burst width (ms)'] = (b[1] - b[0]) * timestep

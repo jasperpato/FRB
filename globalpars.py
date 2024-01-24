@@ -13,14 +13,17 @@ MW_DIAMETER = 30e3 # pc
 #	-------------------		Curve fit constants	------------------------------------
 
 STD_EXGAUSS_PEAK = 0.3
+STOP_AFTER = 3 # number of iterations with no improvement on adjusted R^2
 
 #	-------------------		Curve fit parameters	----------------------------------
 
-RAW_CENTRE_AREA	= 0.9
-RAW_SIGMA				= 5
-RAW_EXTRA_WIDTH	= 1
+# RAW_CENTRE_AREA	= 0.9
+# RAW_SIGMA_NORM  = 0.1
+# RAW_EXTRA_WIDTH	= 1
 
-MODEL_CENTRE_AREA = 0.99
+N_EFFECTIVE_WIDTHS = 20
+
+MODEL_CENTRE_AREA = 0.95
 
 DEFAULT_STDDEV 		= 1
 DEFAULT_TIMESCALE = 1
