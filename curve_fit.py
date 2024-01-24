@@ -49,10 +49,13 @@ def estimate_params(n, xs, ys, timestep, visualise=False):
 		plot_single_fit(xs, ys, params)
 
 	bounds = np.zeros((3*n+1, 2))
-	bounds[0::3] = [0, MAX_A * timestep] # [-np.inf, np.inf] 
+	bounds[0::3] = [0, np.inf] 
 	bounds[1::3] = [xs[0], xs[-1]] 
-	bounds[2::3] = [0, MAX_STDDEV * timestep]
-	bounds[-1]   = [0, MAX_TIMESCALE * timestep] 
+	bounds[2::3] = [0, np.inf] # MAX_STDDEV * timestep]
+	bounds[-1]   = [0, np.inf] # MAX_TIMESCALE * timestep] 
+
+	# print(max(ys))
+	# print(ys[peak_locs], STD_EXGAUSS_PEAK, timestep, params, bounds)
 
 	return params, bounds.T
 

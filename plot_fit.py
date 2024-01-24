@@ -38,6 +38,9 @@ def _plot(xs, ys, data, rms, n, low_i):
 	fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [1, 2]})
 	fig.subplots_adjust(hspace=0)
 
+	ax[1].set_ylabel('Intensity')
+	ax[1].set_xlabel('Time (ms)')
+
 	params = data['Params']
 	low, high = data['Burst range']
 
@@ -53,13 +56,14 @@ def _plot(xs, ys, data, rms, n, low_i):
 	for i in range(0, len(params)-1, 3):
 		ax[1].plot(xs, exgauss(xs, *params[i:i+3], params[-1]), linestyle='dotted', color='blue')
 
-	# burst width
-	l, h = max(0, low - low_i), min(len(xs)-1, high - low_i)
-	ax[1].axvline(xs[l], color='green')
-	ax[1].axvline(xs[h], color='green')
+	# burst width ticks
+	x2 = ax[1].twiny()
+	x2.tick_params(direction='inout')
+	x2.set_xlim([xs[0], xs[-1]])
+
+	x2.set_xticks(xs[[max(0, low - low_i), min(len(xs)-1, high - low_i)]])
+	x2.set_xticklabels([])
 	
-	ax[1].set_ylabel('Intensity')
-	plt.xlabel('Time (ms)')
 	fig.legend()
 
 

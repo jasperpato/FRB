@@ -17,10 +17,6 @@ STOP_AFTER = 3 # number of iterations with no improvement on adjusted R^2
 
 #	-------------------		Curve fit parameters	----------------------------------
 
-# RAW_CENTRE_AREA	= 0.9
-# RAW_SIGMA_NORM  = 0.1
-# RAW_EXTRA_WIDTH	= 1
-
 N_EFFECTIVE_WIDTHS = 20
 
 MODEL_CENTRE_AREA = 0.95
@@ -28,9 +24,8 @@ MODEL_CENTRE_AREA = 0.95
 DEFAULT_STDDEV 		= 1
 DEFAULT_TIMESCALE = 1
 
-MAX_A 				= 3
-MAX_STDDEV 		= 500
-MAX_TIMESCALE = 50
+# MAX_STDDEV 		= 500
+# MAX_TIMESCALE = 50
 
 #	-------------------		Fit plotting parameters	--------------------------------
 
