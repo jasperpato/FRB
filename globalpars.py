@@ -13,6 +13,7 @@ MW_DIAMETER = 30e3 # pc
 #	-------------------		Curve fit constants	------------------------------------
 
 STD_EXGAUSS_PEAK = 0.3
+
 STOP_AFTER = 3 # number of iterations with no improvement on adjusted R^2
 
 #	-------------------		Curve fit parameters	----------------------------------
@@ -23,9 +24,6 @@ MODEL_CENTRE_AREA = 0.95
 
 DEFAULT_STDDEV 		= 1
 DEFAULT_TIMESCALE = 1
-
-# MAX_STDDEV 		= 500
-# MAX_TIMESCALE = 50
 
 #	-------------------		Fit plotting parameters	--------------------------------
 

@@ -31,7 +31,7 @@ def plot_residuals(xs, ys, params, rms, ax):
 	ax.set_ylabel('Residuals / RMS')
 
 
-def _plot(xs, ys, data, rms, n, low_i):
+def _plot(xs, ys, data, rms, n, low_i, frbname):
 	'''
 	Plot the sum of exgausses with given params. Also plot individual exgauss components and original FRB.
 	'''
@@ -64,10 +64,11 @@ def _plot(xs, ys, data, rms, n, low_i):
 	x2.set_xticks(xs[[max(0, low - low_i), min(len(xs)-1, high - low_i)]])
 	x2.set_xticklabels([])
 	
+	fig.suptitle(frbname)
 	fig.legend()
 
 
-def plot_fitted(xs, ys, rms, data, n, show_initial=False):
+def plot_fitted(xs, ys, rms, data, n, frbname, show_initial=False):
 	'''
 	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
@@ -83,7 +84,7 @@ def plot_fitted(xs, ys, rms, data, n, show_initial=False):
 	if show_initial:
 		plot_single_fit(xs, ys, d['Initial params'])
 
-	_plot(xs, ys, d, rms, n, low)
+	_plot(xs, ys, d, rms, n, low, frbname)
 
 
 if __name__ == '__main__':
@@ -109,10 +110,11 @@ if __name__ == '__main__':
 
 		n = data['optimum']
 
-		plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, args.show_initial)
+		plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, frb, args.show_initial)
 			
 		if not (args.show or args.show_initial):
 			plt.savefig(f'figs/fits/{frb}')
+			plt.close()
 	
 	if args.show or args.show_initial:
 		plt.show(block=True)

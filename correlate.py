@@ -114,6 +114,7 @@ def correlate(x0, x1, name0, name1, plot_hists=False, save_fig=False, n=1000):
 		except: pass
 
 		fig.savefig(f'figs/correlations/{name0}/{name0}_{name1}')
+		plt.close(fig)
 
 
 if __name__ == '__main__':

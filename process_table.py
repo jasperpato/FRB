@@ -16,7 +16,7 @@ from frb.rm import galactic_rm, load_hutschenreuter2020
 
 def split_angle(angle):
 	'''
-	Split angle string into components.
+	Split angle string in format H:M:S into components.
 	'''
 	x0, x1, x2 = [float(x) for x in angle.split(':')]
 	if angle[0] == '-': x1, x2 = -x1, -x2
@@ -116,7 +116,7 @@ def complete_row(row, state):
 		
 		rm, rm_error = galactic_rm(coord)
 		row['RM_MW (rad/m^2)'], row['RM_MW error'] = rm.value, rm_error.value
-		row['RM_ex (rad/m^2)'] = ['RM_obs (rad/m^2)'] - row['RM_MW (rad/m^2)']
+		row['RM_ex (rad/m^2)'] = row['RM_obs (rad/m^2)'] - row['RM_MW (rad/m^2)']
 		row['RM_ex error'] = np.hypot(row['RM_MW error'], row['RM_obs error'])
 
 
