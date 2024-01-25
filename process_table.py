@@ -85,7 +85,7 @@ def get_frb_data(frb_name):
 		if frb_name in entry:
 			with open(entry, 'rb') as f:
 				frb_output = json.load(f)
-				frb_output = frb_output['data'][frb_output['optimum']] # get only optimal fit
+				frb_output = frb_output['data'][frb_output['Max R^2']] # get only optimal fit
 
 	return frb_data, frb_output
 

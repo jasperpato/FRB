@@ -8,7 +8,8 @@ from utils import *
 import json
 import os
 import globalpars
-
+from PIL import Image
+import math
 
 def plot_single_fit(xs, ys, params):
 	'''
@@ -64,7 +65,7 @@ def _plot(xs, ys, data, rms, n, low_i, frbname):
 	x2.set_xticks(xs[[max(0, low - low_i), min(len(xs)-1, high - low_i)]])
 	x2.set_xticklabels([])
 	
-	fig.suptitle(frbname)
+	fig.suptitle(f'{frbname} R^2={data["Adjusted R^2"]:.2f}')
 	fig.legend()
 
 
@@ -87,18 +88,46 @@ def plot_fitted(xs, ys, rms, data, n, frbname, show_initial=False):
 	_plot(xs, ys, d, rms, n, low, frbname)
 
 
+def combine(dir, ncols=4, max_imgs=8, name='combined'):
+	entries = [entry for entry in get_files(dir) if name not in entry][:max_imgs]
+	n = len(entries)
+	rows, cols = math.ceil(n / ncols), ncols
+	fig, axs = plt.subplots(rows, cols)
+
+	for i, entry in enumerate(entries):
+		img = np.asarray(Image.open(entry))
+		r, c = i // ncols, i % ncols
+
+		ax = axs[r][c]
+		ax.imshow(img)
+		ax.set_axis_off()
+
+	for i in range(n, rows * cols):
+		r, c = i // ncols, i % ncols
+		axs[r][c].set_visible(False)
+
+	fig.subplots_adjust(bottom=0, top=1, left=0, right=1)
+	fig.savefig(f'{dir}/{name}')
+
 if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--show', action='store_true')
+	a.add_argument('--combine', action='store_true')
+	a.add_argument('--combine-only', action='store_true')
+	a.add_argument('--threshold', action='store_true')
 	a.add_argument('inputs', nargs='*', default=get_files('data/pkls'))
 
 	args = a.parse_args()
 
+	if args.combine_only:
+		combine('figs/fits')
+		exit()
+
 	for input in args.inputs:
-		frb = os.path.basename(input)[:6]
+		frb = get_frb_name(input)
 		output = f'output/{frb}_out.json'
 
 		print(frb)
@@ -108,7 +137,7 @@ if __name__ == '__main__':
 		with open(output, 'r') as f:
 			data = json.load(f)
 
-		n = data['optimum']
+		n = data['Threshold R^2'] if args.threshold else data['Max R^2']
 
 		plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, frb, args.show_initial)
 			

@@ -154,7 +154,7 @@ if __name__ == '__main__':
 	args = a.parse_args()
 
 	for input in args.inputs:
-		frb = os.path.basename(input)[:6]
+		frb = get_frb_name(input)
 		output = f'output/{frb}_out.json'
 
 		if frb in []:

@@ -27,4 +27,11 @@ def get_files(dir):
 	Get all input files from a directory.
 	'''
 	return [f'{dir}/{f}' for f in os.listdir(dir)]
+
+
+def get_frb_name(path):
+	'''
+	Assumes the file starts with the first 6 digits of the frb.
+	'''
+	return os.path.basename(path)[:6]
 	

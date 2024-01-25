@@ -89,6 +89,17 @@ def polarisation_fraction(pol, error, fluence, fluence_error):
 	]
 
 
+def get_threshold_r2(data, threshold=globalpars.R2_THRESHOLD):
+	'''
+	Find the minimum N that exceeds the threshold R^2 value.
+	If none exceed the threshold, return None.
+	'''
+	for n, d in sorted(data.items(), key=lambda t: t[0]):
+		if d['Adjusted R^2'] >= threshold:
+			return n
+	return None
+
+
 def calculate_data(frb_data, data_file):
 	'''
 	Calculate FRB properties for a curve fitted FRB. Add the properties to the
@@ -98,8 +109,6 @@ def calculate_data(frb_data, data_file):
 
 	with open(data_file, 'r') as f:
 		data = json.load(f)
-
-	low, high = data['range']
 
 	xs = frb_data.tmsarr
 	it = frb_data.it
@@ -111,8 +120,6 @@ def calculate_data(frb_data, data_file):
 	epts = replace_nan(frb_data.epts)
 
 	for n, d in data['data'].items():
-		# d['Adjusted R^2'] = adjusted_rsquared(xs[low:high], it[low:high], d['Params'])
-		
 		d['Burst range'] = (b := model_burst_range(xs, d['Params']))
 		d['Burst width (ms)'] = (b[1] - b[0]) * timestep
 
@@ -134,7 +141,8 @@ def calculate_data(frb_data, data_file):
 		
 		data['data'][n] = dict(sorted(d.items()))
 
-	data['optimum'] = max(data['data'].keys(), key=lambda n: data['data'][n]['Adjusted R^2'])
+	data['Max R^2'] = max(data['data'].keys(), key=lambda n: data['data'][n]['Adjusted R^2'])
+	data['Threshold R^2'] = get_threshold_r2(data['data']) or data['Max R^2']
 	
 	with open(data_file, 'w') as f:
 		json.dump(data, f)
@@ -144,14 +152,13 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--input', default='data/221106.pkl')
-	a.add_argument('--output', default=None)
+	a.add_argument('inputs', nargs='*', default=get_files('data/pkls'))
 
 	args = a.parse_args()
 
-	if not args.output:
-		frb = get_frb(args.input)
-		args.output = f'output/{frb}_out.json'
+	for input in args.inputs:
+		frb = get_frb_name(input)
+		output = f'output/{frb}_out.json'
 
-	frb_data = get_data(args.input)
-	calculate_data(frb_data, args.output)
+		frb_data = get_data(input)
+		calculate_data(frb_data, output)

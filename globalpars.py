@@ -29,6 +29,10 @@ DEFAULT_TIMESCALE = 1
 
 N_WIDTHS = 1
 
+#	------------------------------------------------------------------------------
+
+R2_THRESHOLD = 0.8
+
 #	-------------------		Analysis parameters	------------------------------------
 
 Raw_time_res_ms		=	1.0e-3/336.0		#	Time resolution of Raw data files in ms
