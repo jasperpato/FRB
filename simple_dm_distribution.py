@@ -1,19 +1,19 @@
-""" 
+'''
 Simple script to give p(DM|z) distribution.
 
 Not computationally simplest - simplest for Clancy to make! :-)
+'''
 
-"""
-# import os
+import os
 
 from zdm import cosmology as cos
 from zdm import misc_functions
 from zdm import parameters
-# from zdm import survey
-# from zdm import pcosmic
-# from zdm import iteration as it
-# from zdm.craco import loading
-# from zdm import io
+from zdm import survey
+from zdm import pcosmic
+from zdm import iteration as it
+from zdm.craco import loading
+from zdm import io
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -43,7 +43,7 @@ def main():
 	zmin = zmax / nz
 	
 	# get the grid of p(DM|z)
-	zDMgrid, zvals,dmvals = misc_functions.get_zdm_grid(
+	zDMgrid, zvals, dmvals = misc_functions.get_zdm_grid(
 		state,
 		new=True,
 		plot=False,
