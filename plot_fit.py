@@ -109,15 +109,33 @@ def combine(dir, ncols=4, max_imgs=8, name='combined'):
 	fig.subplots_adjust(bottom=0, top=1, left=0, right=1)
 	fig.savefig(f'{dir}/{name}')
 
+
+def plot_r2(frbname, data):
+	'''
+	Plot N vs Adjusted R^2 for a given frb.
+	'''
+	data = [(int(n), d['Adjusted R^2']) for n, d in data.items()]
+	ns, r2s = [n for n, _ in data], [r2 for _, r2 in data]
+
+	plt.figure()
+	plt.plot(ns, r2s)
+	plt.title(f'{frb}')
+	plt.xlabel('N')
+	plt.xticks(range(max(ns) + 1))
+	plt.ylabel('Adjusted R^2')
+	plt.savefig(f'figs/adjusted_r2/{frbname}_r2')
+	plt.close()
+
+
 if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--show', action='store_true')
-	a.add_argument('--combine', action='store_true')
 	a.add_argument('--combine-only', action='store_true')
 	a.add_argument('--threshold', action='store_true')
+	a.add_argument('--r2', action='store_true')
 	a.add_argument('inputs', nargs='*', default=get_files('data/pkls'))
 
 	args = a.parse_args()
@@ -137,13 +155,17 @@ if __name__ == '__main__':
 		with open(output, 'r') as f:
 			data = json.load(f)
 
-		n = data['Threshold R^2'] if args.threshold else data['Max R^2']
+		if args.r2:
+			plot_r2(frb, data['data'])
 
-		plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, frb, args.show_initial)
-			
-		if not (args.show or args.show_initial):
-			plt.savefig(f'figs/fits/{frb}')
-			plt.close()
+		else:
+			n = data['Threshold R^2'] if args.threshold else data['Max R^2']
+
+			plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, frb, args.show_initial)
+				
+			if not (args.show or args.show_initial):
+				plt.savefig(f'figs/fits/{frb}')
+				plt.close()
 	
 	if args.show or args.show_initial:
 		plt.show(block=True)
