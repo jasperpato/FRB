@@ -15,24 +15,15 @@ import os
 IGNORE = 'Index|FRB|RA|DEC|error|Repeater|AGN'
 
 
-def remove_nans(a, b):
+def remove_nans(a, b, *args):
 	'''
 	Returns copies of the input lists, with elements removed from both lists in the positions
 	where there is a nan in one of the lists.
+	Also removes corresponding elements from remaining args.
 	'''
 	a, b = np.array(a), np.array(b)
 	is_nan = np.logical_or(np.isnan(a), np.isnan(b))
-	return a[~is_nan], b[~is_nan]
-
-
-def remove_negs(a, b):
-	'''
-	Returns copies of the input lists, with elements removed from both lists in the positions
-	where there is a negative value in the first list.
-	'''
-	a, b = np.array(a), np.array(b)
-	is_neg = a < 0
-	return a[~is_neg], b[~is_neg]
+	return a[~is_nan], b[~is_nan], *[(c[~is_nan] if c is not None else None) for c in args]
 
 
 def file_name(name):
@@ -60,11 +51,11 @@ def plot_hist(ax, arr, name, bins=20):
 		ax.set_ylabel('Frequency')
 
 
-def correlate(x0, x1, name0, name1, plot_hists=False, save_fig=False, n=1000):
+def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, save_fig=False, n=1000):
 	'''
 	Plot correlation coefficients.
 	'''
-	x0, x1 = remove_nans(x0, x1)
+	x0, x1, x0_err, x1_err = remove_nans(x0, x1, x0_err, x1_err)
 	if len(x0) < 3: return
 
 	def get_c(x2, method='spearman'):
@@ -96,7 +87,10 @@ def correlate(x0, x1, name0, name1, plot_hists=False, save_fig=False, n=1000):
 		fig, ax0 = plt.subplots()
 	
 	# plot scatter of x0 vs x1
-	ax0.scatter(x0, x1)
+	if x0_err is not None:
+		ax0.errorbar(x0, x1, xerr=x0_err, yerr=x1_err, fmt='o', ecolor='lightgrey')
+	else:
+		ax0.scatter(x0, x1)
 	ax0.set_xlabel(name0)
 	ax0.set_ylabel(name1)
 	ax0.set_title(f'{name0} vs {name1}')
@@ -117,43 +111,47 @@ def correlate(x0, x1, name0, name1, plot_hists=False, save_fig=False, n=1000):
 		plt.close(fig)
 
 
+def get_error_col(data, col_name):
+	'''
+	Return error column if present in data, else list of zeroes.
+	Assumes error column is the next column in data and contains the string 'error'.
+	'''
+	zero_err = np.zeros(len(data))
+	next_i = data.columns.get_loc(col_name) + 1
+	
+	if next_i == len(data.columns): return zero_err
+	
+	next_col = data.iloc[:, next_i]
+	return next_col if 'error' in next_col.name else zero_err
+
+
 if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
 	a.add_argument('targets', nargs='*', default=['DM_ex (NE2001)'])
-	a.add_argument('--save', action='store_true')
 	a.add_argument('--plot-hists', action='store_true')
 
 	args = a.parse_args()
 
 	data = pd.read_csv('data/table.csv')
 	cols = [col for col in data.columns if not re.search(IGNORE, col)]
-
-	# from scipy.optimize import curve_fit
-
-	# params = [1, -20, 1]
-	# f = lambda xs, a, b, c: a * (1+xs)**b + c
-	# plt.plot(data['z'], f(data['z'], *params))
-	# plt.scatter(data['z'], data['DM_ex (NE2001)'])
-	# plt.show(block=True)
-
-	# popt, pcov = curve_fit(f, data['z'], data['DM_ex (NE2001)'])
-	# print(popt)
-	# exit()
+	errs = [get_error_col(data, col) for col in cols]
 
 	if len(args.targets) == 1:
 		t = args.targets[0]
-		for col1 in cols:
+		err = get_error_col(data, t)
+
+		for i in range(len(cols)):
+			col1, err1 = cols[i], errs[i]
 			if col1 != t:
-				correlate(data[t], data[col1], t, col1, args.plot_hists, args.save)
+				correlate(data[t], data[col1], t, col1, err, err1, plot_hists=args.plot_hists, save_fig=True)
 
 	elif len(args.targets) == 2:
 		t0, t1 = args.targets
-		correlate(data[t0], data[t1], t0, t1, args.plot_hists, args.save)
+		err0, err1 = get_error_col(data, t0), get_error_col(data, t1)
+		correlate(data[t0], data[t1], t0, t1, err0, err1, plot_hists=args.plot_hists, save_fig=True)
 
-	if not args.save:
-		plt.show(block=True)
 
 
 			

@@ -97,7 +97,6 @@ def get_threshold_r2(data, threshold=globalpars.R2_THRESHOLD):
 	for n, d in sorted(data.items(), key=lambda t: t[0]):
 		if d['Adjusted R^2'] >= threshold:
 			return n
-	return None
 
 
 def calculate_data(frb_data, data_file):

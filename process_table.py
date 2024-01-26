@@ -117,6 +117,7 @@ def complete_row(row, state):
 		rm, rm_error = galactic_rm(coord)
 		row['RM_MW (rad/m^2)'], row['RM_MW error'] = rm.value, rm_error.value
 		row['RM_ex (rad/m^2)'] = row['RM_obs (rad/m^2)'] - row['RM_MW (rad/m^2)']
+		row['abs(RM_ex)'] = abs(row['RM_ex (rad/m^2)'])
 		row['RM_ex error'] = np.hypot(row['RM_MW error'], row['RM_obs error'])
 
 
@@ -174,16 +175,16 @@ def update_table(file):
 	data = data.apply(complete_row, axis=1, state=igm_state)
 
 	# reorder columns
-	order = [
-		'FRB', 'RA', 'DEC', 'Galactic lon', 'Galactic lat', 'z', 'Repeater', 'Host magnitude (AB)', 
-		'log(MF/Mo)', 'log(MF/Mo) error', 'log(Z*/Zo)', 'log(Z*/Zo) error', 'Av,old (mag)', 'Av,old error', 'Av,young (mag)', 'Av,young error', 'AGN',
-		'log(Zgas/Zo)', 'log(Zgas/Zo) error', 'SFR 0-100 Myr (Mo yr-1)', 'SFR error', 'log(M*/Mo)', 'log(M*/Mo) error', 'log(SFR/M)', 'log(SFR/M) error', 'tm (Gyr)', 'tm error',
-		'DM_MW (NE2001)', 'DM_MW error (NE2001)', 'DM_MW (YMW16)', 'DM_MW error (YMW16)', 'DM_IGM', 'DM_IGM error', 'DM_obs (pc cm^-3)', 'DM_ex (NE2001)', 'DM_ex error (NE2001)',
-		'RM_MW (rad/m^2)', 'RM_MW error', 'RM_obs (rad/m^2)', 'RM_ex (rad/m^2)', 'RM_ex error',
-		'Tau_MW (ms) (YMW16)', 'Tau_MW error (YMW16)', 'Tau_obs (ms)', 'Tau_obs error', 'Tau_ex (ms)', 'Tau_ex error',
-		'Linear polarisation fraction', 'Linear polarisation fraction error', 'Total polarisation fraction', 'Total polarisation fraction error',  'Burst width (ms)',        
-	]
-	data = data[order]
+	# order = [
+	# 	'FRB', 'RA', 'DEC', 'Galactic lon', 'Galactic lat', 'z', 'Repeater', 'Host magnitude (AB)', 
+	# 	'log(MF/Mo)', 'log(MF/Mo) error', 'log(Z*/Zo)', 'log(Z*/Zo) error', 'Av,old (mag)', 'Av,old error', 'Av,young (mag)', 'Av,young error', 'AGN',
+	# 	'log(Zgas/Zo)', 'log(Zgas/Zo) error', 'SFR 0-100 Myr (Mo yr-1)', 'SFR error', 'log(M*/Mo)', 'log(M*/Mo) error', 'log(SFR/M)', 'log(SFR/M) error', 'tm (Gyr)', 'tm error',
+	# 	'DM_MW (NE2001)', 'DM_MW error (NE2001)', 'DM_MW (YMW16)', 'DM_MW error (YMW16)', 'DM_IGM', 'DM_IGM error', 'DM_obs (pc cm^-3)', 'DM_ex (NE2001)', 'DM_ex error (NE2001)',
+	# 	'RM_MW (rad/m^2)', 'RM_MW error', 'RM_obs (rad/m^2)', 'RM_obs error', 'RM_ex (rad/m^2)', 'RM_ex error', 'abs(RM_ex)',
+	# 	'Tau_MW (ms) (YMW16)', 'Tau_MW error (YMW16)', 'Tau_obs (ms)', 'Tau_obs error', 'Tau_ex (ms)', 'Tau_ex error',
+	# 	'Linear polarisation fraction', 'Linear polarisation fraction error', 'Total polarisation fraction', 'Total polarisation fraction error',  'Burst width (ms)',        
+	# ]
+	# data = data[order]
 
 	data.to_csv(file)
 
