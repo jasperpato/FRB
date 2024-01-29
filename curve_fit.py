@@ -1,6 +1,10 @@
 '''
-Fits a sum of exgaussians to an FRB, stores the fit information in a JSON file.
+Fits the sum of N exGaussian components to an FRB signal, iterating through a range of N.
+Stores the curve fit data in JSON files.
+
+By default fits every FRB pickle file found in /data/pkls and stores the JSON files in /output.
 '''
+
 
 import numpy as np
 from scipy.optimize import curve_fit
@@ -11,15 +15,13 @@ from globalpars import *
 import matplotlib.pyplot as plt
 from plot_fit import *
 from calculate_data import calculate_data
-import os
 import globalpars
-from copy import deepcopy
 
 
 def raw_burst_range(xs, ys, n=globalpars.N_EFFECTIVE_WIDTHS):
 	'''
-	Extracts FRB from signal by taking n effective widths on either side of the peak.
-	Returns low and high indices of the extracted FRB.
+	Trunctates noise tails of the FRB signal by taking N effective widths on either side of the peak.
+	Returns low and high indices of the extracted FRB in the centre of the signal.
 	'''
 	eff = np.trapz(ys) / np.max(ys) # effective width
 	centre = np.abs(xs).argmin()
@@ -28,15 +30,15 @@ def raw_burst_range(xs, ys, n=globalpars.N_EFFECTIVE_WIDTHS):
 
 def estimate_params(n, xs, ys, timestep, visualise=False):
 	'''
-	Returns an array of 3*n + 1 params that are reasonable initial guesses to fit the data, and an array of bounds of the params.
-	Fits N standard exGaussians at the local maxima of the burst, vertically scaled to the burst height.
+	Returns an array of 3*N + 1 params that are reasonable initial guesses to fit the data, and an array of bounds of the params.
+	Fits N exGaussians at the N highest peaks in the burst, vertically scaled to the peak height.
 	'''
 	peaks, _ = find_peaks(ys)
 	num_peaks = len(peaks)
 
 	peak_locs = sorted(peaks, key=lambda i: ys[i], reverse=True)[:n if n < num_peaks else num_peaks]
 	if n > num_peaks:
-		# evenly space remaining exGaussians
+		# evenly space remaining exGaussians if more than number of peaks
 		peak_locs = np.append(peak_locs, np.linspace(xs[0], xs[-1], n - num_peaks, endpoint=True, dtype=int))
 
 	params = np.zeros(3*n+1)
@@ -51,18 +53,15 @@ def estimate_params(n, xs, ys, timestep, visualise=False):
 	bounds = np.zeros((3*n+1, 2))
 	bounds[0::3] = [0, np.inf] 
 	bounds[1::3] = [xs[0], xs[-1]] 
-	bounds[2::3] = [0, np.inf] # MAX_STDDEV * timestep]
-	bounds[-1]   = [0, np.inf] # MAX_TIMESCALE * timestep] 
-
-	# print(max(ys))
-	# print(ys[peak_locs], STD_EXGAUSS_PEAK, timestep, params, bounds)
+	bounds[2::3] = [0, np.inf] 
+	bounds[-1]   = [0, np.inf]
 
 	return params, bounds.T
 
 
 def rsquared(xs, ys, params):
 	'''
-	Returns R squared value for a set of parameters.
+	Returns R squared value for a set of fit parameters.
 	'''
 	residuals = ys - exgauss(xs, *params)
 	ss_res = np.sum(residuals ** 2)
@@ -72,7 +71,7 @@ def rsquared(xs, ys, params):
 
 def adjusted_rsquared(xs, ys, params):
 	'''
-	Returns adjust R squared value for a set of parameters.
+	Returns adjust R squared value for a set of fit parameters.
 	'''
 	rs = rsquared(xs, ys, params)
 	return 1 - (1 - rs) * (len(xs) - 1) / (len(xs) - len(params) - 1)
@@ -80,7 +79,7 @@ def adjusted_rsquared(xs, ys, params):
 
 def update(data0, data1):
 	'''
-	Recursive update of data0 with data1.
+	Update of JSON fit data0 with data1.
 	'''
 	data0['data'].update(data1['data'])
 	data1['data'] = data0['data']
@@ -156,10 +155,6 @@ if __name__ == '__main__':
 	for input in args.inputs:
 		frb = get_frb_name(input)
 		output = f'output/{frb}_out.json'
-
-		if frb in []:
-			print(f'Skipping {frb}')
-			continue
 		
 		print(frb)
 

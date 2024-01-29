@@ -1,6 +1,12 @@
 '''
 Calculate FRB properties for a curve fitted FRB and add properties to the JSON data file.
+
+By default iterates through every JSON file found in /output, and calculates the
+relevant FRB properties such as polarisation fractions.
+
+Called automatically after each curve fit in curve_fit.py.
 '''
+
 
 from utils import *
 import json
@@ -11,7 +17,8 @@ import globalpars
 
 def integral(xs, *args):
 	'''
-	Integral from -inf to x of the sum of exGaussians.
+	xs: array_like
+	Integral from -inf to xs of the sum of N exGaussians.
 	'''
 	single_integral = lambda xs, a, u, sd, ts: a * exponnorm.cdf(xs, ts / sd, loc=u, scale=sd)
 	return np.sum([single_integral(xs, *args[i:i+3], args[-1]) for i in range(0, len(args)-1, 3)], axis=0)
@@ -19,7 +26,8 @@ def integral(xs, *args):
 
 def ppf(xs, params, area_prop, low=None, high=None, area=None):
 	'''
-	Implements the ppf of the sum of exGaussians as a binary search.
+	xs: array_like
+	Implements the ppf of the sum of N exGaussians specified by params as a binary search.
 	'''
 	if not area:
 		total_area = integral(xs[-1], *params)
@@ -44,13 +52,14 @@ def model_burst_range(xs, params, area_prop=globalpars.MODEL_CENTRE_AREA):
 	'''
 	Get the burst range of a fitted curve by finding the central range containing
 	`area_prop` proportion of the total area under the curve.
+	Returns the low and high index of the burst range.
 	'''
 	return ppf(xs, params, (1 - area_prop) / 2), ppf(xs, params, (1 + area_prop) / 2)
 
 
 def replace_nan(arr):
 	'''
-	Replace NaN with mean of neighbours. Assumes leading and trailing zero values.
+	Replace all NaNs in arr with the mean of its neighbours. Assumes leading and trailing zeroes.
 	'''
 	b_val = 0
 	b_i = -1
@@ -91,7 +100,7 @@ def polarisation_fraction(pol, error, fluence, fluence_error):
 
 def get_threshold_r2(data, threshold=globalpars.R2_THRESHOLD):
 	'''
-	Find the minimum N that exceeds the threshold R^2 value.
+	Find the minimum N that exceeds the threshold R^2 value in data.
 	If none exceed the threshold, return None.
 	'''
 	for n, d in sorted(data.items(), key=lambda t: t[0]):

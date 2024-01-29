@@ -1,5 +1,11 @@
 '''
-Visualises the curve fitted FRBs.
+Plots the curve fitted FRBs and residuals.
+
+By default plots the fits of every FRB pickle file found in /data/pkls and saves
+the pngs in /figs/fits.
+
+--r2: Plots the N vs adjusted R^2 plots and saves in /figs/adjusted_r2.
+--threshold: Plot the minimum N that exceeds the threshold adjusted R^2 instead of the N that maximises adjusted R^2.
 '''
 
 import numpy as np
@@ -11,10 +17,10 @@ import globalpars
 from PIL import Image
 import math
 
+
 def plot_single_fit(xs, ys, params):
 	'''
-	Plot fit model on a separate figure. Used for displaying the initial params
-	against the raw FRB.
+	Plot a fitted curve given by params on a separate figure. Used for displaying the initial params on the FRB signal.
 	'''
 	fig, ax = plt.subplots(1, 1)
 	ax.plot(xs, ys, color='red', label='Smoothed FRB')
@@ -25,17 +31,27 @@ def plot_single_fit(xs, ys, params):
 
 def plot_residuals(xs, ys, params, rms, ax):
 	'''
-	Plot residuals / RMS as a scatter plot.
+	Plot residuals / RMS as a scatter plot on ax.
 	'''
 	residuals = ys - np.array([exgauss(x, *params) for x in xs])
 	ax.scatter(xs, residuals / rms, color='black', alpha=0.3)
 	ax.set_ylabel('Residuals / RMS')
 
 
-def _plot(xs, ys, data, rms, n, low_i, frbname):
+def plot_fitted(xs, ys, rms, data, n, frbname, show_initial=False):
 	'''
-	Plot the sum of exgausses with given params. Also plot individual exgauss components and original FRB.
+	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
 	'''
+	# trunctate tails
+	low, high = data['Burst range']
+	width = high - low
+	low, high = max(0, low - width * globalpars.N_WIDTHS), min(len(xs), high + width * globalpars.N_WIDTHS)
+
+	xs, ys = xs[low:high], ys[low:high]
+
+	if show_initial:
+		plot_single_fit(xs, ys, data['Initial params'])
+
 	fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [1, 2]})
 	fig.subplots_adjust(hspace=0)
 
@@ -43,7 +59,7 @@ def _plot(xs, ys, data, rms, n, low_i, frbname):
 	ax[1].set_xlabel('Time (ms)')
 
 	params = data['Params']
-	low, high = data['Burst range']
+	low1, high1 = data['Burst range']
 
 	plot_residuals(xs, ys, params, rms, ax[0])
 	
@@ -62,33 +78,18 @@ def _plot(xs, ys, data, rms, n, low_i, frbname):
 	x2.tick_params(direction='inout')
 	x2.set_xlim([xs[0], xs[-1]])
 
-	x2.set_xticks(xs[[max(0, low - low_i), min(len(xs)-1, high - low_i)]])
+	x2.set_xticks(xs[[max(0, low1 - low), min(len(xs)-1, high1 - low)]])
 	x2.set_xticklabels([])
 	
 	fig.suptitle(f'{frbname} R^2={data["Adjusted R^2"]:.2f}')
 	fig.legend()
 
 
-def plot_fitted(xs, ys, rms, data, n, frbname, show_initial=False):
-	'''
-	Plots the fitted curved found in the json data. Can be filtered with an optional parameter ns: a list of ns to plot.
-	'''
-	d = data['data'][n]
-
-	# trunctate tails
-	low, high = d['Burst range']
-	width = high - low
-	low, high = max(0, low - width * globalpars.N_WIDTHS), min(len(xs), high + width * globalpars.N_WIDTHS)
-
-	xs, ys = xs[low:high], ys[low:high]
-
-	if show_initial:
-		plot_single_fit(xs, ys, d['Initial params'])
-
-	_plot(xs, ys, d, rms, n, low, frbname)
-
-
 def combine(dir, ncols=4, max_imgs=8, name='combined'):
+	'''
+	Unused.
+	Plot every fit image found in /figs/fits on a single figure.
+	'''
 	entries = [entry for entry in get_files(dir) if name not in entry][:max_imgs]
 	n = len(entries)
 	rows, cols = math.ceil(n / ncols), ncols
@@ -112,7 +113,7 @@ def combine(dir, ncols=4, max_imgs=8, name='combined'):
 
 def plot_r2(frbname, data):
 	'''
-	Plot N vs Adjusted R^2 for a given frb.
+	Plot N vs Adjusted R^2 for a given FRB.
 	'''
 	data = [(int(n), d['Adjusted R^2']) for n, d in data.items()]
 	ns, r2s = [n for n, _ in data], [r2 for _, r2 in data]
@@ -161,7 +162,7 @@ if __name__ == '__main__':
 		else:
 			n = data['Threshold R^2'] if args.threshold else data['Max R^2']
 
-			plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data, n, frb, args.show_initial)
+			plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data['data'][n], n, frb, args.show_initial)
 				
 			if not (args.show or args.show_initial):
 				plt.savefig(f'figs/fits/{frb}')

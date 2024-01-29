@@ -1,6 +1,10 @@
 '''
-Correlates all columns from table except any matching an IGNORE pattern.
-Prints correlations in order of abs of spearman coefficient.
+By default takes a single column name as an argument and plots the correlation between that
+column and all other columns that do not match an IGNORE pattern. Saves the correlation plots
+in /figs/correlations/col_name.
+
+--plot-hists: plots and shows the histograms of randomly shuffling one column and finding
+spearman and pearson coefficients.
 '''
 
 
@@ -10,9 +14,6 @@ import re
 import numpy as np
 from matplotlib import pyplot as plt
 import os
-
-
-IGNORE = 'Index|FRB|RA|DEC|error|Repeater|AGN'
 
 
 def remove_nans(a, b, *args):
@@ -26,14 +27,25 @@ def remove_nans(a, b, *args):
 	return a[~is_nan], b[~is_nan], *[(c[~is_nan] if c is not None else None) for c in args]
 
 
+def collapse(str, c):
+	'''
+	Collapse multiple consecutive instances of c in str with a single instance.
+	'''
+	res = ''
+	for ch in str:
+		if ch != c or res[-1] != c:
+			res += ch
+	return res
+
+
 def file_name(name):
 	'''
 	Remove units in brackets and replace space characters and other brackets with underscores.
 	'''
-	if ' (' in name: name = name.split(' (')[0]
+	while ' (' in name: name = name.split(' (')[0]
 	for c in '()/ ':
 		name = name.replace(c, '_')
-	return name
+	return collapse(name.strip('_'), '_')
 
 
 def get_pos(arr, p='x'):
@@ -93,7 +105,7 @@ def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, 
 		ax0.scatter(x0, x1)
 	ax0.set_xlabel(name0)
 	ax0.set_ylabel(name1)
-	ax0.set_title(f'{name0} vs {name1}')
+	ax0.set_title(f'{name1} vs {name0}')
 	ax0.text(
 		get_pos(x0, 'x'),
 		get_pos(x1, 'y'),
@@ -113,8 +125,8 @@ def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, 
 
 def get_error_col(data, col_name):
 	'''
-	Return error column if present in data, else list of zeroes.
-	Assumes error column is the next column in data and contains the string 'error'.
+	Return error column corresponding to col_name if present in data, else array of zeroes.
+	Assumes error column is the nieghbouring column in data and contains 'error'.
 	'''
 	zero_err = np.zeros(len(data))
 	next_i = data.columns.get_loc(col_name) + 1
@@ -128,30 +140,36 @@ def get_error_col(data, col_name):
 if __name__ == '__main__':
 	from argparse import ArgumentParser
 
+	DEFAULTS = ['log(DM_obs)', 'log(DM_IGM)', 'log(DM_ex)', 'log(abs(RM_obs))', 'log(abs(RM_ex))']
+
 	a = ArgumentParser()
-	a.add_argument('targets', nargs='*', default=['DM_ex (NE2001)'])
+	a.add_argument('targets', nargs='*', default=DEFAULTS)
 	a.add_argument('--plot-hists', action='store_true')
+	a.add_argument('--single', action='store_true')
 
 	args = a.parse_args()
 
 	data = pd.read_csv('data/table.csv')
+
+	IGNORE = 'Index|FRB|RA|DEC|error|Repeater|AGN'
 	cols = [col for col in data.columns if not re.search(IGNORE, col)]
 	errs = [get_error_col(data, col) for col in cols]
 
-	if len(args.targets) == 1:
-		t = args.targets[0]
-		err = get_error_col(data, t)
-
-		for i in range(len(cols)):
-			col1, err1 = cols[i], errs[i]
-			if col1 != t:
-				correlate(data[t], data[col1], t, col1, err, err1, plot_hists=args.plot_hists, save_fig=True)
-
-	elif len(args.targets) == 2:
+	# single correlation of two quantities
+	if args.single and len(args.targets) == 2:
 		t0, t1 = args.targets
 		err0, err1 = get_error_col(data, t0), get_error_col(data, t1)
 		correlate(data[t0], data[t1], t0, t1, err0, err1, plot_hists=args.plot_hists, save_fig=True)
 
+	elif len(args.targets) >= 1:
+		for t in args.targets:
+			err = get_error_col(data, t)
+
+			for i in range(len(cols)):
+				col1, err1 = cols[i], errs[i]
+				if col1 != t and 'log' in col1:
+					print(f'Correlating {t} and {col1}')
+					correlate(data[t], data[col1], t, col1, err, err1, plot_hists=args.plot_hists, save_fig=True)
 
 
 			
