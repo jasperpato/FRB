@@ -124,7 +124,7 @@ def plot_r2(frbname, data):
 	plt.xlabel('N')
 	plt.xticks(range(max(ns) + 1))
 	plt.ylabel('Adjusted R^2')
-	plt.savefig(f'figs/adjusted_r2/{frbname}_r2')
+	plt.savefig(f'figs/adjusted_r2/{frbname}_r2', bbox_inches='tight')
 	plt.close()
 
 
@@ -161,12 +161,7 @@ if __name__ == '__main__':
 
 		else:
 			n = data[args.choose_r2]
-
 			plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data['data'][n], n, frb, args.show_initial)
-				
-			if not (args.show or args.show_initial):
-				plt.savefig(f'figs/fits/{frb}')
-				plt.close()
 	
 	if args.show or args.show_initial:
 		plt.show(block=True)
