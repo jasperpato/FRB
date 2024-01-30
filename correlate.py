@@ -96,6 +96,7 @@ def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, 
 		plot_hist(ax2, ps, 'Pearson')
 
 	else:
+		plt.rc('axes', labelsize=16, titlesize=16)
 		fig, ax0 = plt.subplots()
 	
 	# plot scatter of x0 vs x1
@@ -105,12 +106,13 @@ def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, 
 		ax0.scatter(x0, x1)
 	ax0.set_xlabel(name0)
 	ax0.set_ylabel(name1)
-	ax0.set_title(f'{name1} vs {name0}')
-	ax0.text(
-		get_pos(x0, 'x'),
-		get_pos(x1, 'y'),
-		f'Spearman: {spear:.2f} [{s_err:.2f}]\nPearson:     {pear:.2f} [{p_err:.2f}]'
-	)
+	ax0.set_title(f'Spearman: {spear:.2f} [{s_err:.2f}]\nPearson:     {pear:.2f} [{p_err:.2f}]')
+	# ax0.set_title(f'{name1} vs {name0}')
+	# ax0.text(
+	# 	get_pos(x0, 'x'),
+	# 	get_pos(x1, 'y'),
+	# 	f'Spearman: {spear:.2f} [{s_err:.2f}]\nPearson:     {pear:.2f} [{p_err:.2f}]'
+	# )
 	
 	if save_fig:
 		name0, name1 = file_name(name0), file_name(name1)
@@ -141,16 +143,15 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	DEFAULTS = [
-		'log(DM_obs)', 'log(DM_IGM)', 'log(DM_ex)',
+		'log(DM_MW) (NE2001)', 'log(DM_obs)', 'log(DM_IGM)', 'log(DM_ex)',
 		'log(abs(RM_obs))', 'log(abs(RM_MW))', 'log(abs(RM_ex))',
 		'log(Tau_MW)', 'log(Tau_obs)', 'log(Tau_ex)'
 	]
 
 	DEFAULTS_NO_LOG = [
-		'DM_obs (pc cm^-3)', 'DM_IGM', 'DM_ex (NE2001)',
+		'DM_MW (NE2001)', 'DM_obs (pc cm^-3)', 'DM_IGM', 'DM_ex (NE2001)',
 		'abs(RM_obs)', 'abs(RM_MW)', 'abs(RM_ex)',
 		'Tau_MW (ms)', 'Tau_obs (ms)', 'Tau_ex (ms)'
-
 	]
 
 	a = ArgumentParser()

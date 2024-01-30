@@ -196,6 +196,9 @@ def update_table(file, dm_igm_csv, choose_r2):
 	data['log(SFR/M)'] = np.log10(data['SFR 0-100 Myr (Mo yr-1)']) - data['log(M*/Mo)']
 	data['log(SFR/M) error'] = np.hypot(data['SFR error'] / data['SFR 0-100 Myr (Mo yr-1)'] / np.log(10), data['log(M*/Mo) error'])
 
+	data['log(DM_MW) (NE2001)'] = np.log10(data['DM_MW (NE2001)'])
+	data['log(DM_MW) error (NE2001)'] = data['DM_MW error (NE2001)'] / data['DM_MW (NE2001)'] / np.log(10)
+	
 	data['log(DM_obs)'] = np.log10(data['DM_obs (pc cm^-3)'])
 
 	data['log(DM_ex)'] = np.log10(data['DM_ex (NE2001)'])

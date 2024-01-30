@@ -116,9 +116,9 @@ def get_no_increase(data, inc=globalpars.NO_INCREASE_R2, ns_after=globalpars.NS_
 		n0 = int(n)
 		cont = False
 		for n1 in range(n0 + 1, n0 + ns_after + 1):
-			r0 = d['Adjusted R^2']
-			r1 = data[str(n1)]['Adjusted R^2']
-			if (r1 - r0) / r0 > inc:
+			y0 = 1 - d['Adjusted R^2']
+			y1 = 1 - data[str(n1)]['Adjusted R^2']
+			if (y0 - y1) / y0 > inc:
 				cont = True
 				break
 		if cont: continue

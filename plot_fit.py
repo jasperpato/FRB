@@ -135,8 +135,7 @@ if __name__ == '__main__':
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--show', action='store_true')
 	a.add_argument('--combine-only', action='store_true')
-	a.add_argument('--threshold', action='store_true')
-	a.add_argument('--no-increase', action='store_true')
+	a.add_argument('--choose-r2', default='No increase R^2')
 	a.add_argument('--r2', action='store_true')
 	a.add_argument('inputs', nargs='*', default=get_files('data/pkls'))
 
@@ -161,8 +160,7 @@ if __name__ == '__main__':
 			plot_r2(frb, data['data'])
 
 		else:
-			n = data['Threshold R^2'] if args.threshold else data['Max R^2']
-			n = data['No increase R^2'] if args.no_increase else data['Max R^2']
+			n = data[args.choose_r2]
 
 			plot_fitted(frb_data.tmsarr, frb_data.it, frb_data.irms, data['data'][n], n, frb, args.show_initial)
 				
