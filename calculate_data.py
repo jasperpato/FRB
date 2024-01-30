@@ -106,7 +106,24 @@ def get_threshold_r2(data, threshold=globalpars.R2_THRESHOLD):
 	for n, d in sorted(data.items(), key=lambda t: t[0]):
 		if d['Adjusted R^2'] >= threshold:
 			return n
+		
 
+def get_no_increase(data, inc=globalpars.NO_INCREASE_R2, ns_after=globalpars.NS_AFTER):
+	'''
+	Return minimum N for which there is no percentage increase `inc` in R^2 for the next `ns_after` N's.
+	'''
+	for n, d in sorted(data.items(), key=lambda t: t[0]):
+		n0 = int(n)
+		cont = False
+		for n1 in range(n0 + 1, n0 + ns_after + 1):
+			r0 = d['Adjusted R^2']
+			r1 = data[str(n1)]['Adjusted R^2']
+			if (r1 - r0) / r0 > inc:
+				cont = True
+				break
+		if cont: continue
+		return n
+		
 
 def calculate_data(frb_data, data_file):
 	'''
@@ -151,6 +168,7 @@ def calculate_data(frb_data, data_file):
 
 	data['Max R^2'] = max(data['data'].keys(), key=lambda n: data['data'][n]['Adjusted R^2'])
 	data['Threshold R^2'] = get_threshold_r2(data['data']) or data['Max R^2']
+	data['No increase R^2'] = get_no_increase(data['data']) or data['Max R^2']
 	
 	with open(data_file, 'w') as f:
 		json.dump(data, f)

@@ -13,13 +13,11 @@ from collections import namedtuple
 
 MW_DIAMETER = 30e3 # pc
 
-#	-------------------		Curve fit constants	------------------------------------
+#	-------------------		Curve fit constants	  ----------------------------------
 
 STD_EXGAUSS_PEAK = 0.3
 
-STOP_AFTER = 3 # number of iterations with no improvement on adjusted R^2
-
-#	-------------------		Curve fit parameters	----------------------------------
+#	-------------------		Curve fit parameters   ---------------------------------
 
 N_EFFECTIVE_WIDTHS = 20
 
@@ -28,20 +26,25 @@ MODEL_CENTRE_AREA = 0.95
 DEFAULT_STDDEV 		= 1
 DEFAULT_TIMESCALE = 1
 
-#	-------------------		Fit plotting parameters	--------------------------------
+#	-------------------   Fit plotting parameters   ------------------------------
 
 N_WIDTHS = 1
 
-#	------------------------------------------------------------------------------
+#	-------------------   Optimal N   --------------------------------------------
 
 R2_THRESHOLD = 0.8
+
+NO_INCREASE_R2 = 0.1
+NS_AFTER = 5
+
+#	-------------------   DM_IGM   -----------------------------------------------
 
 NZ = 1000
 Z_MAX = 2
 NDM = 5000
 DM_MAX = 10000
 
-#	-------------------		Analysis parameters	------------------------------------
+#	-------------------   Analysis parameters	   ---------------------------------
 
 # Raw_time_res_ms		=	1.0e-3/336.0		#	Time resolution of Raw data files in ms
 # CelebiNchan				=	336							#	Number of channels in CELEBI output files

@@ -13,6 +13,7 @@ import globalpars
 from utils import *
 import json
 from frb.rm import galactic_rm, load_hutschenreuter2020
+import os
 
 
 def split_angle(angle):
@@ -61,7 +62,7 @@ def get_error(lon, lat, method='NE2001', nu=1, width=2, n_samples=30):
 	return np.std(ufunc(lons, lats))
 
 
-def get_frb_data(frb_name, threshold=False):
+def get_frb_data(frb_name, choose_r2):
 	'''
 	Returns FRB pickle data and FRB JSON fit output data, else (None, None) if not found.
 	'''
@@ -77,24 +78,45 @@ def get_frb_data(frb_name, threshold=False):
 		if frb_name in entry:
 			with open(entry, 'rb') as f:
 				frb_output = json.load(f)
-				key = 'Threshold R^2' if threshold else 'Max R^2'
-				frb_output = frb_output['data'][frb_output[key]]
+				frb_output = frb_output['data'][frb_output[choose_r2]]
 
 	return frb_data, frb_output
 
 
-def complete_row(row, threshold=False):
+def complete_host_properties(row, frb_name, path='FRB/frb/data/Galaxies'):
+	'''
+	Search for host properties JSON in the FRB package and fill in columns.
+	'''
+	data = {}
+	for entry in get_files(path):
+		if frb_name in entry:
+			with open(entry + f'/FRB{os.path.basename(entry)}_host.json') as f:
+				data = json.load(f)
+	
+	if not data: return
+
+	row['RA'], row['DEC'] = data['ra'], data['dec']
+	row['z'] = data['redshift']['z']
+
+	data = data['derived']
+	# properties not filled in yet
+
+
+def complete_row(row, choose_r2):
 	'''
 	Calculate the missing values in a row of the table.
 	'''
 	# get frb data and frb output
 	frb_name = row['FRB'][2:-1] # get 6-digit frb name
-	frb_data, frb_output = get_frb_data(frb_name, threshold)
+	frb_data, frb_output = get_frb_data(frb_name, choose_r2)
+
+	# complete host properties from FRB package
+	# complete_host_properties(row, frb_name)
 	
 	ra, dec = 'RA', 'DEC'
 	glon, glat = 'Galactic lon', 'Galactic lat'
 
-	r, d = to_decimal(row[ra], row[dec])
+	r, d = to_decimal(row[ra], row[dec]) if isinstance(row[ra], str) else (row[ra], row[dec])
 	row[glon], row[glat] = to_galactic(r, d)
 
 	if not np.isnan([row[glon], row[glat]]).any():
@@ -120,6 +142,8 @@ def complete_row(row, threshold=False):
 
 	s = 'Tau_obs (ms)'
 	row[s], row['Tau_obs error'] = frb_output[s]
+	if row[s] < row['Tau_obs error']:
+		row[s], row['Tau_obs error'] = np.nan, np.nan # remove from sample if Tau_obs is smaller than its error
 
 	l = 'Linear polarisation fraction'
 	row[l], row[l + ' error'] = frb_output[l]
@@ -128,21 +152,22 @@ def complete_row(row, threshold=False):
 	row[t], row[t + ' error'] = frb_output[t]
 
 	# YMW16 (requires observed frequency)
-	dm, sc = dist_to_dm(row[glon], row[glat], globalpars.MW_DIAMETER, nu=freq)
-	
-	row['DM_MW (YMW16)'], row['Tau_MW (ms)'] = dm.value, sc.value * 1e3 # ms  
-	row['DM_MW error (YMW16)'], row['Tau_MW error'] = get_error(row[glon], row[glat], nu=freq, method='YMW16')
+	if not np.isnan([row[glon], row[glat]]).any():
+		dm, sc = dist_to_dm(row[glon], row[glat], globalpars.MW_DIAMETER, nu=freq)
+		
+		row['DM_MW (YMW16)'], row['Tau_MW (ms)'] = dm.value, sc.value * 1e3 # ms  
+		row['DM_MW error (YMW16)'], row['Tau_MW error'] = get_error(row[glon], row[glat], nu=freq, method='YMW16')
 
 	return row
 
 
-def update_table(file, dm_igm_csv, threshold=False):
+def update_table(file, dm_igm_csv, choose_r2):
 	'''
 	Update table by calculating host properties and burst properties.
 	'''
 	# complete missing host properties
 	data = pd.read_csv(file, index_col=0)
-	data = data.apply(complete_row, axis=1, threshold=threshold)
+	data = data.apply(complete_row, axis=1, choose_r2=choose_r2)
 
 	# DM_IGM
 	dm_igm_data = pd.read_csv(dm_igm_csv)
@@ -159,7 +184,7 @@ def update_table(file, dm_igm_csv, threshold=False):
 
 	# Tau_ex
 	data['Tau_ex (ms)'] = (data['Tau_obs (ms)']**2 - data['Tau_MW (ms)']**2) ** 0.5
-	data['Tau_ex error'] = 0.5 * np.hypot(data['Tau_obs (ms)'], data['Tau_MW (ms)']) / data['Tau_ex (ms)']
+	data['Tau_ex error'] = (data['Tau_obs error'] / data['Tau_obs (ms)'] + data['Tau_MW error'] / data['Tau_MW (ms)']) / data['Tau_ex (ms)'] # http://spiff.rit.edu/classes/phys216/workshops/w2x/hypotenuse.html
 	data['log(Tau_ex)'] = np.log10(data['Tau_ex (ms)'])
 	data['log(Tau_ex) error'] = data['Tau_ex error'] / data['Tau_ex (ms)'] / np.log(10)
 
@@ -190,7 +215,7 @@ def update_table(file, dm_igm_csv, threshold=False):
 	data['log(Tau_MW)'] = np.log10(data['Tau_MW (ms)'])
 	data['log(Tau_MW) error'] = data['Tau_MW error'] / data['Tau_MW (ms)'] / np.log(10)
 
-	data['log(abs(Galactic lat))'] = np.log10(np.abs(data['Galactic lat']))
+	data['abs(Galactic lat)'] = np.abs(data['Galactic lat'])
 	data['log(1+z)'] = np.log10(1 + np.array(data['z']))
 
 	data.to_csv(file)
@@ -200,11 +225,11 @@ if __name__ == '__main__':
 	from argparse import ArgumentParser
 
 	a = ArgumentParser()
-	a.add_argument('--threshold', action='store_true')
+	a.add_argument('--choose-r2', default='No increase R^2')
 	args = a.parse_args()
 
 	load_hutschenreuter2020()
 
 	file = 'data/table.csv'
 	dm_igm_csv = 'data/dm_igm.csv'
-	update_table(file, dm_igm_csv, args.threshold)
+	update_table(file, dm_igm_csv, choose_r2=args.choose_r2)

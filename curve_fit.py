@@ -86,7 +86,7 @@ def update(data0, data1):
 	data0.update(data1)
 
 
-def fit(xs, ys, timestep, nmin, nmax, data_file, frbname, append_data=False, visualise_for=None, stop_after=globalpars.STOP_AFTER):
+def fit(xs, ys, timestep, nmin, nmax, data_file, frbname, append_data=False, visualise_for=None):
 	'''
 	Iterates through n values and fits the sum of n exgaussians to the ys data. Saves the results to file.
 	'''
@@ -99,9 +99,6 @@ def fit(xs, ys, timestep, nmin, nmax, data_file, frbname, append_data=False, vis
 		'data': {}
 	}
 
-	no_improvement = 0
-	max_r2 = -1
-
 	for n in range(nmin, nmax):
 		try:
 			print(f'N={n}')
@@ -113,18 +110,8 @@ def fit(xs, ys, timestep, nmin, nmax, data_file, frbname, append_data=False, vis
 				'Params': list(popt),
 				'Condition': np.linalg.cond(pcov),
 				'Uncertainties': list(np.sqrt(np.diag(pcov))),
-				'Adjusted R^2': (r2 := adjusted_rsquared(xs, ys, popt)),
+				'Adjusted R^2': adjusted_rsquared(xs, ys, popt),
 			}
-
-			if r2 > max_r2:
-				max_r2 = r2
-				no_improvement = 0
-			else:
-				no_improvement += 1
-			
-			if no_improvement == stop_after:
-				print('Stopping early')
-				break
 
 		except KeyboardInterrupt: break
 		except Exception as e: print(e)
@@ -167,8 +154,8 @@ if __name__ == '__main__':
 			*[int(n) for n in args.nrange.split(',')],
 			output,
 			frb_data.frbname,
-			args.append,
-			args.visualise_for
+			append_data=args.append,
+			visualise_for=args.visualise_for,
 		)
 
 		calculate_data(frb_data, output)

@@ -109,7 +109,7 @@ def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, 
 	ax0.text(
 		get_pos(x0, 'x'),
 		get_pos(x1, 'y'),
-		f'Spearman: {spear:.2f} ± {s_err:.2f}\nPearson:     {pear:.2f} ± {p_err:.2f}'
+		f'Spearman: {spear:.2f} [{s_err:.2f}]\nPearson:     {pear:.2f} [{p_err:.2f}]'
 	)
 	
 	if save_fig:
@@ -126,7 +126,7 @@ def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, 
 def get_error_col(data, col_name):
 	'''
 	Return error column corresponding to col_name if present in data, else array of zeroes.
-	Assumes error column is the nieghbouring column in data and contains 'error'.
+	Assumes error column is the neighbouring column in data and contains 'error'.
 	'''
 	zero_err = np.zeros(len(data))
 	next_i = data.columns.get_loc(col_name) + 1
@@ -140,7 +140,11 @@ def get_error_col(data, col_name):
 if __name__ == '__main__':
 	from argparse import ArgumentParser
 
-	DEFAULTS = ['log(DM_obs)', 'log(DM_IGM)', 'log(DM_ex)', 'log(abs(RM_obs))', 'log(abs(RM_ex))']
+	DEFAULTS = [
+		'log(DM_obs)', 'log(DM_IGM)', 'log(DM_ex)',
+		'log(abs(RM_obs))', 'log(abs(RM_ex))',
+		'log(Tau_MW)', 'log(Tau_obs)', 'log(Tau_ex)'
+	]
 
 	a = ArgumentParser()
 	a.add_argument('targets', nargs='*', default=DEFAULTS)
@@ -167,7 +171,7 @@ if __name__ == '__main__':
 
 			for i in range(len(cols)):
 				col1, err1 = cols[i], errs[i]
-				if col1 != t and 'log' in col1:
+				if col1 != t and ('log' in col1 or col1 == 'abs(Galactic lat)'):
 					print(f'Correlating {t} and {col1}')
 					correlate(data[t], data[col1], t, col1, err, err1, plot_hists=args.plot_hists, save_fig=True)
 
