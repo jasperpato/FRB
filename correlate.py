@@ -142,16 +142,27 @@ if __name__ == '__main__':
 
 	DEFAULTS = [
 		'log(DM_obs)', 'log(DM_IGM)', 'log(DM_ex)',
-		'log(abs(RM_obs))', 'log(abs(RM_ex))',
+		'log(abs(RM_obs))', 'log(abs(RM_MW))', 'log(abs(RM_ex))',
 		'log(Tau_MW)', 'log(Tau_obs)', 'log(Tau_ex)'
+	]
+
+	DEFAULTS_NO_LOG = [
+		'DM_obs (pc cm^-3)', 'DM_IGM', 'DM_ex (NE2001)',
+		'abs(RM_obs)', 'abs(RM_MW)', 'abs(RM_ex)',
+		'Tau_MW (ms)', 'Tau_obs (ms)', 'Tau_ex (ms)'
+
 	]
 
 	a = ArgumentParser()
 	a.add_argument('targets', nargs='*', default=DEFAULTS)
+	a.add_argument('--no-log', action='store_true')
 	a.add_argument('--plot-hists', action='store_true')
 	a.add_argument('--single', action='store_true')
 
 	args = a.parse_args()
+
+	if args.no_log:
+		args.targets = DEFAULTS_NO_LOG
 
 	data = pd.read_csv('data/table.csv')
 
@@ -171,9 +182,10 @@ if __name__ == '__main__':
 
 			for i in range(len(cols)):
 				col1, err1 = cols[i], errs[i]
-				if col1 != t and ('log' in col1 or col1 == 'abs(Galactic lat)'):
-					print(f'Correlating {t} and {col1}')
-					correlate(data[t], data[col1], t, col1, err, err1, plot_hists=args.plot_hists, save_fig=True)
+				if col1 != t:
+					if col1 == 'abs(Galactic lat)' or ('log' in t and 'log' in col1) or ('log' not in t and 'log' not in col1):
+						print(f'Correlating {t} and {col1}')
+						correlate(data[t], data[col1], t, col1, err, err1, plot_hists=args.plot_hists, save_fig=True)
 
 
 			

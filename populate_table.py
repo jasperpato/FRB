@@ -185,10 +185,11 @@ def update_table(file, dm_igm_csv, choose_r2):
 	# Tau_ex
 	data['Tau_ex (ms)'] = (data['Tau_obs (ms)']**2 - data['Tau_MW (ms)']**2) ** 0.5
 	data['Tau_ex error'] = (data['Tau_obs error'] / data['Tau_obs (ms)'] + data['Tau_MW error'] / data['Tau_MW (ms)']) / data['Tau_ex (ms)'] # http://spiff.rit.edu/classes/phys216/workshops/w2x/hypotenuse.html
+
 	data['log(Tau_ex)'] = np.log10(data['Tau_ex (ms)'])
 	data['log(Tau_ex) error'] = data['Tau_ex error'] / data['Tau_ex (ms)'] / np.log(10)
 
-	# take logs
+	# take abs and logs
 	data['log(SFR)'] = np.log10(data['SFR 0-100 Myr (Mo yr-1)'])
 	data['log(SFR) error'] = data['SFR error'] / data['SFR 0-100 Myr (Mo yr-1)'] / np.log(10)
 
@@ -200,13 +201,22 @@ def update_table(file, dm_igm_csv, choose_r2):
 	data['log(DM_ex)'] = np.log10(data['DM_ex (NE2001)'])
 	data['log(DM_ex) error'] = data['DM_ex error (NE2001)'] / data['DM_ex (NE2001)'] / np.log(10)
 
-	data['log(abs(RM_obs))'] = np.log10(np.abs(data['RM_obs (rad/m^2)']))
+	data['abs(RM_obs)'] = np.abs(data['RM_obs (rad/m^2)'])
+	data['abs(RM_obs) error'] = data['RM_obs error']
+
+	data['log(abs(RM_obs))'] = np.log10(data['abs(RM_obs)'])
 	data['log(abs(RM_obs)) error'] = np.abs(data['RM_obs error'] / data['RM_obs (rad/m^2)'] / np.log(10))
 
-	data['log(abs(RM_MW))'] = np.log10(np.abs(data['RM_MW (rad/m^2)']))
+	data['abs(RM_MW)'] = np.abs(data['RM_MW (rad/m^2)'])
+	data['abs(RM_MW) error'] = data['RM_MW error']
+
+	data['log(abs(RM_MW))'] = np.log10(data['abs(RM_MW)'])
 	data['log(abs(RM_MW)) error'] = np.abs(data['RM_MW error'] / data['RM_MW (rad/m^2)'] / np.log(10))
 
-	data['log(abs(RM_ex))'] = np.log10(np.abs(data['RM_ex (rad/m^2)']))
+	data['abs(RM_ex)'] = np.abs(data['RM_ex (rad/m^2)'])
+	data['abs(RM_ex) error'] = data['RM_ex error']
+
+	data['log(abs(RM_ex))'] = np.log10(data['abs(RM_ex)'])
 	data['log(abs(RM_ex)) error'] = np.abs(data['RM_ex error'] / data['RM_ex (rad/m^2)'] / np.log(10))
 
 	data['log(Tau_obs)'] = np.log10(data['Tau_obs (ms)'])
@@ -217,6 +227,25 @@ def update_table(file, dm_igm_csv, choose_r2):
 
 	data['abs(Galactic lat)'] = np.abs(data['Galactic lat'])
 	data['log(1+z)'] = np.log10(1 + np.array(data['z']))
+
+	data['log(tm)'] = np.log10(data['tm (Gyr)'])
+	data['log(tm) error'] = data['tm error'] / data['tm (Gyr)'] / np.log(10)
+
+	# reverse logs
+	data['MF/Mo'] = 10 ** data['log(MF/Mo)']
+	data['MF/Mo error'] = data['log(MF/Mo) error'] * data['MF/Mo'] * np.log(10)
+
+	data['Z*/Zo'] = 10 ** data['log(Z*/Zo)']
+	data['Z*/Zo error'] = data['log(Z*/Zo) error'] * data['Z*/Zo'] * np.log(10)
+
+	data['Zgas/Zo'] = 10 ** data['log(Zgas/Zo)']
+	data['Zgas/Zo error'] = data['log(Zgas/Zo) error'] * data['Zgas/Zo'] * np.log(10)
+
+	data['M*/Mo'] = 10 ** data['log(M*/Mo)']
+	data['M*/Mo error'] = data['log(M*/Mo) error'] * data['M*/Mo'] * np.log(10)
+
+	data['SFR/M'] = 10 ** data['log(SFR/M)']
+	data['SFR/M error'] = data['log(SFR/M) error'] * data['SFR/M'] * np.log(10)
 
 	data.to_csv(file)
 
