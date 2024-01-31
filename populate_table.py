@@ -142,8 +142,9 @@ def complete_row(row, choose_r2):
 
 	s = 'Tau_obs (ms)'
 	row[s], row['Tau_obs error'] = frb_output[s]
+
 	if row[s] < row['Tau_obs error']:
-		row[s], row['Tau_obs error'] = np.nan, np.nan # remove from sample if Tau_obs is smaller than its error
+		row[s], row['Tau_obs error'] = 0, 0 # replace with zero if Tau_obs is smaller than its error
 
 	l = 'Linear polarisation fraction'
 	row[l], row[l + ' error'] = frb_output[l]
@@ -184,9 +185,16 @@ def update_table(file, dm_igm_csv, choose_r2):
 
 	# Tau_ex
 	data['Tau_ex (ms)'] = (data['Tau_obs (ms)']**2 - data['Tau_MW (ms)']**2) ** 0.5
-	data['Tau_ex error'] = (data['Tau_obs error'] / data['Tau_obs (ms)'] + data['Tau_MW error'] / data['Tau_MW (ms)']) / data['Tau_ex (ms)'] # http://spiff.rit.edu/classes/phys216/workshops/w2x/hypotenuse.html
+	data['Tau_ex error'] = ((2 * data['Tau_obs (ms)'] * data['Tau_obs error'])**2 + (2 * data['Tau_MW (ms)'] * data['Tau_MW error'])**2) ** 0.5 / 2 / data['Tau_ex (ms)']
+	# data['Tau_ex error'] = (data['Tau_obs error'] / data['Tau_obs (ms)'] + data['Tau_MW error'] / data['Tau_MW (ms)']) / data['Tau_ex (ms)'] # http://spiff.rit.edu/classes/phys216/workshops/w2x/hypotenuse.html
+
+	# Replace Tau_ex with zero if error larger than value
+	cond = data['Tau_ex (ms)'] < data['Tau_ex error']
+	data['Tau_ex (ms)'] = np.where(cond, 0, data['Tau_ex (ms)'])
+	data['Tau_ex error'] = np.where(cond, 0, data['Tau_ex error'])
 
 	data['log(Tau_ex)'] = np.log10(data['Tau_ex (ms)'])
+	data['log(Tau_ex)'] = np.where(np.isinf(data['log(Tau_ex)']), np.nan, data['log(Tau_ex)']) # replace -inf with np.nan
 	data['log(Tau_ex) error'] = data['Tau_ex error'] / data['Tau_ex (ms)'] / np.log(10)
 
 	# take abs and logs
@@ -223,6 +231,7 @@ def update_table(file, dm_igm_csv, choose_r2):
 	data['log(abs(RM_ex)) error'] = np.abs(data['RM_ex error'] / data['RM_ex (rad/m^2)'] / np.log(10))
 
 	data['log(Tau_obs)'] = np.log10(data['Tau_obs (ms)'])
+	data['log(Tau_obs)'] = np.where(np.isinf(data['log(Tau_obs)']), np.nan, data['log(Tau_obs)'])
 	data['log(Tau_obs) error'] = data['Tau_obs error'] / data['Tau_obs (ms)'] / np.log(10)
 
 	data['log(Tau_MW)'] = np.log10(data['Tau_MW (ms)'])

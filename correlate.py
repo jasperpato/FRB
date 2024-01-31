@@ -40,9 +40,8 @@ def collapse(str, c):
 
 def file_name(name):
 	'''
-	Remove units in brackets and replace space characters and other brackets with underscores.
+	Replace space characters and other brackets with underscores.
 	'''
-	while ' (' in name: name = name.split(' (')[0]
 	for c in '()/ ':
 		name = name.replace(c, '_')
 	return collapse(name.strip('_'), '_')
@@ -121,7 +120,7 @@ def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, 
 		try: os.mkdir(f'figs/correlations/{name0}')
 		except: pass
 
-		fig.savefig(f'figs/correlations/{name0}/{name0}_{name1}')
+		fig.savefig(f'figs/correlations/{name0}/{name0}_{name1}', bbox_inches='tight')
 		plt.close(fig)
 
 
