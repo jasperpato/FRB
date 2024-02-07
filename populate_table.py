@@ -1,8 +1,7 @@
 '''
-Complete the host properties and FRB burst properties in the table CSV file.
-
-Completes data for all FRB pickle files found in /data/pkls that are also present in rows of the table.
+Completes data for all FRB pickle files found in /data/pkls that are also present in rows of the data/table.csv.
 '''
+
 
 from astropy.coordinates import SkyCoord, FK5, Galactic
 from pyne2001 import get_galactic_dm
@@ -14,6 +13,7 @@ from utils import *
 import json
 from frb.rm import galactic_rm, load_hutschenreuter2020
 import os
+from luminosity import lum_dist
 
 
 def split_angle(angle):
@@ -99,7 +99,8 @@ def complete_host_properties(row, frb_name, path='FRB/frb/data/Galaxies'):
 	row['z'] = data['redshift']['z']
 
 	data = data['derived']
-	# properties not filled in yet
+
+	# complete properties (unfinished)
 
 
 def complete_row(row, choose_r2):
@@ -116,10 +117,11 @@ def complete_row(row, choose_r2):
 	ra, dec = 'RA', 'DEC'
 	glon, glat = 'Galactic lon', 'Galactic lat'
 
-	r, d = to_decimal(row[ra], row[dec]) if isinstance(row[ra], str) else (row[ra], row[dec])
-	row[glon], row[glat] = to_galactic(r, d)
+	if not pd.isna(row[ra]) and not pd.isna(row[dec]):
+		# assume RA, DEC are both in hours or both in decimal
+		r, d = to_decimal(row[ra], row[dec]) if ':' in row[ra] else (float(row[ra]), float(row[dec]))
+		row[glon], row[glat] = to_galactic(r, d)
 
-	if not np.isnan([row[glon], row[glat]]).any():
 		# DM NE2001 and error
 		row['DM_MW (NE2001)'] = get_galactic_dm(row[glon], row[glat])
 		row['DM_MW error (NE2001)'] = get_error(row[glon], row[glat], method='NE2001')
@@ -186,7 +188,6 @@ def update_table(file, dm_igm_csv, choose_r2):
 	# Tau_ex
 	data['Tau_ex (ms)'] = (data['Tau_obs (ms)']**2 - data['Tau_MW (ms)']**2) ** 0.5
 	data['Tau_ex error'] = ((2 * data['Tau_obs (ms)'] * data['Tau_obs error'])**2 + (2 * data['Tau_MW (ms)'] * data['Tau_MW error'])**2) ** 0.5 / 2 / data['Tau_ex (ms)']
-	# data['Tau_ex error'] = (data['Tau_obs error'] / data['Tau_obs (ms)'] + data['Tau_MW error'] / data['Tau_MW (ms)']) / data['Tau_ex (ms)'] # http://spiff.rit.edu/classes/phys216/workshops/w2x/hypotenuse.html
 
 	# Replace Tau_ex with zero if error larger than value
 	cond = data['Tau_ex (ms)'] < data['Tau_ex error']
@@ -258,6 +259,10 @@ def update_table(file, dm_igm_csv, choose_r2):
 
 	data['SFR/M'] = 10 ** data['log(SFR/M)']
 	data['SFR/M error'] = data['log(SFR/M) error'] * data['SFR/M'] * np.log(10)
+
+	# luminosity
+	data['Burst energy'] = data['Fluence'] * np.vectorize(lum_dist)(data['z']) ** 2
+	data['log(Burst energy)'] = np.log10(data['Burst energy'])
 
 	data.to_csv(file)
 

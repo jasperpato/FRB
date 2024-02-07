@@ -3,7 +3,7 @@ By default takes a single column name as an argument and plots the correlation b
 column and all other columns that do not match an IGNORE pattern. Saves the correlation plots
 in /figs/correlations/col_name.
 
---plot-hists: plots and shows the histograms of randomly shuffling one column and finding
+--plot-hists: shows the histograms of randomly shuffling one column and finding
 spearman and pearson coefficients.
 '''
 
@@ -105,13 +105,7 @@ def correlate(x0, x1, name0, name1, x0_err=None, x1_err=None, plot_hists=False, 
 		ax0.scatter(x0, x1)
 	ax0.set_xlabel(name0)
 	ax0.set_ylabel(name1)
-	ax0.set_title(f'Spearman: {spear:.2f} [{s_err:.2f}]\nPearson:     {pear:.2f} [{p_err:.2f}]')
-	# ax0.set_title(f'{name1} vs {name0}')
-	# ax0.text(
-	# 	get_pos(x0, 'x'),
-	# 	get_pos(x1, 'y'),
-	# 	f'Spearman: {spear:.2f} [{s_err:.2f}]\nPearson:     {pear:.2f} [{p_err:.2f}]'
-	# )
+	ax0.set_title(f'    Spearman: {spear:.2f} [{s_err:.2f}]\n    Pearson:     {pear:.2f} [{p_err:.2f}]    (sample={len(x0)})', loc='left') # horizontalalignment='left')
 	
 	if save_fig:
 		name0, name1 = file_name(name0), file_name(name1)
@@ -153,28 +147,33 @@ if __name__ == '__main__':
 		'Tau_MW (ms)', 'Tau_obs (ms)', 'Tau_ex (ms)'
 	]
 
+	IGNORE = 'Index|FRB|RA|DEC|error|Repeater|AGN'
+
 	a = ArgumentParser()
 	a.add_argument('targets', nargs='*', default=DEFAULTS)
+	a.add_argument('--table', default='data/table.csv')
 	a.add_argument('--no-log', action='store_true')
 	a.add_argument('--plot-hists', action='store_true')
 	a.add_argument('--single', action='store_true')
+	a.add_argument('--show', action='store_true')
 
 	args = a.parse_args()
 
 	if args.no_log:
 		args.targets = DEFAULTS_NO_LOG
 
-	data = pd.read_csv('data/table.csv')
+	# data = pd.read_csv('data/table.csv')
+	data = pd.read_csv(args.table)
 
-	IGNORE = 'Index|FRB|RA|DEC|error|Repeater|AGN'
 	cols = [col for col in data.columns if not re.search(IGNORE, col)]
 	errs = [get_error_col(data, col) for col in cols]
 
 	# single correlation of two quantities
 	if args.single and len(args.targets) == 2:
 		t0, t1 = args.targets
+		print(f'Correlating {t0} and {t1}')
 		err0, err1 = get_error_col(data, t0), get_error_col(data, t1)
-		correlate(data[t0], data[t1], t0, t1, err0, err1, plot_hists=args.plot_hists, save_fig=True)
+		correlate(data[t0], data[t1], t0, t1, err0, err1, plot_hists=args.plot_hists, save_fig=not args.show)
 
 	elif len(args.targets) >= 1:
 		for t in args.targets:
@@ -185,7 +184,7 @@ if __name__ == '__main__':
 				if col1 != t:
 					if col1 == 'abs(Galactic lat)' or ('log' in t and 'log' in col1) or ('log' not in t and 'log' not in col1):
 						print(f'Correlating {t} and {col1}')
-						correlate(data[t], data[col1], t, col1, err, err1, plot_hists=args.plot_hists, save_fig=True)
+						correlate(data[t], data[col1], t, col1, err, err1, plot_hists=args.plot_hists, save_fig=not args.show)
 
-
-			
+	if args.show:
+		plt.show(block=True)

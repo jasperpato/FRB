@@ -8,11 +8,11 @@ the pngs in /figs/fits.
 --threshold: Plot the minimum N that exceeds the threshold adjusted R^2 instead of the N that maximises adjusted R^2.
 '''
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import *
 import json
-import os
 import globalpars
 from PIL import Image
 import math

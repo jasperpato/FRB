@@ -1,5 +1,5 @@
 '''
-Script to get z-DM_IGM means, medians and modes and store in a CSV file.
+Script to get z-DM_IGM means, medians and modes from zdm package and store in a CSV file.
 '''
 
 
@@ -28,7 +28,7 @@ def store_dms(fname, nz=NZ, zmax=Z_MAX, ndm=NDM, dmmax=DM_MAX):
 	cos.set_cosmology(state)
 	cos.init_dist_measures()
 		
-	#parameters of the grid
+	# # parameters of the grid
 	# nz = 1000
 	# zmax = 2
 	# ndm = 5000

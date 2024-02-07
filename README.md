@@ -1,11 +1,14 @@
-![fit 0](figs/fits/181112_20.png)
+# Can Fast Radio Bursts Probe the Ionized Gas in Distant Galaxies?
 
-![fit 1](figs/fits/181112_50.png)
+## ICRAR Summer Project 2023/24
 
-![fit 2](figs/fits/210912_20.png)
+Jasper Paterson  
+Apurba Bera, Marcin Glowacki, Clancy James
 
-![fit 3](figs/fits/210912_50.png)
+The scripts in this package:
 
-![fit 4](figs/fits/221106.png)
-
-![fit 5](figs/fits/230708_100.png)
+- curve fit high time resolution FRB data
+- plot curve fits
+- generate FRB property data and collate host galaxy data
+- perform correlations between FRB properties and host galaxy properties
+- plot correlations
