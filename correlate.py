@@ -164,6 +164,8 @@ if __name__ == '__main__':
 
 	# data = pd.read_csv('data/table.csv')
 	data = pd.read_csv(args.table)
+	# data1 = pd.read_csv('data/table.csv')
+	# data = data.loc[data1['FRB'].isin(data['FRB'])]
 
 	cols = [col for col in data.columns if not re.search(IGNORE, col)]
 	errs = [get_error_col(data, col) for col in cols]

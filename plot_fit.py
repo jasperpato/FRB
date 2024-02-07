@@ -18,14 +18,14 @@ from PIL import Image
 import math
 
 
-def plot_single_fit(xs, ys, params):
+def plot_single_fit(xs, ys, params, frbname):
 	'''
 	Plot a fitted curve given by params on a separate figure. Used for displaying the initial params on the FRB signal.
 	'''
 	fig, ax = plt.subplots(1, 1)
 	ax.plot(xs, ys, color='red', label='Smoothed FRB')
 	ax.plot(xs, [exgauss(x, *params) for x in xs], color='black', label='Estimated params')
-	fig.suptitle('Estimated Parameters')
+	fig.suptitle(frbname)
 	fig.legend()
 
 
@@ -50,7 +50,7 @@ def plot_fitted(xs, ys, rms, data, n, frbname, show_initial=False):
 	xs, ys = xs[low:high], ys[low:high]
 
 	if show_initial:
-		plot_single_fit(xs, ys, data['Initial params'])
+		plot_single_fit(xs, ys, data['Initial params'], frbname)
 
 	fig, ax = plt.subplots(2, 1, sharex=True, gridspec_kw={'height_ratios': [1, 2]})
 	fig.subplots_adjust(hspace=0)
@@ -85,32 +85,6 @@ def plot_fitted(xs, ys, rms, data, n, frbname, show_initial=False):
 	fig.legend()
 
 
-def combine(dir, ncols=4, max_imgs=8, name='combined'):
-	'''
-	Unused.
-	Plot every fit image found in /figs/fits on a single figure.
-	'''
-	entries = [entry for entry in get_files(dir) if name not in entry][:max_imgs]
-	n = len(entries)
-	rows, cols = math.ceil(n / ncols), ncols
-	fig, axs = plt.subplots(rows, cols)
-
-	for i, entry in enumerate(entries):
-		img = np.asarray(Image.open(entry))
-		r, c = i // ncols, i % ncols
-
-		ax = axs[r][c]
-		ax.imshow(img)
-		ax.set_axis_off()
-
-	for i in range(n, rows * cols):
-		r, c = i // ncols, i % ncols
-		axs[r][c].set_visible(False)
-
-	fig.subplots_adjust(bottom=0, top=1, left=0, right=1)
-	fig.savefig(f'{dir}/{name}')
-
-
 def plot_r2(frbname, data):
 	'''
 	Plot N vs Adjusted R^2 for a given FRB.
@@ -134,16 +108,11 @@ if __name__ == '__main__':
 	a = ArgumentParser()
 	a.add_argument('--show-initial', action='store_true')
 	a.add_argument('--show', action='store_true')
-	a.add_argument('--combine-only', action='store_true')
 	a.add_argument('--choose-r2', default='No increase R^2')
 	a.add_argument('--r2', action='store_true')
 	a.add_argument('inputs', nargs='*', default=get_files('data/pkls'))
 
 	args = a.parse_args()
-
-	if args.combine_only:
-		combine('figs/fits')
-		exit()
 
 	for input in args.inputs:
 		frb = get_frb_name(input)
