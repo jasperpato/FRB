@@ -42,7 +42,7 @@ def file_name(name):
 	'''
 	Replace space characters and other brackets with underscores.
 	'''
-	for c in '()/ ':
+	for c in '*()/ ':
 		name = name.replace(c, '_')
 	return collapse(name.strip('_'), '_')
 
