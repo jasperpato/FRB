@@ -31,3 +31,15 @@ How to:
 7. `python3 correlate.py`
 
 After this process, fitted curve plots can be found in figs/fits, and correlation scatter plots can be found in figs/correlations.
+
+Submodules
+
+- https://github.com/FRBs/astropath
+- https://github.com/FRBs/FRB
+- https://github.com/FRBs/ne2001
+
+Versions:
+
+- Python 3.11.4
+- numpy 1.26.2
+- scipy 1.11.3
