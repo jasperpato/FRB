@@ -287,6 +287,9 @@ def update_table(file, dm_igm_csv, choose_r2):
 		data['Burst energy error'] = data['Fluence error'] * lum_dists2
 		data['log(Burst energy)'] = np.log10(data['Burst energy'])
 		data['log(Burst energy)'] = data['Burst energy error'] / data['Burst energy'] / np.log(10)
+
+		# remove outliers above 1
+		# data['log(Burst energy)'] = np.where(data['log(Burst energy)'] > 0.15, np.nan, data['log(Burst energy)'])
 	
 	except: pass
 
@@ -298,7 +301,7 @@ if __name__ == '__main__':
 
 	a = ArgumentParser()
 	a.add_argument('--choose-r2', default='No increase R^2')
-	a.add_argument('file', default='data/table.csv')
+	a.add_argument('file', nargs='?', default='data/table.csv')
 	a.add_argument('--igm-csv', default='data/dm_igm.csv')
 	args = a.parse_args()
 
