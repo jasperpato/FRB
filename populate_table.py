@@ -16,6 +16,14 @@ import os
 from luminosity import lum_dist
 
 
+def create_table(path):
+	'''
+	Create new table
+	'''
+	with open(path, 'w') as f:
+		f.write('Index,FRB,RA,DEC,Galactic lon,Galactic lat,abs(Galactic lat),z,log(1+z),Repeater,Host magnitude (AB),MF/Mo,MF/Mo error,log(MF/Mo),log(MF/Mo) error,Z*/Zo,Z*/Zo error,log(Z*/Zo),log(Z*/Zo) error,"Av_old (mag)","Av_old error","Av_young (mag)","Av_young error",Zgas/Zo,Zgas/Zo error,log(Zgas/Zo),log(Zgas/Zo) error,SFR 0-100 Myr (Mo yr-1),SFR error,log(SFR),log(SFR) error,M*/Mo,M*/Mo error,log(M*/Mo),log(M*/Mo) error,SFR/M,SFR/M error,log(SFR/M),log(SFR/M) error,tm (Gyr),tm error,log(tm),log(tm) error,DM_MW (NE2001),DM_MW error (NE2001),log(DM_MW) (NE2001),log(DM_MW) error (NE2001),DM_MW (YMW16),DM_MW error (YMW16),DM_IGM,log(DM_IGM),DM_obs (pc cm^-3),DM_obs error,log(DM_obs),DM_ex (NE2001),DM_ex error (NE2001),log(DM_ex),log(DM_ex) error,RM_MW (rad/m^2),RM_MW error,abs(RM_MW),abs(RM_MW) error,log(abs(RM_MW)),log(abs(RM_MW)) error,RM_obs (rad/m^2),RM_obs error,abs(RM_obs),abs(RM_obs) error,log(abs(RM_obs)),log(abs(RM_obs)) error,RM_ex (rad/m^2),RM_ex error,abs(RM_ex),abs(RM_ex) error,log(abs(RM_ex)),log(abs(RM_ex)) error,Tau_MW (ms),Tau_MW error,log(Tau_MW),log(Tau_MW) error,Tau_obs (ms),Tau_obs error,log(Tau_obs),log(Tau_obs) error,Tau_ex (ms),Tau_ex error,log(Tau_ex),log(Tau_ex) error,Fluence,Fluence error,Burst energy,Burst energy error,log(Burst energy),log(Burst energy) error,Linear polarisation fraction,Linear polarisation fraction error,Total polarisation fraction,Total polarisation fraction error,Burst width (ms)\n')
+
+
 def split_angle(angle):
 	'''
 	Split angle string in format H:M:S into components.
@@ -83,24 +91,60 @@ def get_frb_data(frb_name, choose_r2):
 	return frb_data, frb_output
 
 
+def complete_properties(row, frb_name, path='FRB/frb/data/FRBs', get_RMs=False):
+	'''
+	Get FRB RA, DEC, z, DM, RM and fluence from FRB package data.
+	'''
+	try:
+		path = path + f'/FRB{frb_name}.json'
+		print(path)
+		with open(path) as f:
+			data = json.load(f)
+	except:
+		print('No FRB properties')
+		return row
+	
+	try: row['RA'], row['DEC'] = data['ra'], data['dec']
+	except: pass
+
+	try: row['z'] = data['z']
+	except: pass
+
+	try: row['DM_obs (pc cm^-3)'], row['DM_obs error'] = data['DM']['value'], data['DM_err']['value']
+	except: pass
+	
+	if get_RMs:
+		try: row['RM_obs (rad/m^2)'], row['RM_obs error'] = data['RM']['value'], data['RM_err']['value']
+		except: pass
+
+	try: row['Fluence'], row['Fluence error'] = data['fluence']['value'], data['fluence_err']['value']
+	except: pass
+	
+	return row
+
+
 def complete_host_properties(row, frb_name, path='FRB/frb/data/Galaxies'):
 	'''
 	Search for host properties JSON in the FRB package and fill in columns.
 	'''
-	data = {}
-	for entry in get_files(path):
-		if frb_name in entry:
-			with open(entry + f'/FRB{os.path.basename(entry)}_host.json') as f:
-				data = json.load(f)
+	try:
+		path = path + f'\{frb_name}\FRB{frb_name}_host.json'
+		print(path)
+		with open(path) as f:
+			host_data = json.load(f)
+	except:
+		print('No host properties')
+		return row
 	
-	if not data: return
+	# row['RA'], row['DEC'] = host_data['ra'], host_data['dec']
+	# row['z'] = host_data['redshift']['z']
 
-	row['RA'], row['DEC'] = data['ra'], data['dec']
-	row['z'] = data['redshift']['z']
+	try: host_data = host_data['derived']
+	except: return row
 
-	data = data['derived']
+	return row
 
-	# complete properties (unfinished)
+# complete properties (unfinished)
 
 
 def complete_row(row, choose_r2):
@@ -111,8 +155,12 @@ def complete_row(row, choose_r2):
 	frb_name = row['FRB'][2:-1] # get 6-digit frb name
 	frb_data, frb_output = get_frb_data(frb_name, choose_r2)
 
-	# complete host properties from FRB package
-	# complete_host_properties(row, frb_name)
+	if frb_output:
+		row['Components'] = frb_output[choose_r2]
+
+	# complete properties from FRB package
+	complete_properties(row, row['FRB'])
+	complete_host_properties(row, row['FRB'])
 	
 	ra, dec = 'RA', 'DEC'
 	glon, glat = 'Galactic lon', 'Galactic lat'
@@ -187,7 +235,7 @@ def update_table(file, dm_igm_csv, choose_r2):
 	# DM_ex
 	try:
 		data['DM_ex (NE2001)'] = data['DM_obs (pc cm^-3)'] - data['DM_MW (NE2001)'] - data['DM_IGM']
-		data['DM_ex error (NE2001)'] = data['DM_MW error (NE2001)'] # no DM_IGM error
+		data['DM_ex error (NE2001)'] = np.hypot(data['DM_obs error'], data['DM_MW error (NE2001)']) # no DM_IGM error
 	except: pass
 
 	# RM_ex
@@ -286,12 +334,16 @@ def update_table(file, dm_igm_csv, choose_r2):
 		data['Burst energy'] = data['Fluence'] * lum_dists2
 		data['Burst energy error'] = data['Fluence error'] * lum_dists2
 		data['log(Burst energy)'] = np.log10(data['Burst energy'])
-		data['log(Burst energy)'] = data['Burst energy error'] / data['Burst energy'] / np.log(10)
+		data['log(Burst energy) error'] = data['Burst energy error'] / data['Burst energy'] / np.log(10)
 
 		# remove outliers above 1
 		# data['log(Burst energy)'] = np.where(data['log(Burst energy)'] > 0.15, np.nan, data['log(Burst energy)'])
 	
 	except: pass
+
+	# reorder columns
+	cols = 'FRB,RA,DEC,Galactic lon,Galactic lat,abs(Galactic lat),z,log(1+z),Repeater,Host magnitude (AB),MF/Mo,MF/Mo error,log(MF/Mo),log(MF/Mo) error,Z*/Zo,Z*/Zo error,log(Z*/Zo),log(Z*/Zo) error,Av_old (mag),Av_old error,Av_young (mag),Av_young error,Zgas/Zo,Zgas/Zo error,log(Zgas/Zo),log(Zgas/Zo) error,SFR 0-100 Myr (Mo yr-1),SFR error,log(SFR),log(SFR) error,M*/Mo,M*/Mo error,log(M*/Mo),log(M*/Mo) error,SFR/M,SFR/M error,log(SFR/M),log(SFR/M) error,tm (Gyr),tm error,log(tm),log(tm) error,DM_MW (NE2001),DM_MW error (NE2001),log(DM_MW) (NE2001),log(DM_MW) error (NE2001),DM_MW (YMW16),DM_MW error (YMW16),DM_IGM,log(DM_IGM),DM_obs (pc cm^-3),DM_obs error,log(DM_obs),DM_ex (NE2001),DM_ex error (NE2001),log(DM_ex),log(DM_ex) error,RM_MW (rad/m^2),RM_MW error,abs(RM_MW),abs(RM_MW) error,log(abs(RM_MW)),log(abs(RM_MW)) error,RM_obs (rad/m^2),RM_obs error,abs(RM_obs),abs(RM_obs) error,log(abs(RM_obs)),log(abs(RM_obs)) error,RM_ex (rad/m^2),RM_ex error,abs(RM_ex),abs(RM_ex) error,log(abs(RM_ex)),log(abs(RM_ex)) error,Tau_MW (ms),Tau_MW error,log(Tau_MW),log(Tau_MW) error,Tau_obs (ms),Tau_obs error,log(Tau_obs),log(Tau_obs) error,Tau_ex (ms),Tau_ex error,log(Tau_ex),log(Tau_ex) error,Fluence,Fluence error,Burst energy,Burst energy error,log(Burst energy),log(Burst energy) error,Linear polarisation fraction,Linear polarisation fraction error,Total polarisation fraction,Total polarisation fraction error,Burst width (ms)'
+	data = data[cols.split(',')]
 
 	data.to_csv(file)
 
@@ -299,12 +351,17 @@ def update_table(file, dm_igm_csv, choose_r2):
 if __name__ == '__main__':
 	from argparse import ArgumentParser
 
+	DEFAULT_TABLE = 'data/table.csv'
+
 	a = ArgumentParser()
 	a.add_argument('--choose-r2', default='No increase R^2')
-	a.add_argument('file', nargs='?', default='data/table.csv')
+	a.add_argument('file', nargs='?', default=DEFAULT_TABLE)
 	a.add_argument('--igm-csv', default='data/dm_igm.csv')
 	args = a.parse_args()
 
 	load_hutschenreuter2020()
+
+	if not os.path.exists(DEFAULT_TABLE):
+		create_table(DEFAULT_TABLE)
 
 	update_table(args.file, args.igm_csv, choose_r2=args.choose_r2)
