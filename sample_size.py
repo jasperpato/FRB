@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 table_file = 'data/table.csv'
-sample_file = 'data/sample.csv'
+sample_file = 'data/sample_info.csv'
 
 table = pd.read_csv(table_file)
 

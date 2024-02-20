@@ -81,14 +81,15 @@ def get_frb_data(frb_name, choose_r2):
 			frb_data = get_data(entry)
 
 	# output
-	frb_output = None
+	frb_output, n = None, 0
 	for entry in get_files('output'):
 		if frb_name in entry:
 			with open(entry, 'rb') as f:
 				frb_output = json.load(f)
-				frb_output = frb_output['data'][frb_output[choose_r2]]
+				n = frb_output[choose_r2]
+				frb_output = frb_output['data'][n]
 
-	return frb_data, frb_output
+	return frb_data, frb_output, n
 
 
 def complete_properties(row, frb_name, path='FRB/frb/data/FRBs', get_RMs=False):
@@ -153,10 +154,7 @@ def complete_row(row, choose_r2):
 	'''
 	# get frb data and frb output
 	frb_name = row['FRB'][2:-1] # get 6-digit frb name
-	frb_data, frb_output = get_frb_data(frb_name, choose_r2)
-
-	if frb_output:
-		row['Components'] = frb_output[choose_r2]
+	frb_data, frb_output, row['Components'] = get_frb_data(frb_name, choose_r2)
 
 	# complete properties from FRB package
 	complete_properties(row, row['FRB'])
@@ -223,6 +221,7 @@ def update_table(file, dm_igm_csv, choose_r2):
 	'''
 	# complete missing host properties
 	data = pd.read_csv(file, index_col=0)
+	# data['Components'] = np.nan
 	data = data.apply(complete_row, axis=1, choose_r2=choose_r2)
 
 	# DM_IGM
@@ -342,7 +341,7 @@ def update_table(file, dm_igm_csv, choose_r2):
 	except: pass
 
 	# reorder columns
-	cols = 'FRB,RA,DEC,Galactic lon,Galactic lat,abs(Galactic lat),z,log(1+z),Repeater,Host magnitude (AB),MF/Mo,MF/Mo error,log(MF/Mo),log(MF/Mo) error,Z*/Zo,Z*/Zo error,log(Z*/Zo),log(Z*/Zo) error,Av_old (mag),Av_old error,Av_young (mag),Av_young error,Zgas/Zo,Zgas/Zo error,log(Zgas/Zo),log(Zgas/Zo) error,SFR 0-100 Myr (Mo yr-1),SFR error,log(SFR),log(SFR) error,M*/Mo,M*/Mo error,log(M*/Mo),log(M*/Mo) error,SFR/M,SFR/M error,log(SFR/M),log(SFR/M) error,tm (Gyr),tm error,log(tm),log(tm) error,DM_MW (NE2001),DM_MW error (NE2001),log(DM_MW) (NE2001),log(DM_MW) error (NE2001),DM_MW (YMW16),DM_MW error (YMW16),DM_IGM,log(DM_IGM),DM_obs (pc cm^-3),DM_obs error,log(DM_obs),DM_ex (NE2001),DM_ex error (NE2001),log(DM_ex),log(DM_ex) error,RM_MW (rad/m^2),RM_MW error,abs(RM_MW),abs(RM_MW) error,log(abs(RM_MW)),log(abs(RM_MW)) error,RM_obs (rad/m^2),RM_obs error,abs(RM_obs),abs(RM_obs) error,log(abs(RM_obs)),log(abs(RM_obs)) error,RM_ex (rad/m^2),RM_ex error,abs(RM_ex),abs(RM_ex) error,log(abs(RM_ex)),log(abs(RM_ex)) error,Tau_MW (ms),Tau_MW error,log(Tau_MW),log(Tau_MW) error,Tau_obs (ms),Tau_obs error,log(Tau_obs),log(Tau_obs) error,Tau_ex (ms),Tau_ex error,log(Tau_ex),log(Tau_ex) error,Fluence,Fluence error,Burst energy,Burst energy error,log(Burst energy),log(Burst energy) error,Linear polarisation fraction,Linear polarisation fraction error,Total polarisation fraction,Total polarisation fraction error,Burst width (ms)'
+	cols = 'FRB,RA,DEC,Galactic lon,Galactic lat,abs(Galactic lat),z,log(1+z),Repeater,Host magnitude (AB),MF/Mo,MF/Mo error,log(MF/Mo),log(MF/Mo) error,Z*/Zo,Z*/Zo error,log(Z*/Zo),log(Z*/Zo) error,Av_old (mag),Av_old error,Av_young (mag),Av_young error,Zgas/Zo,Zgas/Zo error,log(Zgas/Zo),log(Zgas/Zo) error,SFR 0-100 Myr (Mo yr-1),SFR error,log(SFR),log(SFR) error,M*/Mo,M*/Mo error,log(M*/Mo),log(M*/Mo) error,SFR/M,SFR/M error,log(SFR/M),log(SFR/M) error,tm (Gyr),tm error,log(tm),log(tm) error,DM_MW (NE2001),DM_MW error (NE2001),log(DM_MW) (NE2001),log(DM_MW) error (NE2001),DM_MW (YMW16),DM_MW error (YMW16),DM_IGM,log(DM_IGM),DM_obs (pc cm^-3),DM_obs error,log(DM_obs),DM_ex (NE2001),DM_ex error (NE2001),log(DM_ex),log(DM_ex) error,RM_MW (rad/m^2),RM_MW error,abs(RM_MW),abs(RM_MW) error,log(abs(RM_MW)),log(abs(RM_MW)) error,RM_obs (rad/m^2),RM_obs error,abs(RM_obs),abs(RM_obs) error,log(abs(RM_obs)),log(abs(RM_obs)) error,RM_ex (rad/m^2),RM_ex error,abs(RM_ex),abs(RM_ex) error,log(abs(RM_ex)),log(abs(RM_ex)) error,Tau_MW (ms),Tau_MW error,log(Tau_MW),log(Tau_MW) error,Tau_obs (ms),Tau_obs error,log(Tau_obs),log(Tau_obs) error,Tau_ex (ms),Tau_ex error,log(Tau_ex),log(Tau_ex) error,Fluence,Fluence error,Burst energy,Burst energy error,log(Burst energy),log(Burst energy) error,Linear polarisation fraction,Linear polarisation fraction error,Total polarisation fraction,Total polarisation fraction error,Burst width (ms),Components'
 	data = data[cols.split(',')]
 
 	data.to_csv(file)
