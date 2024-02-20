@@ -43,3 +43,7 @@ Versions:
 - Python 3.11.4
 - numpy 1.26.2
 - scipy 1.11.3
+
+TODO:
+
+- finish automatic host galaxy data scraping from FRB package (populate_table.py)
